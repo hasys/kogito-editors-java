@@ -133,11 +133,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kie-wb-common-stunner-bpmn-emf</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.eclipselabs</groupId>
       <artifactId>org.eclipse.emf.gwt.ecore</artifactId>
     </dependency>

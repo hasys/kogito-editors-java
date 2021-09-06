@@ -16,23 +16,14 @@
 
 package org.kie.workbench.common.stunner.bpmn.client.marshall.service;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.xml.stream.XMLStreamException;
 
-import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
-import org.eclipse.bpmn2.Definitions;
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
-import org.kie.workbench.common.stunner.bpmn.client.emf.Bpmn2Marshalling;
-import org.kie.workbench.common.stunner.bpmn.client.marshall.converters.fromstunner.ConverterFactory;
-import org.kie.workbench.common.stunner.bpmn.client.marshall.converters.fromstunner.DefinitionsBuildingContext;
-import org.kie.workbench.common.stunner.bpmn.client.marshall.converters.fromstunner.DefinitionsConverter;
-import org.kie.workbench.common.stunner.bpmn.client.marshall.converters.fromstunner.properties.PropertyWriterFactory;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.AbstractDiagram;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
@@ -49,7 +40,6 @@ import org.kie.workbench.common.stunner.core.util.UUID;
 @ApplicationScoped
 public class BPMNClientMarshalling {
 
-    private static Logger LOGGER = Logger.getLogger(BPMNClientMarshalling.class.getName());
     private static Definitions_XMLMapperImpl mapper = Definitions_XMLMapperImpl.INSTANCE;
 
     @Inject
@@ -57,17 +47,11 @@ public class BPMNClientMarshalling {
 
     @PostConstruct
     public void init() {
-        Bpmn2Marshalling.setLogger(message -> LOGGER.log(Level.SEVERE, message));
     }
 
     @SuppressWarnings("unchecked")
     public String marshall(final Diagram<Graph, Metadata> diagram) {
-        final PropertyWriterFactory propertyWriterFactory = new PropertyWriterFactory();
-        final DefinitionsBuildingContext buildingContext = new DefinitionsBuildingContext(diagram.getGraph(), getDiagramClass());
-        final ConverterFactory converterFactory = new ConverterFactory(buildingContext, propertyWriterFactory);
-        final DefinitionsConverter definitionsConverter = new DefinitionsConverter(converterFactory, propertyWriterFactory);
-        final Definitions definitions = definitionsConverter.toDefinitions();
-        return Bpmn2Marshalling.marshall(definitions);
+        return "";
     }
 
     @SuppressWarnings("unchecked")

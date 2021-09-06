@@ -23,7 +23,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import elemental2.promise.Promise;
-import org.kie.workbench.common.stunner.bpmn.client.marshall.converters.util.ConverterUtils;
 import org.kie.workbench.common.stunner.bpmn.client.workitem.WorkItemDefinitionClientService;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
@@ -194,7 +193,7 @@ public class BPMNClientDiagramService extends AbstractKogitoClientDiagramService
     private void updateClientMetadata(final Diagram diagram) {
         if (null != diagram) {
             final Metadata metadata = diagram.getMetadata();
-            if (Objects.nonNull(metadata) && ConverterUtils.isEmpty(metadata.getShapeSetId())) {
+            if (Objects.nonNull(metadata)) {
                 final String sId = shapeManager.getDefaultShapeSet(metadata.getDefinitionSetId()).getId();
                 metadata.setShapeSetId(sId);
             }

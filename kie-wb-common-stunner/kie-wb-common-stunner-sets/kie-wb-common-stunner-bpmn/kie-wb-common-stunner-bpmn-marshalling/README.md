@@ -5,7 +5,7 @@ Introduction
 ------------
 The goal for this module is to provide the capability to transform BPMN2 Eclipse models into the Stunner BPMN ones, and vice-versa. 
 
-This way, by relying on top of the [Eclipse EMF/XMI - GWT support modules](../kie-wb-common-stunner-bpmn-emf), the Stunner's BPMN2 domain un/marshalling can be properly exposed to the GWT compiler, so making it also available on client side.  
+This way, by relying on top of the Eclipse EMF/XMI - GWT support modules, the Stunner's BPMN2 domain un/marshalling can be properly exposed to the GWT compiler, so making it also available on client side.  
 
 
 Implementation details
