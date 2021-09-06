@@ -132,8 +132,6 @@
 
     <!-- Uberfire & Errai. -->
 
-
-
     <dependency>
       <groupId>org.kie.kogito</groupId>
       <artifactId>errai-common</artifactId>
@@ -163,6 +161,23 @@
     <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-commons</artifactId>
+    </dependency>
+
+    <!-- New Marshaller -->
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
+      <artifactId>gwt-backend</artifactId>
+      <version>0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
+      <artifactId>api</artifactId>
+      <version>0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
+      <artifactId>processor</artifactId>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
 
     <!-- Testing -->
@@ -231,6 +246,14 @@
           <artifactId>jetty-annotations</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <!-- New Marshalling Testing -->
+    <dependency>
+      <groupId>org.treblereel.gwt.xml.mapper</groupId>
+      <artifactId>jre-backend</artifactId>
+      <scope>test</scope>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
 
   </dependencies>

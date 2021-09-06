@@ -133,7 +133,7 @@ public class DefinitionResolver {
      * <p>
      * this isn't so for Signal, due to a bug in the method signature/impl.
      * <code>getSignalRef()</code> actually returns the <em>reference</em> (the String ID)
-     * to the Signal instead of resolving it to the Signal instnace.
+     * to the Signal instead of resolving it to the Signal instance.
      * <p>
      * This method can be safely dropped as soon as we find a way to upgrade
      * the underlying BPMN2 Eclipse parser without breaking the rest of the code base.
