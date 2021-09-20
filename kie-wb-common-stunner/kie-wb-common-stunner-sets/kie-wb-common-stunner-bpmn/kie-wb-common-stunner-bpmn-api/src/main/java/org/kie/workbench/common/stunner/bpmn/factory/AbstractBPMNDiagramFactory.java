@@ -16,13 +16,10 @@
 
 package org.kie.workbench.common.stunner.bpmn.factory;
 
-import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.BaseDiagramSet;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.diagram.Metadata;
 import org.kie.workbench.common.stunner.core.factory.impl.BindableDiagramFactory;

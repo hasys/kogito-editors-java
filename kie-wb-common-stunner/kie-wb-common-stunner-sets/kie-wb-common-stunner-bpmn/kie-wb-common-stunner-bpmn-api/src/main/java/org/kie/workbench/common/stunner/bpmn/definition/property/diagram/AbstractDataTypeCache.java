@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
-import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
@@ -48,6 +47,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.StartEscalationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.StartMessageEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.imports.DefaultImport;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessData;

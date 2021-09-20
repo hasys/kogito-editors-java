@@ -41,7 +41,6 @@ import org.kie.workbench.common.stunner.bpmn.client.shape.def.ThrowingIntermedia
 import org.kie.workbench.common.stunner.bpmn.client.shape.view.handler.BPMNShapeViewHandlers;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
-import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
@@ -90,6 +89,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.StartTimerEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.TextAnnotation;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.workitem.CustomTask;
 import org.kie.workbench.common.stunner.bpmn.workitem.WorkItemDefinitionRegistry;
 import org.kie.workbench.common.stunner.core.client.preferences.StunnerPreferencesRegistries;

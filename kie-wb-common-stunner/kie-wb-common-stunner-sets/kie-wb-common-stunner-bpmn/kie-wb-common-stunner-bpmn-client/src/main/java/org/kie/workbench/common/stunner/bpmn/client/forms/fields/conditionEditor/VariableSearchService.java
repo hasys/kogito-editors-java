@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManagementSet;
 import org.kie.workbench.common.stunner.bpmn.forms.conditions.TypeMetadata;
 import org.kie.workbench.common.stunner.bpmn.forms.conditions.TypeMetadataQuery;
