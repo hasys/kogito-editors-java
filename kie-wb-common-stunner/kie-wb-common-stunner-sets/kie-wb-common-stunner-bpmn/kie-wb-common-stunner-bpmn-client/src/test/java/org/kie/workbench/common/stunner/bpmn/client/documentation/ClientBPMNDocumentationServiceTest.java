@@ -33,7 +33,7 @@ import org.kie.workbench.common.stunner.bpmn.client.components.palette.BPMNCateg
 import org.kie.workbench.common.stunner.bpmn.client.documentation.decorator.PropertyDecorators;
 import org.kie.workbench.common.stunner.bpmn.client.shape.factory.BPMNShapeFactory;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.property.assignee.Actors;
@@ -229,27 +229,25 @@ public class ClientBPMNDocumentationServiceTest {
 
     private List<Node> nodes;
 
-    private BPMNDiagramImpl bpmnDiagram;
+    private Process bpmnDiagram;
 
-    private DiagramSet diagramSet;
+    private String processName;
 
-    private Name processName;
+    private String processDocumentation;
 
-    private Documentation processDocumentation;
+    private String processId;
 
-    private Id processId;
+    private String packageProperty;
 
-    private Package packageProperty;
+    private String type;
 
-    private ProcessType type;
+    private String version;
 
-    private Version version;
+    private Boolean adHoc;
 
-    private AdHoc adHoc;
+    private String processInstanceDescription;
 
-    private ProcessInstanceDescription processInstanceDescription;
-
-    private Executable executable;
+    private Boolean executable;
 
     private ProcessData processData;
 
@@ -300,25 +298,25 @@ public class ClientBPMNDocumentationServiceTest {
     private DefinitionId subprocessId;
 
     @Mock
-    private SLADueDate slaDueDate;
+    private String slaDueDate;
 
     @Before
     @SuppressWarnings("all")
     public void setUp() throws Exception {
 
         //DiagramSet
-        processName = new Name(PROCESS_NAME);
-        processDocumentation = new Documentation(PROCESS_DOCUMENTATION);
-        packageProperty = new Package(PROCESS_PACKAGE);
-        type = new ProcessType();
-        version = new Version(PROCESS_VERSION);
-        adHoc = new AdHoc(PROCESS_IS_ADHOC);
-        processInstanceDescription = new ProcessInstanceDescription(PROCESS_DECRIPTION);
-        executable = new Executable(PROCESS_IS_EXECUTABLE);
-        processId = new Id(PROCESS_UUID);
+        processName = PROCESS_NAME;
+        processDocumentation = PROCESS_DOCUMENTATION;
+        packageProperty = PROCESS_PACKAGE;
+        type = "";
+        version = PROCESS_VERSION;
+        adHoc = PROCESS_IS_ADHOC;
+        processInstanceDescription = PROCESS_DECRIPTION;
+        executable = PROCESS_IS_EXECUTABLE;
+        processId = PROCESS_UUID;
         globalVariables = new GlobalVariables(GLOBAL_VARIABLES);
         metaDataAttributes = new MetaDataAttributes(METADATA);
-        slaDueDate = new SLADueDate(SLA_DUE_DATE);
+        slaDueDate = SLA_DUE_DATE;
 
         ImportsValue importsValue = new ImportsValue();
         importsValue.addImport(new DefaultImport(CLASS_NAME + "1"));
@@ -330,17 +328,6 @@ public class ClientBPMNDocumentationServiceTest {
         importsValue.addImport(new WSDLImport(LOCATION + "4", NAMESPACE + "4"));
         imports = new Imports(importsValue);
 
-        diagramSet = new DiagramSet(processName,
-                                    processDocumentation,
-                                    processId,
-                                    packageProperty,
-                                    type,
-                                    version,
-                                    adHoc,
-                                    processInstanceDescription,
-                                    imports,
-                                    executable,
-                                    slaDueDate);
         //ProcessData
         processVariables = new ProcessVariables(VARIABLES);
         processData = new ProcessData(processVariables);
@@ -350,8 +337,18 @@ public class ClientBPMNDocumentationServiceTest {
         metaDataAttributes = new MetaDataAttributes(METADATA);
         advancedData = new RootProcessAdvancedData(globalVariables, metaDataAttributes);
 
-        bpmnDiagram = new BPMNDiagramImpl(
-                diagramSet,
+        bpmnDiagram = new Process(
+                processName,
+                processDocumentation,
+                processId,
+                packageProperty,
+                type,
+                version,
+                adHoc,
+                processInstanceDescription,
+                imports,
+                executable,
+                slaDueDate,
                 processData,
                 new CaseManagementSet(),
                 new BackgroundSet(),
@@ -501,10 +498,6 @@ public class ClientBPMNDocumentationServiceTest {
         when(propertyAdapter.getValue(property)).thenReturn(value);
         when(propertyAdapter.getId(property)).thenReturn(property.getClass().getName());
         when(propertyAdapter.getCaption(property)).thenReturn(caption);
-    }
-
-    private Set toSet(Object... elements) {
-        return Stream.of(elements).collect(Collectors.toSet());
     }
 
     private Node createNode(Object content) {

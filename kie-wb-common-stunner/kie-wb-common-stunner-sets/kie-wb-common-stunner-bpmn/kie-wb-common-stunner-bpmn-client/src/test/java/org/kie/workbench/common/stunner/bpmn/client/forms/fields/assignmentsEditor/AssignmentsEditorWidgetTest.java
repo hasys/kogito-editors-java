@@ -36,7 +36,7 @@ import org.kie.workbench.common.stunner.bpmn.client.forms.fields.model.Assignmen
 import org.kie.workbench.common.stunner.bpmn.client.forms.fields.model.Variable;
 import org.kie.workbench.common.stunner.bpmn.client.forms.util.StringUtils;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.EndNoneEvent;
@@ -579,7 +579,7 @@ public class AssignmentsEditorWidgetTest extends AssignmentBaseTest {
         List<String> selectedItems = Collections.singletonList("UUID");
         when(selectionControl.getSelectedItems()).thenReturn(selectedItems);
 
-        BPMNDiagramImpl bpmnDiagram = new BPMNDiagramImpl();
+        Process bpmnDiagram = new Process();
         Node parentNode = new NodeImpl("PARENT_UUID");
         View parentNodeView = new ViewImpl(bpmnDiagram, Bounds.create());
         parentNode.setContent(parentNodeView);

@@ -46,7 +46,7 @@ import org.kie.workbench.common.stunner.bpmn.client.documentation.template.BPMND
 import org.kie.workbench.common.stunner.bpmn.client.shape.factory.BPMNShapeFactory;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BgColor;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BorderColor;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BorderSize;
@@ -179,7 +179,7 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
     public BPMNDocumentation processDocumentation(Diagram diagram) {
         final Graph<?, Node> graph = diagram.getGraph();
 
-        final Optional<BPMNDiagramImpl> diagramModel = getDiagramModel(graph).findFirst();
+        final Optional<Process> diagramModel = getDiagramModel(graph).findFirst();
 
         return BPMNDocumentation.create(getProcessOverview(diagramModel, graph),
                                         getElementsDetails(graph),
@@ -189,66 +189,56 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
                                                                 .map(c -> (AbstractCanvasHandler) c)));
     }
 
-    private Stream<BPMNDiagramImpl> getDiagramModel(Graph<?, Node> graph) {
+    private Stream<Process> getDiagramModel(Graph<?, Node> graph) {
         return StreamSupport.stream(graph.nodes().spliterator(), false)
                 .map(Node::getContent)
                 .filter(c -> c instanceof Definition)
                 .map(c -> (Definition) c)
                 .map(Definition::getDefinition)
-                .filter(d -> d instanceof BPMNDiagramImpl)
-                .map(d -> (BPMNDiagramImpl) d);
+                .filter(d -> d instanceof Process)
+                .map(d -> (Process) d);
     }
 
-    private ProcessOverview getProcessOverview(final Optional<BPMNDiagramImpl> diagramModel,
+    private ProcessOverview getProcessOverview(final Optional<Process> diagramModel,
                                                final Graph<?, Node> graph) {
         return ProcessOverview.create(getGeneral(diagramModel), getAllImports(graph), getAllProcessVariables(graph));
     }
 
-    private General getGeneral(Optional<BPMNDiagramImpl> diagramModel) {
-        final Optional<DiagramSet> diagramSet = diagramModel
-                .map(BPMNDiagram::getDiagramSet);
+    private General getGeneral(Optional<Process> process) {
 
-        final String documentation = diagramSet
-                .map(DiagramSet::getDocumentation)
-                .map(Documentation::getValue)
+        final String documentation = process
+                .map(Process::getDocumentation)
                 .map(this::encodeLineBreak)
                 .orElse(null);
 
-        final String version = diagramSet
-                .map(DiagramSet::getVersion)
-                .map(Version::getValue)
+        final String version = process
+                .map(Process::getVersion)
                 .orElse(null);
 
-        final String pkg = diagramSet
-                .map(DiagramSet::getPackageProperty)
-                .map(Package::getValue)
+        final String pkg = process
+                .map(Process::getPackageName)
                 .orElse(null);
 
-        final String adhoc = diagramSet
-                .map(DiagramSet::getAdHoc)
-                .map(AdHoc::getValue)
+        final String adhoc = process
+                .map(Process::isAdHoc)
                 .map(String::valueOf)
                 .orElse(null);
 
-        final String executable = diagramSet
-                .map(DiagramSet::getExecutable)
-                .map(Executable::getValue)
+        final String executable = process
+                .map(Process::isExecutable)
                 .map(String::valueOf)
                 .orElse(null);
 
-        final String id = diagramSet
-                .map(DiagramSet::getId)
-                .map(Id::getValue)
+        final String id = process
+                .map(Process::getId)
                 .orElse(null);
 
-        final String name = diagramSet
-                .map(DiagramSet::getName)
-                .map(Name::getValue)
+        final String name = process
+                .map(Process::getName)
                 .orElse(null);
 
-        final String description = diagramSet
-                .map(DiagramSet::getProcessInstanceDescription)
-                .map(d -> d.getValue())
+        final String description = process
+                .map(Process::getProcessInstanceDescription)
                 .map(this::encodeLineBreak)
                 .orElse(null);
 
@@ -266,8 +256,7 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
 
     private Imports getAllImports(final Graph<?, Node> graph) {
         final List<Imports.DefaultImport> defaultImports = getDiagramModel(graph)
-                .map(BPMNDiagramImpl::getDiagramSet)
-                .map(DiagramSet::getImports)
+                .map(Process::getImports)
                 .filter(Objects::nonNull)
                 .map(org.kie.workbench.common.stunner.bpmn.definition.property.diagram.imports.Imports::getValue)
                 .map(ImportsValue::getDefaultImports)
@@ -277,8 +266,7 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
                 .collect(Collectors.toList());
 
         final List<Imports.WSDLImport> wsdlImports = getDiagramModel(graph)
-                .map(BPMNDiagram::getDiagramSet)
-                .map(DiagramSet::getImports)
+                .map(Process::getImports)
                 .filter(Objects::nonNull)
                 .map(org.kie.workbench.common.stunner.bpmn.definition.property.diagram.imports.Imports::getValue)
                 .map(ImportsValue::getWSDLImports)

@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
@@ -75,8 +75,8 @@ public abstract class AbstractDataTypeCache {
         } else if (definition instanceof AdHocSubprocess) {
             AdHocSubprocess adhoc = (AdHocSubprocess) definition;
             allDataTypes.addAll(getDataTypes(adhoc.getProcessData().getProcessVariables().getValue()));
-        } else if (definition instanceof BPMNDiagramImpl) {
-            BPMNDiagramImpl diagram = (BPMNDiagramImpl) definition;
+        } else if (definition instanceof Process) {
+            Process diagram = (Process) definition;
             allDataTypes.addAll(getDataTypes(diagram.getProcessData().getProcessVariables().getValue()));
         } else if (definition instanceof EmbeddedSubprocess) {
             EmbeddedSubprocess embeddedSubprocess = (EmbeddedSubprocess) definition;
@@ -173,7 +173,7 @@ public abstract class AbstractDataTypeCache {
     public void initCache(Object diagramRoot, Node<View<? extends BPMNDiagram<? extends BaseDiagramSet, ? extends BaseProcessData, ? extends BaseRootProcessAdvancedData>>, Edge> value) {
         allDataTypes.clear();
         final BPMNDiagram<? extends BaseDiagramSet, ? extends BaseProcessData, ? extends BaseRootProcessAdvancedData> definition = value.getContent().getDefinition();
-        cacheImports(definition.getDiagramSet().getImports().getValue().getDefaultImports());
+        cacheImports(definition.getImports().getValue().getDefaultImports());
         cacheProcessVariables(definition.getProcessData().getProcessVariables().getValue());
         cacheGlobalVariables(definition.getAdvancedData().getGlobalVariables().getValue());
         cacheDataTypes(diagramRoot);

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
@@ -153,8 +153,8 @@ public class VariableSearchService implements LiveSearchService<String> {
         if (view.getDefinition() instanceof MultipleInstanceSubprocess) {
             return ((MultipleInstanceSubprocess) view.getDefinition()).getProcessData().getProcessVariables().getValue();
         }
-        if (view.getDefinition() instanceof BPMNDiagramImpl) {
-            BPMNDiagramImpl bpmnDiagram = ((BPMNDiagramImpl) view.getDefinition());
+        if (view.getDefinition() instanceof Process) {
+            Process bpmnDiagram = ((Process) view.getDefinition());
             StringBuilder variablesBuilder = new StringBuilder();
             String processVariables = bpmnDiagram.getProcessData().getProcessVariables().getValue();
             if (!isEmpty(processVariables)) {

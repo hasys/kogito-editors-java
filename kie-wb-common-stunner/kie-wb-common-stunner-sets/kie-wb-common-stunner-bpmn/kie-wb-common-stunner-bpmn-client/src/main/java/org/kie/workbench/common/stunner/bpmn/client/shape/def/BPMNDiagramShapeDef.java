@@ -19,15 +19,15 @@ package org.kie.workbench.common.stunner.bpmn.client.shape.def;
 import java.util.Optional;
 
 import org.kie.workbench.common.stunner.bpmn.client.resources.BPMNSVGViewFactory;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.core.client.shape.view.handler.SizeHandler;
 import org.kie.workbench.common.stunner.svg.client.shape.view.SVGShapeView;
 
 public class BPMNDiagramShapeDef extends BaseDimensionedShapeDef
-        implements BPMNSvgShapeDef<BPMNDiagramImpl> {
+        implements BPMNSvgShapeDef<Process> {
 
     @Override
-    public SizeHandler<BPMNDiagramImpl, SVGShapeView> newSizeHandler() {
+    public SizeHandler<Process, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
                 .width(e -> e.getDimensionsSet().getWidth().getValue())
                 .height(e -> e.getDimensionsSet().getHeight().getValue())
@@ -36,7 +36,7 @@ public class BPMNDiagramShapeDef extends BaseDimensionedShapeDef
 
     @Override
     public SVGShapeView<?> newViewInstance(final BPMNSVGViewFactory factory,
-                                           final BPMNDiagramImpl diagram) {
+                                           final Process diagram) {
         return newViewInstance(Optional.ofNullable(diagram.getDimensionsSet().getWidth()),
                                Optional.ofNullable(diagram.getDimensionsSet().getHeight()),
                                factory.rectangle());

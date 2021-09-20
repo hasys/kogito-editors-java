@@ -25,15 +25,10 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.DiagramSet;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.GlobalVariables;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.Id;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.MetaDataAttributes;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.Package;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.Version;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.RootProcessAdvancedData;
 
@@ -65,56 +60,55 @@ public class BPMNDiagramTest {
         this.validator = vf.getValidator();
     }
 
-    public BPMNDiagramImpl createValidBpmnDiagram() {
-        BPMNDiagramImpl BPMNDiagramImpl = new BPMNDiagramImpl();
-        DiagramSet diagramSet = BPMNDiagramImpl.getDiagramSet();
-        diagramSet.setName(new Name(NAME_VALID));
-        diagramSet.setId(new Id(ID_VALID));
-        diagramSet.setPackageProperty(new Package(PACKAGE_VALID));
-        diagramSet.setVersion(new Version(VERSION_VALID));
+    public Process createValidBpmnDiagram() {
+        Process process = new Process();
+        process.setName(NAME_VALID);
+        process.setId(ID_VALID);
+        process.setPackageName(PACKAGE_VALID);
+        process.setVersion(VERSION_VALID);
 
-        return BPMNDiagramImpl;
+        return process;
     }
 
     @Test
     public void testAllValid() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        Set<ConstraintViolation<BPMNDiagramImpl>> violations = this.validator.validate(BPMNDiagramImpl);
+        Process Process = createValidBpmnDiagram();
+        Set<ConstraintViolation<Process>> violations = this.validator.validate(Process);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     public void testNameInvalid() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.getDiagramSet().setName(new Name(NAME_INVALID));
-        Set<ConstraintViolation<BPMNDiagramImpl>> violations = this.validator.validate(BPMNDiagramImpl);
+        Process Process = createValidBpmnDiagram();
+        Process.setName(NAME_INVALID);
+        Set<ConstraintViolation<Process>> violations = this.validator.validate(Process);
         assertEquals(1,
                      violations.size());
     }
 
     @Test
     public void testIDInvalid() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.getDiagramSet().setId(new Id(ID_INVALID));
-        Set<ConstraintViolation<BPMNDiagramImpl>> violations = this.validator.validate(BPMNDiagramImpl);
+        Process Process = createValidBpmnDiagram();
+        Process.setId(ID_INVALID);
+        Set<ConstraintViolation<Process>> violations = this.validator.validate(Process);
         assertEquals(1,
                      violations.size());
     }
 
     @Test
     public void testPackageInvalid() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.getDiagramSet().setPackageProperty(new Package(PACKAGE_INVALID));
-        Set<ConstraintViolation<BPMNDiagramImpl>> violations = this.validator.validate(BPMNDiagramImpl);
+        Process Process = createValidBpmnDiagram();
+        Process.setPackageName(PACKAGE_INVALID);
+        Set<ConstraintViolation<Process>> violations = this.validator.validate(Process);
         assertEquals(1,
                      violations.size());
     }
 
     @Test
     public void testVersionInvalid() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.getDiagramSet().setVersion(new Version(VERSION_INVALID));
-        Set<ConstraintViolation<BPMNDiagramImpl>> violations = this.validator.validate(BPMNDiagramImpl);
+        Process Process = createValidBpmnDiagram();
+        Process.setVersion(VERSION_INVALID);
+        Set<ConstraintViolation<Process>> violations = this.validator.validate(Process);
         assertEquals(1,
                      violations.size());
     }
@@ -139,15 +133,15 @@ public class BPMNDiagramTest {
 
     @Test
     public void testSetAdvancedData() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
-                                                                    new MetaDataAttributes(METADATA)));
+        Process Process = createValidBpmnDiagram();
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
+                                                            new MetaDataAttributes(METADATA)));
         RootProcessAdvancedData advancedData = new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
                                                                            new MetaDataAttributes(METADATA));
 
-        assertEquals(advancedData, BPMNDiagramImpl.getAdvancedData());
-        assertEquals(advancedData.getGlobalVariables(), BPMNDiagramImpl.getAdvancedData().getGlobalVariables());
-        assertEquals(advancedData.getMetaDataAttributes(), BPMNDiagramImpl.getAdvancedData().getMetaDataAttributes());
+        assertEquals(advancedData, Process.getAdvancedData());
+        assertEquals(advancedData.getGlobalVariables(), Process.getAdvancedData().getGlobalVariables());
+        assertEquals(advancedData.getMetaDataAttributes(), Process.getAdvancedData().getMetaDataAttributes());
     }
 
     @Test
@@ -170,49 +164,49 @@ public class BPMNDiagramTest {
 
     @Test
     public void testNotEqualsAdvancedData() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
-                                                                    new MetaDataAttributes(METADATA)));
+        Process Process = createValidBpmnDiagram();
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
+                                                            new MetaDataAttributes(METADATA)));
         RootProcessAdvancedData advancedData = new RootProcessAdvancedData(new GlobalVariables(), new MetaDataAttributes());
 
-        assertNotEquals(advancedData, BPMNDiagramImpl.getAdvancedData());
+        assertNotEquals(advancedData, Process.getAdvancedData());
 
-        assertNotEquals(advancedData.getGlobalVariables(), BPMNDiagramImpl.getAdvancedData().getGlobalVariables());
-        assertNotEquals(advancedData.getMetaDataAttributes(), BPMNDiagramImpl.getAdvancedData().getMetaDataAttributes());
+        assertNotEquals(advancedData.getGlobalVariables(), Process.getAdvancedData().getGlobalVariables());
+        assertNotEquals(advancedData.getMetaDataAttributes(), Process.getAdvancedData().getMetaDataAttributes());
     }
 
     @Test
     public void testBPMNDiagramEquals() {
-        BPMNDiagramImpl BPMNDiagramImpl = createValidBpmnDiagram();
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
-                                                                    new MetaDataAttributes(METADATA)));
-        BPMNDiagramImpl BPMNDiagramImpl2 = createValidBpmnDiagram();
-        BPMNDiagramImpl2.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
-                                                                     new MetaDataAttributes(METADATA)));
+        Process Process = createValidBpmnDiagram();
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
+                                                            new MetaDataAttributes(METADATA)));
+        Process Process2 = createValidBpmnDiagram();
+        Process2.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
+                                                             new MetaDataAttributes(METADATA)));
 
-        assertEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        assertEquals(Process, Process2);
 
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables("id:"),
-                                                                    new MetaDataAttributes("securityRoles3ß<![CDATA[employees,clients]]>")));
-        assertNotEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables("id:"),
+                                                            new MetaDataAttributes("securityRoles3ß<![CDATA[employees,clients]]>")));
+        assertNotEquals(Process, Process2);
 
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
-                                                                    new MetaDataAttributes("securityRoles3ß<![CDATA[employees,clients]]>")));
-        assertNotEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
+                                                            new MetaDataAttributes("securityRoles3ß<![CDATA[employees,clients]]>")));
+        assertNotEquals(Process, Process2);
 
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables("id:"),
-                                                                    new MetaDataAttributes(METADATA)));
-        assertNotEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables("id:"),
+                                                            new MetaDataAttributes(METADATA)));
+        assertNotEquals(Process, Process2);
 
-        BPMNDiagramImpl.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
-                                                                    new MetaDataAttributes(METADATA)));
-        assertEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        Process.setAdvancedData(new RootProcessAdvancedData(new GlobalVariables(GLOBAL_VARIABLES),
+                                                            new MetaDataAttributes(METADATA)));
+        assertEquals(Process, Process2);
 
-        BPMNDiagramImpl.setDimensionsSet(new RectangleDimensionsSet(10d, 10d));
-        BPMNDiagramImpl2.setDimensionsSet(new RectangleDimensionsSet(20d, 20d));
-        assertNotEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        Process.setDimensionsSet(new RectangleDimensionsSet(10d, 10d));
+        Process2.setDimensionsSet(new RectangleDimensionsSet(20d, 20d));
+        assertNotEquals(Process, Process2);
 
-        BPMNDiagramImpl2.setDimensionsSet(new RectangleDimensionsSet(10d, 10d));
-        assertEquals(BPMNDiagramImpl, BPMNDiagramImpl2);
+        Process2.setDimensionsSet(new RectangleDimensionsSet(10d, 10d));
+        assertEquals(Process, Process2);
     }
 }

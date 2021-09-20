@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.stunner.bpmn.client.forms.util.PromiseMock;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
@@ -397,8 +397,8 @@ public class VariableSearchServiceTest {
         return multipleInstanceSubprocess;
     }
 
-    protected BPMNDiagramImpl mockBPMNDiagram(String variables, String caseVariables) {
-        BPMNDiagramImpl bpmnDiagram = mock(BPMNDiagramImpl.class);
+    protected Process mockBPMNDiagram(String variables, String caseVariables) {
+        Process bpmnDiagram = mock(Process.class);
         ProcessData processData = mockProcessData(variables);
         when(bpmnDiagram.getProcessData()).thenReturn(processData);
         CaseManagementSet caseManagementSet = mock(CaseManagementSet.class);

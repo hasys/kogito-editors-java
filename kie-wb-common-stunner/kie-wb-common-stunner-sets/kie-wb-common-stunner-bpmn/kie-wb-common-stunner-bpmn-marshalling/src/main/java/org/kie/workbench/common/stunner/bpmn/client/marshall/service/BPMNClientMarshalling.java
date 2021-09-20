@@ -21,21 +21,17 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.xml.stream.XMLStreamException;
 
+import elemental2.dom.DomGlobal;
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
-import org.kie.workbench.common.stunner.core.diagram.AbstractDiagram;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
-import org.kie.workbench.common.stunner.core.diagram.DiagramImpl;
 import org.kie.workbench.common.stunner.core.diagram.Metadata;
 import org.kie.workbench.common.stunner.core.graph.Graph;
-import org.kie.workbench.common.stunner.core.graph.Node;
-import org.kie.workbench.common.stunner.core.graph.content.definition.DefinitionSet;
-import org.kie.workbench.common.stunner.core.graph.content.definition.DefinitionSetImpl;
-import org.kie.workbench.common.stunner.core.graph.impl.GraphImpl;
-import org.kie.workbench.common.stunner.core.graph.store.GraphNodeStoreImpl;
-import org.kie.workbench.common.stunner.core.util.UUID;
+import org.kie.workbench.common.stunner.core.graph.content.view.ViewImpl;
+import org.kie.workbench.common.stunner.core.graph.impl.NodeImpl;
 
 @ApplicationScoped
 public class BPMNClientMarshalling {
@@ -51,36 +47,28 @@ public class BPMNClientMarshalling {
 
     @SuppressWarnings("unchecked")
     public String marshall(final Diagram<Graph, Metadata> diagram) {
-        return "";
+        Definitions definitions = new Definitions();
+        Process process = new Process();
+        diagram.getGraph().nodes().forEach(o -> DomGlobal.console.info(o));
+        for (final Object node : diagram.getGraph().nodes()) {
+            process = (Process) ((ViewImpl)((NodeImpl)node).getContent()).getDefinition();
+        }
+        definitions.setProcess(process);
+
+        try {
+            return mapper.write(definitions);
+        } catch (XMLStreamException e) {
+            return "";
+        }
     }
 
     @SuppressWarnings("unchecked")
-    public Graph<DefinitionSet, Node> unmarshall(final Metadata metadata,
-                                                 final String raw) {
-        org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions definitions;
+    public Definitions unmarshall(final String raw) {
         try {
-            definitions = mapper.read(raw);
+            return mapper.read(raw);
         } catch (XMLStreamException e) {
-            definitions = new org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions();
+            return new org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions();
         }
-
-        metadata.setCanvasRootUUID(definitions.getId());
-        metadata.setTitle(definitions.getProcess().getName());
-
-        final GraphImpl graph = new GraphImpl<>(UUID.uuid(),
-                                                new GraphNodeStoreImpl());
-        final DefinitionSet content = new DefinitionSetImpl(definitions.getId());
-        graph.setContent(content);
-        graph.getLabels().add(definitions.getId());
-        final AbstractDiagram<Graph, Metadata> diagram = new DiagramImpl(definitions.getProcess().getName(),
-                                                                         metadata);
-        diagram.setGraph(graph);
-
-        return graph;
-    }
-
-    public static Class<?> getDiagramClass() {
-        return BPMNDiagramImpl.class;
     }
 
     public static String getDefinitionSetId() {

@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
@@ -467,8 +467,8 @@ public class AbstractDataTypeCacheTest {
 
     @Test
     public void textExtractBPMNDiagram() {
-        BPMNDiagramImpl diagram = new BPMNDiagramImpl();
-        BPMNDiagramImpl diagram2 = new BPMNDiagramImpl();
+        Process diagram = new Process();
+        Process diagram2 = new Process();
 
         when(firstView.getDefinition()).thenReturn(diagram);
         when(lastView.getDefinition()).thenReturn(diagram2);

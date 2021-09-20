@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorData;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectTypeValue;
@@ -174,7 +174,7 @@ public class VariableProviderTest
     }
 
     private Element mockRootNode(String processVariables, String caseFileVariables) {
-        BPMNDiagramImpl rootNode = new BPMNDiagramImpl();
+        Process rootNode = new Process();
         rootNode.setProcessData(new ProcessData(new ProcessVariables(processVariables)));
         rootNode.setCaseManagementSet((new CaseManagementSet(
                 new CaseIdPrefix(""),
@@ -184,7 +184,7 @@ public class VariableProviderTest
     }
 
     private Element mockRootNodeWithoutVariables() {
-        BPMNDiagramImpl rootNode = new BPMNDiagramImpl();
+        Process rootNode = new Process();
         rootNode.setProcessData(new ProcessData(new ProcessVariables("")));
         return mockNode(rootNode);
     }

@@ -16,7 +16,7 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 public class Definitions {
 
     @XmlAttribute
-    private String id;
+    private String id = "Definition_1";
 
     @XmlAttribute
     private String exporter = "jBPM Process Modeler";

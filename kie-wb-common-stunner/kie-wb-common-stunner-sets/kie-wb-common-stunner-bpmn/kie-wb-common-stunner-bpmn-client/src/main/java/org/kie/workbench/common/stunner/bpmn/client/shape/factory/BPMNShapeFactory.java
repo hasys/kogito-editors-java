@@ -41,7 +41,7 @@ import org.kie.workbench.common.stunner.bpmn.client.shape.def.ThrowingIntermedia
 import org.kie.workbench.common.stunner.bpmn.client.shape.view.handler.BPMNShapeViewHandlers;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
@@ -160,7 +160,7 @@ public class BPMNShapeFactory
     @SuppressWarnings("all")
     public void registerDelegates() {
         delegateShapeFactory
-                .delegate(BPMNDiagramImpl.class,
+                .delegate(Process.class,
                           new BPMNDiagramShapeDef(),
                           () -> svgShapeFactory)
                 .delegate(NoneTask.class,

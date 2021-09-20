@@ -205,7 +205,7 @@ public class FormDefinitionGenerator {
 
                 String fieldModifier = "";
 
-                if (finalTypeElement.getKind().equals(ElementKind.CLASS)) {
+                if (finalTypeElement != null && finalTypeElement.getKind().equals(ElementKind.CLASS)) {
                     FieldDefinition fieldDefinitionAnnotation = finalTypeElement.getAnnotation(FieldDefinition.class);
                     if (fieldDefinitionAnnotation != null) {
 
@@ -331,7 +331,7 @@ public class FormDefinitionGenerator {
                 if (!overrideI18n) {
                     if (!isEmpty(i18nSettings.keyPreffix())) {
                         fieldData.setLabel(i18nSettings.keyPreffix() + i18nSettings.separator() + fieldData.getLabel());
-                        if(!isEmpty(fieldData.getHelpMessage())) {
+                        if (!isEmpty(fieldData.getHelpMessage())) {
                             fieldData.setHelpMessage(i18nSettings.keyPreffix() + i18nSettings.separator() + fieldData.getHelpMessage());
                         }
                     }
@@ -344,7 +344,6 @@ public class FormDefinitionGenerator {
         }
         return fieldSettings;
     }
-
 
     protected void extractFieldExtraSettings(FormDefinitionFieldData fieldData, Element fieldElement) {
         SelectorDataProvider selectorDataProvider = fieldElement.getAnnotation(SelectorDataProvider.class);

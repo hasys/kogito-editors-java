@@ -17,6 +17,7 @@
 package org.kie.workbench.common.stunner.bpmn.definition;
 
 import org.junit.Test;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.assignee.Actors;
 import org.kie.workbench.common.stunner.bpmn.definition.property.assignee.Groupid;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
@@ -147,8 +148,8 @@ public class HashCodeAndEqualityTest {
 
     @Test
     public void testBPMNDiagramImplEquals() {
-        BPMNDiagramImpl a = new BPMNDiagramImpl();
-        BPMNDiagramImpl b = new BPMNDiagramImpl();
+        Process a = new Process();
+        Process b = new Process();
         assertEquals(a,
                      b);
         assertFalse(a.equals(19));
@@ -157,8 +158,8 @@ public class HashCodeAndEqualityTest {
 
     @Test
     public void testBPMNDiagramImplHashCode() {
-        BPMNDiagramImpl a = new BPMNDiagramImpl();
-        BPMNDiagramImpl b = new BPMNDiagramImpl();
+        Process a = new Process();
+        Process b = new Process();
         assertEquals(a.hashCode(),
                      b.hashCode());
     }

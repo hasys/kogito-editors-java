@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.kie.workbench.common.stunner.bpmn.client.forms.filters.BPMNDiagramFilterProvider;
 import org.kie.workbench.common.stunner.bpmn.client.forms.filters.CatchingIntermediateEventFilterProvider;
 import org.kie.workbench.common.stunner.bpmn.client.forms.filters.StartEventFilterProvider;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseCatchingIntermediateEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseStartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateTimerEvent;
@@ -53,7 +53,7 @@ public class StunnerBPMNEntryPointTest {
     @Mock
     private BPMNDiagramFilterProvider bpmnDiagramFilterProvider;
 
-    private BPMNDiagramImpl diagramDef;
+    private Process diagramDef;
 
     @Mock
     private CatchingIntermediateEventFilterProvider catchingIntermediateEventFilterProvider;
@@ -67,8 +67,8 @@ public class StunnerBPMNEntryPointTest {
 
     @Before
     public void setUp() throws Exception {
-        diagramDef = new BPMNDiagramImpl();
-        when(bpmnDiagramFilterProvider.getDefinitionType()).thenReturn((Class) BPMNDiagramImpl.class);
+        diagramDef = new Process();
+        when(bpmnDiagramFilterProvider.getDefinitionType()).thenReturn((Class) Process.class);
 
         intermediateEventDef = new IntermediateTimerEvent();
         when(catchingIntermediateEventFilterProvider.getDefinitionType()).thenReturn((Class) IntermediateTimerEvent.class);

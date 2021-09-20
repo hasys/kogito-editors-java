@@ -19,7 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.factory;
 import javax.enterprise.context.Dependent;
 
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.diagram.DiagramImpl;
 import org.kie.workbench.common.stunner.core.diagram.Metadata;
@@ -32,7 +32,7 @@ public class BPMNDiagramFactoryImpl
         implements BPMNDiagramFactory {
 
     public BPMNDiagramFactoryImpl() {
-        setDiagramType(BPMNDiagramImpl.class);
+        setDiagramType(Process.class);
     }
 
     @Override

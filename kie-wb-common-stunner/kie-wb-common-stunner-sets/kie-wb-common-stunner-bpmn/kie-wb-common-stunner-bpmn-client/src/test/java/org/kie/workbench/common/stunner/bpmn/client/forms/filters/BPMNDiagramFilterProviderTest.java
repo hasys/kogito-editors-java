@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.kie.workbench.common.forms.adf.engine.shared.FormElementFilter;
 import org.kie.workbench.common.forms.processing.engine.handling.FieldChangeHandlerManager;
 import org.kie.workbench.common.stunner.bpmn.client.diagram.DiagramTypeClientService;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.AdHoc;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.DiagramSet;
 import org.kie.workbench.common.stunner.bpmn.service.ProjectType;
@@ -50,7 +50,7 @@ public class BPMNDiagramFilterProviderTest {
 
     private static final String UUID = "uuid";
 
-    private static final String ADHOC_FIELD_NAME = BPMNDiagramImpl.DIAGRAM_SET + "." + DiagramSet.ADHOC;
+    private static final String ADHOC_FIELD_NAME = DiagramSet.ADHOC;
 
     private BPMNDiagramFilterProvider tested;
 
@@ -67,7 +67,7 @@ public class BPMNDiagramFilterProviderTest {
     private EventSourceMock<RefreshFormPropertiesEvent> refreshFormPropertiesEvent;
 
     @Mock
-    private BPMNDiagramImpl diagramDef;
+    private Process diagramDef;
 
     @Mock
     private Element<? extends Definition<?>> element;
@@ -97,7 +97,6 @@ public class BPMNDiagramFilterProviderTest {
     public void setUp() throws Exception {
         when(formFieldChanged.getName()).thenReturn(ADHOC_FIELD_NAME);
         when(formFieldChanged.getUuid()).thenReturn(UUID);
-        when(diagramDef.getDiagramSet()).thenReturn(diagramSet);
         when(diagramSet.getAdHoc()).thenReturn(adHoc);
         when(adHoc.getValue()).thenReturn(true);
         when(sessionManager.getCurrentSession()).thenReturn(session);
@@ -111,7 +110,7 @@ public class BPMNDiagramFilterProviderTest {
 
     @Test
     public void getDefinitionType() {
-        assertEquals(tested.getDefinitionType(), BPMNDiagramImpl.class);
+        assertEquals(tested.getDefinitionType(), Process.class);
     }
 
     @Test
@@ -129,7 +128,7 @@ public class BPMNDiagramFilterProviderTest {
 
     private FormElementFilter testAndGetFormElementFilter() {
         final FormElementFilter filter = tested.provideFilters(UUID, diagramDef).stream().findFirst().get();
-        assertEquals(filter.getElementName(), BPMNDiagramImpl.CASE_MANAGEMENT_SET);
+        assertEquals(filter.getElementName(), Process.CASE_MANAGEMENT_SET);
         return filter;
     }
 

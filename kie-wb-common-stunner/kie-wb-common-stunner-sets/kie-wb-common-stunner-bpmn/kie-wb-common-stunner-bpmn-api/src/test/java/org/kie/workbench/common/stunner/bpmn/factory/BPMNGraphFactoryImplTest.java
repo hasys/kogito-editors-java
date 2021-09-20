@@ -19,7 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.factory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
 import org.kie.workbench.common.stunner.core.api.FactoryManager;
 import org.kie.workbench.common.stunner.core.command.Command;
@@ -93,7 +93,7 @@ public class BPMNGraphFactoryImplTest {
         final Node diagramNode = mock(Node.class);
         final Node startEventNode = mock(Node.class);
         when(factoryManager.newElement(anyString(),
-                                       eq(getDefinitionId(BPMNDiagramImpl.class)))).thenReturn(diagramNode);
+                                       eq(getDefinitionId(Process.class)))).thenReturn(diagramNode);
         final Graph<DefinitionSet, Node> graph = tested.build("uuid1",
                                                               "defSetId");
         assertNotNull(graph);

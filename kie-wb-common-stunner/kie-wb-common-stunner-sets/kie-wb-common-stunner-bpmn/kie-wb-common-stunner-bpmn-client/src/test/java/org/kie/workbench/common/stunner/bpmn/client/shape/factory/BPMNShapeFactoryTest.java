@@ -37,7 +37,7 @@ import org.kie.workbench.common.stunner.bpmn.client.shape.def.TaskShapeDef;
 import org.kie.workbench.common.stunner.bpmn.client.shape.def.ThrowingIntermediateEventShapeDef;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DirectionalAssociation;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
@@ -162,7 +162,7 @@ public class BPMNShapeFactoryTest {
         final ArgumentCaptor<Supplier> factoryArgumentCaptor =
                 ArgumentCaptor.forClass(Supplier.class);
         verify(delegateShapeFactory,
-               times(1)).delegate(eq(BPMNDiagramImpl.class),
+               times(1)).delegate(eq(Process.class),
                                   any(BPMNDiagramShapeDef.class),
                                   factoryArgumentCaptor.capture());
         verify(delegateShapeFactory,

@@ -25,7 +25,7 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.DirectionalAssociation;
 import org.kie.workbench.common.stunner.bpmn.definition.EndSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.Lane;
@@ -161,7 +161,7 @@ public class BPMNPaletteDefinitionBuilderTest {
         assertTrue(delegate.getItemFilter().test(getId(TextAnnotation.class)));
         assertTrue(delegate.getItemFilter().test(getId(DirectionalAssociation.class)));
         assertTrue(delegate.getItemFilter().test(getId(NonDirectionalAssociation.class)));
-        assertFalse(delegate.getItemFilter().test(getId(BPMNDiagramImpl.class)));
+        assertFalse(delegate.getItemFilter().test(getId(Process.class)));
         assertFalse(delegate.getItemFilter().test(getId(SequenceFlow.class)));
         assertFalse(delegate.getItemFilter().test(getId(NoneTask.class)));
     }

@@ -23,7 +23,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
 import org.kie.workbench.common.stunner.core.api.FactoryManager;
@@ -92,7 +92,7 @@ public class BPMNGraphFactoryImpl
         this.graphCommandManager = graphCommandManager;
         this.graphCommandFactory = graphCommandFactory;
         this.indexBuilder = indexBuilder;
-        this.diagramType = BPMNDiagramImpl.class;
+        this.diagramType = Process.class;
     }
 
     public void setDiagramType(final Class<? extends BPMNDiagram> diagramType) {

@@ -29,7 +29,7 @@ import org.kie.workbench.common.forms.adf.engine.shared.FormElementFilter;
 import org.kie.workbench.common.forms.processing.engine.handling.FieldChangeHandlerManager;
 import org.kie.workbench.common.stunner.bpmn.client.diagram.DiagramTypeClientService;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.DiagramSet;
 import org.kie.workbench.common.stunner.bpmn.service.ProjectType;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
@@ -63,25 +63,25 @@ public class BPMNDiagramFilterProvider implements StunnerFormElementFilterProvid
 
     @Override
     public Class<?> getDefinitionType() {
-        return BPMNDiagramImpl.class;
+        return Process.class;
     }
 
     @Override
     public Collection<FormElementFilter> provideFilters(String elementUUID, Object definition) {
         final BPMNDiagram diagram = (BPMNDiagram) definition;
-        final Boolean isAdHoc = diagram.getDiagramSet().getAdHoc().getValue();
+        final Boolean isAdHoc = diagram.isAdHoc();
 
         final Metadata metadata = sessionManager.getCurrentSession().getCanvasHandler().getDiagram().getMetadata();
         final ProjectType currentProjectType = diagramTypeService.getProjectType(metadata);
 
         final Predicate predicate = t -> isAdHoc && Objects.equals(currentProjectType, ProjectType.CASE);
-        final FormElementFilter filter = new FormElementFilter(BPMNDiagramImpl.CASE_MANAGEMENT_SET, predicate);
+        final FormElementFilter filter = new FormElementFilter(Process.CASE_MANAGEMENT_SET, predicate);
 
         return Arrays.asList(filter);
     }
 
     void onFormFieldChanged(@Observes FormFieldChanged formFieldChanged) {
-        final String adHocFieldName = BPMNDiagramImpl.DIAGRAM_SET + "." + DiagramSet.ADHOC;
+        final String adHocFieldName = DiagramSet.ADHOC;
         if (!Objects.equals(formFieldChanged.getName(), adHocFieldName)) {
             return;
         }

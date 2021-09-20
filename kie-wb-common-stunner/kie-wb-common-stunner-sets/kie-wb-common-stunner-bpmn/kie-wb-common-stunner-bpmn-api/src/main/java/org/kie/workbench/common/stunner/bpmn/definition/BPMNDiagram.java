@@ -19,6 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.definition;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManagementSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.BaseDiagramSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.imports.Imports;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseRootProcessAdvancedData;
@@ -27,9 +28,49 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.variables.HasPr
 public interface BPMNDiagram<D extends BaseDiagramSet, P extends BaseProcessData, S extends BaseRootProcessAdvancedData> extends BPMNViewDefinition,
                                                                                                                                  HasProcessData<P> {
 
-    D getDiagramSet();
+    String getName();
 
-    void setDiagramSet(final D diagramSet);
+    void setName(final String name);
+
+    String getDocumentation();
+
+    void setDocumentation(final String documentation);
+
+    String getId();
+
+    void setId(final String id);
+
+    String getPackageName();
+
+    void setPackageName(final String packageName);
+
+    String getProcessType();
+
+    void setProcessType(final String processType);
+
+    String getVersion();
+
+    void setVersion(final String version);
+
+    Boolean isAdHoc();
+
+    void setAdHoc(final Boolean adHoc);
+
+    String getProcessInstanceDescription();
+
+    void setProcessInstanceDescription(final String processInstanceDescription);
+
+    Imports getImports();
+
+    void setImports(final Imports imports);
+
+    Boolean isExecutable();
+
+    void setExecutable(final Boolean executable);
+
+    String getSlaDueDate();
+
+    void setSlaDueDate(final String slaDueDate);
 
     P getProcessData();
 

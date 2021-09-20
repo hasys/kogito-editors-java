@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.BaseDiagramSet;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.diagram.Metadata;
@@ -68,20 +69,14 @@ public abstract class AbstractBPMNDiagramFactory<M extends Metadata, D extends D
                                            final Node<Definition<BPMNDiagram>, ?> diagramNode,
                                            final M metadata) {
         // Default initializations.
-        final Optional<BaseDiagramSet> diagramSet = Optional.ofNullable(diagramNode)
-                .map(Node::<Definition<BPMNDiagram>>getContent)
-                .map(Definition::getDefinition)
-                .map(BPMNDiagram::getDiagramSet);
+        Process process = (Process) diagramNode.getContent().getDefinition();
+        if (null == process.getId()) {
+            process.setId(createValidId(metadata.getTitle()));
+        }
 
-        diagramSet
-                .map(BaseDiagramSet::getId)
-                .filter(id -> Objects.isNull(id.getValue()))
-                .ifPresent(id -> id.setValue(createValidId(metadata.getTitle())));
-
-        diagramSet
-                .map(BaseDiagramSet::getName)
-                .filter(attr -> Objects.isNull(attr.getValue()))
-                .ifPresent(attr -> attr.setValue(name));
+        if (null == process.getName()) {
+            process.setName(name);
+        }
     }
 
     private void updateProperties(final String name,

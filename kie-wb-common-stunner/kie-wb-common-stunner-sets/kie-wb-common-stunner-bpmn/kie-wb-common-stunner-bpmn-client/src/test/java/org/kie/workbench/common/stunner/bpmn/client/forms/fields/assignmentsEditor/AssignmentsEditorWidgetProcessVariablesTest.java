@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagramImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
@@ -101,7 +101,7 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
     @Mock
     private SelectionControl selectionControl;
     @Mock
-    private BPMNDiagramImpl bpmnDiagram;
+    private Process bpmnDiagram;
     @Mock
     private View nodeView;
     @Mock
