@@ -167,23 +167,20 @@ public class BPMNClientDiagramService extends AbstractKogitoClientDiagramService
     private Diagram parse(final String fileName, final String raw) {
         final Metadata metadata = createMetadata();
         final Definitions definitions = marshalling.unmarshall(raw);
-        metadata.setCanvasRootUUID(definitions.getId());
-        metadata.setTitle(definitions.getProcess().getName());
-        final Diagram diagram = factoryManager.newDiagram(definitions.getProcess().getName(),
-                                                          definitions.getId(),
+        final String title = createDiagramTitleFromFilePath(fileName);
+        final String defSetId = BPMNClientMarshalling.getDefinitionSetId();
+        metadata.setTitle(title);
+        final Diagram diagram = factoryManager.newDiagram(title,
+                                                          defSetId,
                                                           metadata);
 
         final Node<Definition<BPMNDiagram>, ?> diagramNode = GraphUtils.getFirstNode((Graph<?, Node>) diagram.getGraph(), Process.class);
-        if (null == diagramNode) {
-            throw new NullPointerException(NO_DIAGRAM_MESSAGE);
-        }
+
+        diagramNode.getContent().setDefinition(definitions.getProcess());
 
         updateDiagramSet(diagramNode, fileName);
-
-        /* final Diagram diagram = diagramFactory.build(title,
-                                                     metadata,
-                                                     graph);   */
         updateClientMetadata(diagram);
+
         return diagram;
     }
 

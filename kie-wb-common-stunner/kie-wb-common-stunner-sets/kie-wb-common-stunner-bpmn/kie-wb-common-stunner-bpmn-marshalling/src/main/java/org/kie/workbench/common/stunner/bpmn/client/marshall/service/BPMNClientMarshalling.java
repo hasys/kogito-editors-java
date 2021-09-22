@@ -51,7 +51,11 @@ public class BPMNClientMarshalling {
         Process process = new Process();
         diagram.getGraph().nodes().forEach(o -> DomGlobal.console.info(o));
         for (final Object node : diagram.getGraph().nodes()) {
-            process = (Process) ((ViewImpl)((NodeImpl)node).getContent()).getDefinition();
+            DomGlobal.console.info("Class is: " + node.getClass());
+            DomGlobal.console.info(node);
+            ViewImpl view = (ViewImpl) ((NodeImpl) node).getContent();
+            DomGlobal.console.info(view.getBounds());
+            process = (Process)(view).getDefinition();
         }
         definitions.setProcess(process);
 
