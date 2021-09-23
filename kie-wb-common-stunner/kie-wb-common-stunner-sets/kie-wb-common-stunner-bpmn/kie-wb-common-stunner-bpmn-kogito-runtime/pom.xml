@@ -214,23 +214,19 @@
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>gwt-backend</artifactId>
-      <version>0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>api</artifactId>
-      <version>0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>processor</artifactId>
-      <version>0.4-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.treblereel.gwt.xml.mapper</groupId>
       <artifactId>jre-backend</artifactId>
-      <version>0.4-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 

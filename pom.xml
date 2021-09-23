@@ -203,6 +203,9 @@
 
     <version.org.kie.kogito.lienzo>${project.version}</version.org.kie.kogito.lienzo>
 
+    <!-- XML mapper -->
+    <version.mapper.xml>0.5-SNAPSHOT</version.mapper.xml>
+
     <!-- Properties from KIE-WB-COMMON parent POM -->
     <version.powermock.api.mockito2>2.0.9</version.powermock.api.mockito2>
     <spotbugs.failOnViolation>true</spotbugs.failOnViolation>
@@ -351,6 +354,28 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-to-slf4j</artifactId>
         <version>${version.org.apache.logging.log4j}</version>
+      </dependency>
+
+      <!-- XML Mapper for new marshallers -->
+      <dependency>
+        <groupId>org.treblereel.gwt.xml.mapper</groupId>
+        <artifactId>gwt-backend</artifactId>
+        <version>${version.mapper.xml}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.treblereel.gwt.xml.mapper</groupId>
+        <artifactId>jre-backend</artifactId>
+        <version>${version.mapper.xml}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.treblereel.gwt.xml.mapper</groupId>
+        <artifactId>api</artifactId>
+        <version>${version.mapper.xml}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.treblereel.gwt.xml.mapper</groupId>
+        <artifactId>processor</artifactId>
+        <version>${version.mapper.xml}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
