@@ -25,7 +25,13 @@ import elemental2.dom.DomGlobal;
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationship;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnDiagram;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnPlane;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.BPSimData;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.Scenario;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.diagram.Metadata;
@@ -51,13 +57,30 @@ public class BPMNClientMarshalling {
         Process process = new Process();
         diagram.getGraph().nodes().forEach(o -> DomGlobal.console.info(o));
         for (final Object node : diagram.getGraph().nodes()) {
-            DomGlobal.console.info("Class is: " + node.getClass());
-            DomGlobal.console.info(node);
             ViewImpl view = (ViewImpl) ((NodeImpl) node).getContent();
             DomGlobal.console.info(view.getBounds());
             process = (Process)(view).getDefinition();
         }
         definitions.setProcess(process);
+
+        BpmnDiagram bpmnDiagram = new BpmnDiagram();
+        BpmnPlane plane = new BpmnPlane();
+        plane.setBpmnElement(process.getName());
+        bpmnDiagram.setBpmnPlane(plane);
+        definitions.setBpmnDiagram(bpmnDiagram);
+
+        Relationship relationship = new Relationship();
+        relationship.setTarget("BPSimData");
+        ExtensionElements extensionElements = new ExtensionElements();
+        BPSimData simData = new BPSimData();
+        Scenario scenario = new Scenario();
+        scenario.setScenarioParameters("");
+        simData.setScenario(scenario);
+        extensionElements.setBpSimData(simData);
+        relationship.setExtensionElements(extensionElements);
+        relationship.setTarget(definitions.getId());
+        relationship.setSource(definitions.getId());
+        definitions.setRelationship(relationship);
 
         try {
             return mapper.write(definitions);

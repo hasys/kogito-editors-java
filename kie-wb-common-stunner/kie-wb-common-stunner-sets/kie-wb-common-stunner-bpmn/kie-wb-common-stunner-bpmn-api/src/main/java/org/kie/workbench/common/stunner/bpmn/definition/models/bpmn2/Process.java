@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -96,6 +97,7 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
             type = TextAreaFieldType.class,
             afterElement = "name"
     )
+    @XmlCData
     private String documentation;
 
     @Property
@@ -115,7 +117,7 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     @NotNull
     @NotEmpty
     @FormField(afterElement = "id")
-    @XmlAttribute(name = "package", namespace = "http://www.jboss.org/drools")
+    @XmlAttribute(namespace = "http://www.jboss.org/drools")
     private String packageName;
 
     @Property
@@ -159,6 +161,7 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     @Value
     @FieldValue
     @FormField(afterElement = ADHOC)
+    @XmlTransient
     private String processInstanceDescription;
 
     @Property

@@ -18,14 +18,21 @@ package org.kie.workbench.common.stunner.bpmn.definition.models.bpsim;
 import java.util.List;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 public class Scenario {
 
+    @XmlAttribute
+    private String id = "default";
+
+    @XmlAttribute
+    private String name = "Simulationscenario";
+
     @XmlElement(name = "ScenarioParameters")
-    private String scenarioParameters;
+    private String scenarioParameters = "";
 
     @XmlElement(name = "ElementParameters")
     @XmlUnwrappedCollection
@@ -33,6 +40,22 @@ public class Scenario {
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getScenarioParameters() {
         return scenarioParameters;
@@ -42,11 +65,11 @@ public class Scenario {
         this.scenarioParameters = scenarioParameters;
     }
 
-    public List<ElementParameters> getElementParameters() {
+    public List<org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.ElementParameters> getElementParameters() {
         return ElementParameters;
     }
 
-    public void setElementParameters(List<ElementParameters> elementParameters) {
+    public void setElementParameters(List<org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.ElementParameters> elementParameters) {
         ElementParameters = elementParameters;
     }
 
@@ -59,11 +82,17 @@ public class Scenario {
             return false;
         }
         Scenario scenario = (Scenario) o;
-        return Objects.equals(getScenarioParameters(), scenario.getScenarioParameters()) && Objects.equals(getElementParameters(), scenario.getElementParameters());
+        return Objects.equals(getId(), scenario.getId())
+                && Objects.equals(getName(), scenario.getName())
+                && Objects.equals(getScenarioParameters(), scenario.getScenarioParameters())
+                && Objects.equals(getElementParameters(), scenario.getElementParameters());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getScenarioParameters(), getElementParameters());
+        return Objects.hash(getId(),
+                            getName(),
+                            getScenarioParameters(),
+                            getElementParameters());
     }
 }
