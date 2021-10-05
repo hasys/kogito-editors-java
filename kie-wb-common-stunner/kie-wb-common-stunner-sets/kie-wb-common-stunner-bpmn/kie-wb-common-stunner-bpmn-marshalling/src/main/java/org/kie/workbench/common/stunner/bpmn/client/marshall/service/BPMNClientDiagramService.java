@@ -166,10 +166,11 @@ public class BPMNClientDiagramService extends AbstractKogitoClientDiagramService
     @SuppressWarnings("unchecked")
     private Diagram parse(final String fileName, final String raw) {
         final Metadata metadata = createMetadata();
-        final Definitions definitions = marshalling.unmarshall(raw);
         final String title = createDiagramTitleFromFilePath(fileName);
         final String defSetId = BPMNClientMarshalling.getDefinitionSetId();
         metadata.setTitle(title);
+
+        final Definitions definitions = marshalling.unmarshall(raw);
         final Diagram diagram = factoryManager.newDiagram(title,
                                                           defSetId,
                                                           metadata);

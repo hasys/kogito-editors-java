@@ -21,8 +21,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.xml.stream.XMLStreamException;
 
-import elemental2.dom.DomGlobal;
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
@@ -34,8 +34,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.BPSimData;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.Scenario;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
-import org.kie.workbench.common.stunner.core.diagram.Metadata;
-import org.kie.workbench.common.stunner.core.graph.Graph;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewImpl;
 import org.kie.workbench.common.stunner.core.graph.impl.NodeImpl;
 
@@ -52,14 +50,21 @@ public class BPMNClientMarshalling {
     }
 
     @SuppressWarnings("unchecked")
-    public String marshall(final Diagram<Graph, Metadata> diagram) {
+    public String marshall(final Diagram diagram) {
+        Definitions definitions = createDefinitions(diagram.getGraph().nodes());
+
+        try {
+            return mapper.write(definitions);
+        } catch (XMLStreamException e) {
+            return "";
+        }
+    }
+
+    Definitions createDefinitions(Iterable<NodeImpl<ViewImpl<BPMNViewDefinition>>> nodes) {
         Definitions definitions = new Definitions();
         Process process = new Process();
-        diagram.getGraph().nodes().forEach(o -> DomGlobal.console.info(o));
-        for (final Object node : diagram.getGraph().nodes()) {
-            ViewImpl view = (ViewImpl) ((NodeImpl) node).getContent();
-            DomGlobal.console.info(view.getBounds());
-            process = (Process)(view).getDefinition();
+        for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
+            process = (Process) node.getContent().getDefinition();
         }
         definitions.setProcess(process);
 
@@ -82,11 +87,7 @@ public class BPMNClientMarshalling {
         relationship.setSource(definitions.getId());
         definitions.setRelationship(relationship);
 
-        try {
-            return mapper.write(definitions);
-        } catch (XMLStreamException e) {
-            return "";
-        }
+        return definitions;
     }
 
     @SuppressWarnings("unchecked")

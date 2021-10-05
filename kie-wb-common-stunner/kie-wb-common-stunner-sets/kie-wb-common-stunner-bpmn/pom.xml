@@ -33,6 +33,7 @@
   <modules>
     <module>kie-wb-common-stunner-bpmn-api</module>
     <module>kie-wb-common-stunner-bpmn-marshalling</module>
+    <module>kie-wb-common-stunner-bpmn-marshalling-tests</module>
     <module>kie-wb-common-stunner-bpmn-client</module>
     <module>kie-wb-common-stunner-bpmn-kogito-runtime</module>
   </modules>
