@@ -29,10 +29,8 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Radius;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.gateway.GatewayExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -61,21 +59,24 @@ public class ExclusiveGateway extends BaseGateway {
     private GatewayExecutionSet executionSet;
 
     public ExclusiveGateway() {
-        this(new BPMNGeneralSet(""),
+        this("",
+             "",
              new BackgroundSet(),
              new FontSet(),
-             new CircleDimensionSet(new Radius()),
+             new CircleDimensionSet(),
              new AdvancedData(),
              new GatewayExecutionSet());
     }
 
-    public ExclusiveGateway(final @MapsTo("general") BPMNGeneralSet general,
+    public ExclusiveGateway(final @MapsTo("name") String name,
+                            final @MapsTo("documentation") String documentation,
                             final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                             final @MapsTo("fontSet") FontSet fontSet,
                             final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
                             final @MapsTo("advancedData") AdvancedData advancedData,
                             final @MapsTo("executionSet") GatewayExecutionSet executionSet) {
-        super(general,
+        super(name,
+              documentation,
               backgroundSet,
               fontSet,
               dimensionsSet,

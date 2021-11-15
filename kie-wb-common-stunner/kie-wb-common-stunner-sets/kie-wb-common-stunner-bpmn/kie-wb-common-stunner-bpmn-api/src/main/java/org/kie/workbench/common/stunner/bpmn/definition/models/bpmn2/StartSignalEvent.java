@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import javax.validation.Valid;
 
@@ -25,14 +25,8 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Radius;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.error.InterruptingErrorEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationAttributeSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.InterruptingSignalEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -45,58 +39,49 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseStartEvent.class)
+@Morph(base = StartEvent.class)
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class StartErrorEvent extends BaseStartEvent {
+public class StartSignalEvent extends StartEvent {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
-    protected InterruptingErrorEventExecutionSet executionSet;
+    protected InterruptingSignalEventExecutionSet executionSet;
 
     @Property
     @FormField(afterElement = "executionSet")
     @Valid
     protected DataIOSet dataIOSet;
 
-    public StartErrorEvent() {
-        this(new BPMNGeneralSet(""),
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(new Radius()),
-             new SimulationAttributeSet(),
+    public StartSignalEvent() {
+        this("",
+             "",
              new AdvancedData(),
              new DataIOSet(),
-             new InterruptingErrorEventExecutionSet());
+             new InterruptingSignalEventExecutionSet());
     }
 
-    public StartErrorEvent(final @MapsTo("general") BPMNGeneralSet general,
-                           final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                           final @MapsTo("fontSet") FontSet fontSet,
-                           final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
-                           final @MapsTo("simulationSet") SimulationAttributeSet simulationSet,
-                           final @MapsTo("advancedData") AdvancedData advancedData,
-                           final @MapsTo("dataIOSet") DataIOSet dataIOSet,
-                           final @MapsTo("executionSet") InterruptingErrorEventExecutionSet executionSet) {
-        super(general,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
-              simulationSet,
+    public StartSignalEvent(final @MapsTo("name") String name,
+                            final @MapsTo("documentation") String documentation,
+                            final @MapsTo("advancedData") AdvancedData advancedData,
+                            final @MapsTo("dataIOSet") DataIOSet dataIOSet,
+                            final @MapsTo("executionSet") InterruptingSignalEventExecutionSet executionSet) {
+        super(name,
+              documentation,
               advancedData);
         this.dataIOSet = dataIOSet;
         this.executionSet = executionSet;
     }
 
-    public InterruptingErrorEventExecutionSet getExecutionSet() {
+    public InterruptingSignalEventExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(final InterruptingErrorEventExecutionSet executionSet) {
+    public void setExecutionSet(final InterruptingSignalEventExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 
@@ -127,8 +112,8 @@ public class StartErrorEvent extends BaseStartEvent {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof StartErrorEvent) {
-            StartErrorEvent other = (StartErrorEvent) o;
+        if (o instanceof StartSignalEvent) {
+            StartSignalEvent other = (StartSignalEvent) o;
             return super.equals(other) &&
                     dataIOSet.equals(other.dataIOSet) &&
                     executionSet.equals(other.executionSet);

@@ -16,36 +16,36 @@
 
 package org.kie.workbench.common.stunner.bpmn.client.shape.view.handler;
 
-import org.kie.workbench.common.stunner.bpmn.definition.BaseStartEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartConditionalEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartEscalationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartMessageEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartTimerEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartConditionalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartTimerEvent;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeViewHandler;
 import org.kie.workbench.common.stunner.svg.client.shape.view.SVGShapeView;
 import org.kie.workbench.common.stunner.svg.client.shape.view.SVGViewUtils;
 
 public class EventInterruptingViewHandler
-        implements ShapeViewHandler<BaseStartEvent, SVGShapeView<?>> {
+        implements ShapeViewHandler<StartEvent, SVGShapeView<?>> {
 
     // The id for the circle to change in the SVG file.
     static final String ID_START = "start";
 
     @Override
-    public void handle(final BaseStartEvent bean,
+    public void handle(final StartEvent bean,
                        final SVGShapeView<?> view) {
         Boolean isInterrupting = null;
         if (bean instanceof StartMessageEvent) {
-            isInterrupting = ((StartMessageEvent) bean).getExecutionSet().getIsInterrupting().getValue();
+            isInterrupting = ((StartMessageEvent) bean).getExecutionSet().getIsInterrupting();
         } else if (bean instanceof StartTimerEvent) {
-            isInterrupting = ((StartTimerEvent) bean).getExecutionSet().getIsInterrupting().getValue();
+            isInterrupting = ((StartTimerEvent) bean).getExecutionSet().getIsInterrupting();
         } else if (bean instanceof StartSignalEvent) {
-            isInterrupting = ((StartSignalEvent) bean).getExecutionSet().getIsInterrupting().getValue();
+            isInterrupting = ((StartSignalEvent) bean).getExecutionSet().getIsInterrupting();
         } else if (bean instanceof StartConditionalEvent) {
-            isInterrupting = ((StartConditionalEvent) bean).getExecutionSet().getIsInterrupting().getValue();
+            isInterrupting = ((StartConditionalEvent) bean).getExecutionSet().getIsInterrupting();
         } else if (bean instanceof StartEscalationEvent) {
-            isInterrupting = ((StartEscalationEvent) bean).getExecutionSet().getIsInterrupting().getValue();
+            isInterrupting = ((StartEscalationEvent) bean).getExecutionSet().getIsInterrupting();
         }
         if (null != isInterrupting) {
             // Interrupting -> Normal

@@ -17,13 +17,9 @@
 package org.kie.workbench.common.stunner.bpmn.definition;
 
 import org.junit.Test;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class TextAnnotationTest {
@@ -39,29 +35,17 @@ public class TextAnnotationTest {
     }
 
     @Test
-    public void getGeneral() {
-        assertNotNull(tested.getGeneral());
-    }
-
-    @Test
-    public void setGeneral() {
-        BPMNGeneralSet general = new BPMNGeneralSet();
-        tested.setGeneral(general);
-        assertEquals(general, tested.getGeneral());
-    }
-
-    @Test
     public void setName() {
-        Name name = new Name(this.getClass().getSimpleName());
-        tested.getGeneral().setName(name);
-        assertEquals(name, tested.getGeneral().getName());
+        String name = this.getClass().getSimpleName();
+        tested.setName(name);
+        assertEquals(name, tested.getName());
     }
 
     @Test
     public void setDocumentation() {
-        Documentation documentation = new Documentation(this.getClass().getSimpleName());
-        tested.getGeneral().setDocumentation(documentation);
-        assertEquals(documentation, tested.getGeneral().getDocumentation());
+        String documentation = this.getClass().getSimpleName();
+        tested.setDocumentation(documentation);
+        assertEquals(documentation, tested.getDocumentation());
     }
 
     @Test

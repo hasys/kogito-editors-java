@@ -51,10 +51,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.IntermediateMessageEvent
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateSignalEventCatching;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateSignalEventThrowing;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.StartErrorEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartEscalationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartMessageEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartErrorEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseFileVariables;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManagementSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.AssignmentsInfo;
@@ -127,12 +127,12 @@ public class VariableUtils {
         addVariableUsages(result, variableName,
                           subprocess.getExecutionSet().getMultipleInstanceCollectionInput().getValue(), subprocess.getExecutionSet().getMultipleInstanceDataInput().getValue(),
                           subprocess.getExecutionSet().getMultipleInstanceCollectionOutput().getValue(), subprocess.getExecutionSet().getMultipleInstanceDataOutput().getValue(),
-                          getDisplayName(subprocess), node);
+                          subprocess.getName(), node);
         return result;
     }
 
     private static Collection<VariableUsage> findVariableUsages(String variableName, BaseUserTask userTask, Node<View<BPMNDefinition>, Edge> node) {
-        final String displayName = getDisplayName(userTask);
+        final String displayName = userTask.getName();
         final Collection<VariableUsage> result = findVariableUsages(variableName, userTask.getExecutionSet().getAssignmentsinfo(), displayName, node);
         addVariableUsages(result, variableName,
                           userTask.getExecutionSet().getMultipleInstanceCollectionInput().getValue(), userTask.getExecutionSet().getMultipleInstanceDataInput().getValue(),
@@ -142,7 +142,7 @@ public class VariableUtils {
     }
 
     private static Collection<VariableUsage> findVariableUsages(String variableName, BaseReusableSubprocess subprocess, Node<View<BPMNDefinition>, Edge> node) {
-        final String displayName = getDisplayName(subprocess);
+        final String displayName = subprocess.getName();
         final Collection<VariableUsage> result = findVariableUsages(variableName, subprocess.getDataIOSet().getAssignmentsinfo(), displayName, node);
         addVariableUsages(result, variableName,
                           subprocess.getExecutionSet().getMultipleInstanceCollectionInput().getValue(), subprocess.getExecutionSet().getMultipleInstanceDataInput().getValue(),
@@ -175,7 +175,7 @@ public class VariableUtils {
     }
 
     private static String getDisplayName(BPMNDefinition definition) {
-        return definition.getGeneral() != null && definition.getGeneral().getName() != null ? definition.getGeneral().getName().getValue() : null;
+        return definition.getName();
     }
 
     private static Map<String, VariableUsage> decodeVariableUsages(String encodedAssignments, Node node, String displayName) {

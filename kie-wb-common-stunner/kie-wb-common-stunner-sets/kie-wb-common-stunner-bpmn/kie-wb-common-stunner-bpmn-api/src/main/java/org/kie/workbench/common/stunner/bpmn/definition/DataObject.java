@@ -16,6 +16,7 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -32,7 +33,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataO
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
@@ -59,12 +59,13 @@ public class DataObject extends BaseArtifacts {
             .add("lane_child")
             .build();
 
-    protected BPMNGeneralSet general;
+    protected String name;
+    protected String documentation;
 
     @Property
     @Valid
     @FormField
-    private Name name;
+    private Name dataObjectName;
 
     @Property
     @FormField
@@ -73,46 +74,59 @@ public class DataObject extends BaseArtifacts {
     public DataObject() {
         this(new Name("DataObject"),
              new DataObjectType(),
-             new BPMNGeneralSet(),
+             "",
+             "",
              new BackgroundSet(),
              new FontSet(),
              new RectangleDimensionsSet(),
              new AdvancedData());
     }
 
-    public DataObject(final @MapsTo("name") Name name,
+    public DataObject(final @MapsTo("dataObjectName") Name dataObjectName,
                       final @MapsTo("type") DataObjectType type,
-                      final @MapsTo("general") BPMNGeneralSet general,
+                      final @MapsTo("name") String name,
+                      final @MapsTo("documentation") String documentation,
                       final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                       final @MapsTo("fontSet") FontSet fontSet,
                       final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                       final @MapsTo("advancedData") AdvancedData advancedData) {
 
         super(backgroundSet, fontSet, dimensionsSet, advancedData);
-        this.name = name;
-        this.name.setValue(this.name.getValue());
+        this.dataObjectName = dataObjectName;
+        this.dataObjectName.setValue(this.dataObjectName.getValue());
         this.type = type;
-        this.general = general;
+        this.name = name;
+        this.documentation = documentation;
     }
 
     public Set<String> getLabels() {
         return labels;
     }
 
-    public BPMNGeneralSet getGeneral() {
-        return general;
+    public Name getDataObjectName() {
+        return dataObjectName;
     }
 
-    public void setGeneral(final BPMNGeneralSet general) {
-        this.general = general;
+    public void setDataObjectName(Name dataObjectName) {
+        this.dataObjectName = dataObjectName;
     }
 
-    public Name getName() {
+    @Override
+    public String getName() {
         return name;
     }
 
-    public void setName(Name name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
     }
 
     public DataObjectType getType() {
@@ -126,9 +140,9 @@ public class DataObject extends BaseArtifacts {
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
-                                         name.hashCode(),
-                                         type.hashCode(),
-                                         general.hashCode());
+                                         Objects.hashCode(dataObjectName),
+                                         Objects.hashCode(type),
+                                         Objects.hashCode(name));
     }
 
     @Override
@@ -136,9 +150,10 @@ public class DataObject extends BaseArtifacts {
         if (o instanceof DataObject) {
             DataObject other = (DataObject) o;
             return super.equals(other) &&
-                    name.equals(other.name) &&
-                    type.equals(other.type) &&
-                    general.equals(other.general);
+                    Objects.equals(dataObjectName, other.dataObjectName) &&
+                    Objects.equals(type, other.type) &&
+                    Objects.equals(name, other.name) &&
+                    Objects.equals(documentation, other.documentation);
         }
         return false;
     }

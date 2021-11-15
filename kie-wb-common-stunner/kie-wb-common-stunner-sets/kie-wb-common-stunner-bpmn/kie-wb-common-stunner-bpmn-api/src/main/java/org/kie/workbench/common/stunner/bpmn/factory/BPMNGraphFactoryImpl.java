@@ -23,8 +23,8 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
-import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
 import org.kie.workbench.common.stunner.core.api.FactoryManager;
 import org.kie.workbench.common.stunner.core.command.Command;
@@ -131,7 +131,7 @@ public class BPMNGraphFactoryImpl
     }
 
     @SuppressWarnings("unchecked")
-    // Add a BPMN diagram and a start event nodes by default.
+    // Add a BPMN diagram node by default.
     protected List<Command> buildInitialisationCommands() {
         final List<Command> commands = new ArrayList<>();
         final Node<Definition<BPMNDiagram>, Edge> diagramNode =

@@ -22,10 +22,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 public class NormalDistribution {
 
     @XmlAttribute
-    private int mean;
+    private int mean = 0;
 
     @XmlAttribute
-    private int standardDeviation;
+    private int standardDeviation = 0;
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.

@@ -24,7 +24,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Circ
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.ScopedSignalEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.SignalRef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 
 import static org.junit.Assert.assertEquals;
@@ -34,7 +33,6 @@ import static org.mockito.Mockito.mock;
 
 public class IntermediateSignalEventThrowingTest {
 
-    private BPMNGeneralSet general;
     private BackgroundSet backgroundSet;
     private FontSet fontSet;
     private CircleDimensionSet dimensionSet;
@@ -46,14 +44,14 @@ public class IntermediateSignalEventThrowingTest {
 
     @Before
     public void setUp() {
-        general = mock(BPMNGeneralSet.class);
         backgroundSet = mock(BackgroundSet.class);
         fontSet = mock(FontSet.class);
         dimensionSet = mock(CircleDimensionSet.class);
         dataIOSet = mock(DataIOSet.class);
         scopedSignalEventExecutionSet = mock(ScopedSignalEventExecutionSet.class);
 
-        tested = new IntermediateSignalEventThrowing(general,
+        tested = new IntermediateSignalEventThrowing("",
+                                                     "",
                                                      backgroundSet,
                                                      fontSet,
                                                      dimensionSet,
@@ -77,7 +75,8 @@ public class IntermediateSignalEventThrowingTest {
     @Test
     public void testHashCode() {
         IntermediateSignalEventThrowing compare =
-                new IntermediateSignalEventThrowing(general,
+                new IntermediateSignalEventThrowing("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,
@@ -90,7 +89,8 @@ public class IntermediateSignalEventThrowingTest {
     @Test
     public void testEquals() {
         IntermediateSignalEventCatching compare1 = new IntermediateSignalEventCatching();
-        IntermediateSignalEventThrowing compare2 = new IntermediateSignalEventThrowing(general,
+        IntermediateSignalEventThrowing compare2 = new IntermediateSignalEventThrowing("",
+                                                                                       "",
                                                                                        backgroundSet,
                                                                                        fontSet,
                                                                                        dimensionSet,
@@ -100,7 +100,8 @@ public class IntermediateSignalEventThrowingTest {
         ScopedSignalEventExecutionSet executionSet = new ScopedSignalEventExecutionSet();
         executionSet.setSignalRef(new SignalRef("SignalRef"));
         IntermediateSignalEventThrowing compare3 =
-                new IntermediateSignalEventThrowing(general,
+                new IntermediateSignalEventThrowing("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,
@@ -108,7 +109,8 @@ public class IntermediateSignalEventThrowingTest {
                                                     advancedData,
                                                     executionSet);
         IntermediateSignalEventThrowing compare4 =
-                new IntermediateSignalEventThrowing(general,
+                new IntermediateSignalEventThrowing("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,

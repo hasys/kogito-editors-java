@@ -19,6 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.definition.property.event;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlElement;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -27,7 +28,6 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.checkBox.type.CheckBoxFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
@@ -39,37 +39,37 @@ public class BaseStartEventExecutionSet implements BPMNPropertySet {
     @Property
     @FormField(type = CheckBoxFieldType.class)
     @Valid
-    private IsInterrupting isInterrupting;
+    private Boolean isInterrupting;
 
     @Property
     @FormField(afterElement = "isInterrupting")
     @Valid
-    private SLADueDate slaDueDate;
+    @XmlElement(name = "metaData")
+    private String slaDueDate;
 
     public BaseStartEventExecutionSet() {
-        this(new IsInterrupting(),
-             new SLADueDate());
+        this(true, "");
     }
 
-    public BaseStartEventExecutionSet(final @MapsTo("isInterrupting") IsInterrupting isInterrupting,
-                                      final @MapsTo("slaDueDate") SLADueDate slaDueDate) {
+    public BaseStartEventExecutionSet(final @MapsTo("isInterrupting") Boolean isInterrupting,
+                                      final @MapsTo("slaDueDate") String slaDueDate) {
         this.isInterrupting = isInterrupting;
         this.slaDueDate = slaDueDate;
     }
 
-    public IsInterrupting getIsInterrupting() {
+    public Boolean getIsInterrupting() {
         return isInterrupting;
     }
 
-    public void setIsInterrupting(IsInterrupting isInterrupting) {
+    public void setIsInterrupting(Boolean isInterrupting) {
         this.isInterrupting = isInterrupting;
     }
 
-    public SLADueDate getSlaDueDate() {
+    public String getSlaDueDate() {
         return slaDueDate;
     }
 
-    public void setSlaDueDate(SLADueDate slaDueDate) {
+    public void setSlaDueDate(String slaDueDate) {
         this.slaDueDate = slaDueDate;
     }
 

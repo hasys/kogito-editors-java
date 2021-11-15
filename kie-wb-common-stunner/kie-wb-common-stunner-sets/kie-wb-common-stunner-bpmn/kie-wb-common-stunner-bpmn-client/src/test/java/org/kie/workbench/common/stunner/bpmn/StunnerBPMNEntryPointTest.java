@@ -25,10 +25,10 @@ import org.kie.workbench.common.stunner.bpmn.client.forms.filters.BPMNDiagramFil
 import org.kie.workbench.common.stunner.bpmn.client.forms.filters.CatchingIntermediateEventFilterProvider;
 import org.kie.workbench.common.stunner.bpmn.client.forms.filters.StartEventFilterProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseCatchingIntermediateEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.BaseStartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateTimerEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.forms.client.formFilters.FormFiltersProviderFactory;
 import org.kie.workbench.common.stunner.forms.client.formFilters.StunnerFormElementFilterProvider;
@@ -63,7 +63,7 @@ public class StunnerBPMNEntryPointTest {
     @Mock
     private StartEventFilterProvider startEventFilterProvider;
 
-    private BaseStartEvent startEventDef;
+    private StartEvent startEventDef;
 
     @Before
     public void setUp() throws Exception {

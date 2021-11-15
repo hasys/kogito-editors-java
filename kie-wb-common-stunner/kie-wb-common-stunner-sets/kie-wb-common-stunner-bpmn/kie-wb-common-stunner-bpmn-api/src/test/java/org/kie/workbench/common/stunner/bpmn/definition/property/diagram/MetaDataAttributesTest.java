@@ -18,8 +18,6 @@ package org.kie.workbench.common.stunner.bpmn.definition.property.diagram;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.stunner.bpmn.definition.property.type.MetaDataType;
-import org.kie.workbench.common.stunner.core.definition.property.PropertyType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,12 +32,6 @@ public class MetaDataAttributesTest {
     @Before
     public void setUp() throws Exception {
         tested = new MetaDataAttributes(METADATA);
-    }
-
-    @Test
-    public void testGetType() {
-        PropertyType type = new MetaDataType();
-        assertEquals(type, tested.getType());
     }
 
     @Test

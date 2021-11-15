@@ -36,6 +36,13 @@ public class BpmnShape {
     @XmlElement(name = "BPMNLabel")
     private BpmnLabel bpmnLabel;
 
+    public BpmnShape() {}
+
+    public BpmnShape(String id, String bpmnElement) {
+        this.id = id;
+        this.bpmnElement = bpmnElement;
+    }
+
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
 

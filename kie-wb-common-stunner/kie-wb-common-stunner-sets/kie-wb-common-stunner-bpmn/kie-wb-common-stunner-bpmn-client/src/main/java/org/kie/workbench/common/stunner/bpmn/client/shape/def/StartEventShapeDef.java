@@ -23,15 +23,15 @@ import org.kie.soup.commons.util.Maps;
 import org.kie.workbench.common.stunner.bpmn.client.resources.BPMNGlyphFactory;
 import org.kie.workbench.common.stunner.bpmn.client.resources.BPMNSVGViewFactory;
 import org.kie.workbench.common.stunner.bpmn.client.shape.view.handler.EventInterruptingViewHandler;
-import org.kie.workbench.common.stunner.bpmn.definition.BaseStartEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartCompensationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartConditionalEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartErrorEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartEscalationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartMessageEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartTimerEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartCompensationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartConditionalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartErrorEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartTimerEvent;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasTitle;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasTitle.HorizontalAlignment;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasTitle.ReferencePosition;
@@ -45,10 +45,10 @@ import org.kie.workbench.common.stunner.svg.client.shape.factory.SVGShapeViewRes
 import org.kie.workbench.common.stunner.svg.client.shape.view.SVGShapeView;
 
 public class StartEventShapeDef
-        implements BPMNSvgShapeDef<BaseStartEvent> {
+        implements BPMNSvgShapeDef<StartEvent> {
 
-    public static final SVGShapeViewResources<BaseStartEvent, BPMNSVGViewFactory> VIEW_RESOURCES =
-            new SVGShapeViewResources<BaseStartEvent, BPMNSVGViewFactory>()
+    public static final SVGShapeViewResources<StartEvent, BPMNSVGViewFactory> VIEW_RESOURCES =
+            new SVGShapeViewResources<StartEvent, BPMNSVGViewFactory>()
                     .put(StartNoneEvent.class,
                          BPMNSVGViewFactory::startNoneEvent)
                     .put(StartTimerEvent.class,
@@ -66,8 +66,8 @@ public class StartEventShapeDef
                     .put(StartCompensationEvent.class,
                          BPMNSVGViewFactory::startCompensationEvent);
 
-    public static final Map<Class<? extends BaseStartEvent>, Glyph> GLYPHS =
-            new Maps.Builder<Class<? extends BaseStartEvent>, Glyph>()
+    public static final Map<Class<? extends StartEvent>, Glyph> GLYPHS =
+            new Maps.Builder<Class<? extends StartEvent>, Glyph>()
                     .put(StartNoneEvent.class,
                          BPMNGlyphFactory.EVENT_START_NONE)
                     .put(StartTimerEvent.class,
@@ -86,7 +86,7 @@ public class StartEventShapeDef
                     .build();
 
     @Override
-    public FontHandler<BaseStartEvent, SVGShapeView> newFontHandler() {
+    public FontHandler<StartEvent, SVGShapeView> newFontHandler() {
         return newFontHandlerBuilder()
                 .verticalAlignment(bean -> VerticalAlignment.BOTTOM)
                 .horizontalAlignment(bean -> HorizontalAlignment.CENTER)
@@ -97,23 +97,22 @@ public class StartEventShapeDef
     }
 
     @Override
-    public SizeHandler<BaseStartEvent, SVGShapeView> newSizeHandler() {
+    public SizeHandler<StartEvent, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .radius(task -> task.getDimensionsSet().getRadius().getValue())
                 .build();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public BiConsumer<BaseStartEvent, SVGShapeView> viewHandler() {
-        return new CompositeShapeViewHandler<BaseStartEvent, SVGShapeView>()
+    public BiConsumer<StartEvent, SVGShapeView> viewHandler() {
+        return new CompositeShapeViewHandler<StartEvent, SVGShapeView>()
                 .register(newViewAttributesHandler())
                 .register(new EventInterruptingViewHandler())::handle;
     }
 
     @Override
     public SVGShapeView<?> newViewInstance(final BPMNSVGViewFactory factory,
-                                           final BaseStartEvent task) {
+                                           final StartEvent task) {
         return VIEW_RESOURCES
                 .getResource(factory,
                              task)
@@ -121,7 +120,7 @@ public class StartEventShapeDef
     }
 
     @Override
-    public Glyph getGlyph(final Class<? extends BaseStartEvent> type,
+    public Glyph getGlyph(final Class<? extends StartEvent> type,
                           final String defId) {
         return GLYPHS.get(type);
     }

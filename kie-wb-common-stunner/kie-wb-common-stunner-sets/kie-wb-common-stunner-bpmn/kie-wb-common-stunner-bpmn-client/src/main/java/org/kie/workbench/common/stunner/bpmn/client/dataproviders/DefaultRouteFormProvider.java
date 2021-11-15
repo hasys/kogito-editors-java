@@ -29,10 +29,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseCatchingIntermediateEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseEndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseGateway;
-import org.kie.workbench.common.stunner.bpmn.definition.BaseStartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseTask;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseThrowingIntermediateEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.client.canvas.controls.SelectionControl;
@@ -84,14 +84,14 @@ public class DefaultRouteFormProvider
                             BPMNDefinition bpmnDefinition = getEdgeTarget(outEdge);
                             if (bpmnDefinition != null) {
                                 targetNodeType = definitionManager.adapters().forDefinition().getTitle(bpmnDefinition);
-                                if (bpmnDefinition instanceof BaseStartEvent ||
+                                if (bpmnDefinition instanceof StartEvent ||
                                         bpmnDefinition instanceof BaseCatchingIntermediateEvent ||
                                         bpmnDefinition instanceof BaseThrowingIntermediateEvent ||
                                         bpmnDefinition instanceof BaseEndEvent ||
                                         bpmnDefinition instanceof BaseTask ||
                                         bpmnDefinition instanceof BaseGateway ||
                                         bpmnDefinition instanceof BaseSubprocess) {
-                                    targetName = bpmnDefinition.getGeneral().getName().getValue();
+                                    targetName = bpmnDefinition.getName();
                                 }
                             }
                             if (targetName != null && !targetName.isEmpty()) {

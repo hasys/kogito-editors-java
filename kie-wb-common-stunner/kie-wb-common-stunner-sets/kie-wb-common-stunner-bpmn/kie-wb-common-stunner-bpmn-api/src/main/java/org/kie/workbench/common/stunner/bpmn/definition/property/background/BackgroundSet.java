@@ -25,10 +25,12 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.slider.type.SliderFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 import org.kie.workbench.common.stunner.forms.model.ColorPickerFieldType;
 
@@ -45,7 +47,9 @@ public class BackgroundSet implements BPMNPropertySet {
             type = ColorPickerFieldType.class
     )
     @Valid
-    private BgColor bgColor;
+    @Value
+    @FieldValue
+    private String bgColor;
 
     @Property
     @FormField(
@@ -53,7 +57,9 @@ public class BackgroundSet implements BPMNPropertySet {
             afterElement = "bgColor"
     )
     @Valid
-    private BorderColor borderColor;
+    @Value
+    @FieldValue
+    private String borderColor;
 
     @Property
     @FormField(
@@ -66,51 +72,45 @@ public class BackgroundSet implements BPMNPropertySet {
             }
     )
     @Valid
-    private BorderSize borderSize;
+    @Value
+    @FieldValue
+    private Double borderSize;
 
     public BackgroundSet() {
-        this(new BgColor(),
-             new BorderColor(),
-             new BorderSize());
+        this(null,
+             null,
+             null);
     }
 
-    public BackgroundSet(final @MapsTo("bgColor") BgColor bgColor,
-                         final @MapsTo("borderColor") BorderColor borderColor,
-                         final @MapsTo("borderSize") BorderSize borderSize) {
+    public BackgroundSet(final @MapsTo("bgColor") String bgColor,
+                         final @MapsTo("borderColor") String borderColor,
+                         final @MapsTo("borderSize") Double borderSize) {
         this.bgColor = bgColor;
         this.borderColor = borderColor;
         this.borderSize = borderSize;
     }
 
-    public BackgroundSet(final String bgColor,
-                         final String borderColor,
-                         final Double borderSize) {
-        this.bgColor = new BgColor(bgColor);
-        this.borderColor = new BorderColor(borderColor);
-        this.borderSize = new BorderSize(borderSize);
-    }
-
-    public BgColor getBgColor() {
+    public String getBgColor() {
         return bgColor;
     }
 
-    public BorderColor getBorderColor() {
+    public String getBorderColor() {
         return borderColor;
     }
 
-    public BorderSize getBorderSize() {
+    public Double getBorderSize() {
         return borderSize;
     }
 
-    public void setBgColor(final BgColor bgColor) {
+    public void setBgColor(final String bgColor) {
         this.bgColor = bgColor;
     }
 
-    public void setBorderColor(final BorderColor borderColor) {
+    public void setBorderColor(final String borderColor) {
         this.borderColor = borderColor;
     }
 
-    public void setBorderSize(final BorderSize borderSize) {
+    public void setBorderSize(final Double borderSize) {
         this.borderSize = borderSize;
     }
 

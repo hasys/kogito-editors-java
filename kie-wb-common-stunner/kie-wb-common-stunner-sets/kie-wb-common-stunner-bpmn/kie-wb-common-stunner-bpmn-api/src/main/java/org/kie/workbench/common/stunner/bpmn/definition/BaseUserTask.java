@@ -21,7 +21,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.BaseUserTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -29,14 +28,15 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.variables.Advan
 
 public abstract class BaseUserTask<U extends BaseUserTaskExecutionSet> extends BaseTask implements DataIOModel {
 
-    public BaseUserTask(@MapsTo("general") TaskGeneralSet general,
+    public BaseUserTask(@MapsTo("name") String name,
+                        @MapsTo("documentation") String documentation,
                         @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                         @MapsTo("fontSet") FontSet fontSet,
                         @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                         @MapsTo("simulationSet") SimulationSet simulationSet,
                         @MapsTo("taskType") TaskType taskType,
                         @MapsTo("advancedData") AdvancedData advancedData) {
-        super(general, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType, advancedData);
+        super(name, documentation, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType, advancedData);
     }
 
     @Override

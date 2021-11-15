@@ -25,9 +25,10 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.MetaDataAttributes;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.stunner.bpmn.forms.model.MetaDataEditorFieldType;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @Portable
@@ -40,26 +41,24 @@ public class AdvancedData implements BaseAdvancedData {
             type = MetaDataEditorFieldType.class
     )
     @Valid
-    private MetaDataAttributes metaDataAttributes;
+    @Value
+    @FieldValue
+    private String metaDataAttributes;
 
     public AdvancedData() {
-        this(new MetaDataAttributes());
+        this("");
     }
 
-    public AdvancedData(final @MapsTo("metaDataAttributes") MetaDataAttributes metaDataAttributes) {
+    public AdvancedData(final @MapsTo("metaDataAttributes") String metaDataAttributes) {
         this.metaDataAttributes = metaDataAttributes;
     }
 
-    public AdvancedData(final String metaDataAttributes) {
-        this.metaDataAttributes = new MetaDataAttributes(metaDataAttributes);
-    }
-
     @Override
-    public MetaDataAttributes getMetaDataAttributes() {
+    public String getMetaDataAttributes() {
         return metaDataAttributes;
     }
 
-    public void setMetaDataAttributes(MetaDataAttributes metadataAttributes) {
+    public void setMetaDataAttributes(String metadataAttributes) {
         this.metaDataAttributes = metadataAttributes;
     }
 

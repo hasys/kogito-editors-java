@@ -24,6 +24,12 @@ public class TimeParameters {
     @XmlElement(name = "ProcessingTime")
     private ProcessingTime processingTime;
 
+    public TimeParameters(){}
+
+    public TimeParameters(ProcessingTime processingTime) {
+        this.processingTime = processingTime;
+    }
+
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -27,15 +27,7 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Radius;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.BaseStartEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
-import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationAttributeSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.event.conditional.InterruptingConditionalEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -48,51 +40,41 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseStartEvent.class)
+@Morph(base = StartEvent.class)
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class StartCompensationEvent extends BaseStartEvent {
+public class StartConditionalEvent extends StartEvent {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
-    protected BaseStartEventExecutionSet executionSet;
+    protected InterruptingConditionalEventExecutionSet executionSet;
 
-    public StartCompensationEvent() {
-        this(new BPMNGeneralSet(""),
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(new Radius()),
-             new SimulationAttributeSet(),
+    public StartConditionalEvent() {
+        this("",
+             "",
              new AdvancedData(),
-             new BaseStartEventExecutionSet(new IsInterrupting(false),
-                                            new SLADueDate()));
+             new InterruptingConditionalEventExecutionSet());
     }
 
-    public StartCompensationEvent(final @MapsTo("general") BPMNGeneralSet general,
-                                  final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                                  final @MapsTo("fontSet") FontSet fontSet,
-                                  final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
-                                  final @MapsTo("simulationSet") SimulationAttributeSet simulationSet,
-                                  final @MapsTo("advancedData") AdvancedData advancedData,
-                                  final @MapsTo("executionSet") BaseStartEventExecutionSet executionSet) {
-        super(general,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
-              simulationSet,
+    public StartConditionalEvent(final @MapsTo("name") String name,
+                                 final @MapsTo("documentation") String documentation,
+                                 final @MapsTo("advancedData") AdvancedData advancedData,
+                                 final @MapsTo("executionSet") InterruptingConditionalEventExecutionSet executionSet) {
+        super(name,
+              documentation,
               advancedData);
         this.executionSet = executionSet;
     }
 
-    public BaseStartEventExecutionSet getExecutionSet() {
+    public InterruptingConditionalEventExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(BaseStartEventExecutionSet executionSet) {
+    public void setExecutionSet(InterruptingConditionalEventExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 
@@ -104,11 +86,8 @@ public class StartCompensationEvent extends BaseStartEvent {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o instanceof StartCompensationEvent) {
-            StartCompensationEvent other = (StartCompensationEvent) o;
+        if (o instanceof StartConditionalEvent) {
+            StartConditionalEvent other = (StartConditionalEvent) o;
             return super.equals(other) &&
                     Objects.equals(executionSet, other.executionSet);
         }

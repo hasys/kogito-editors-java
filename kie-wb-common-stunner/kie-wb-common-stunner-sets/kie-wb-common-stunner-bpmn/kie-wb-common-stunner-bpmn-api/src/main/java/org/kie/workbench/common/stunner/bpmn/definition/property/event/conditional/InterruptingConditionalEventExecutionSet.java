@@ -29,8 +29,6 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.common.ConditionExpression;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.BaseStartEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptTypeValue;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
@@ -48,14 +46,14 @@ public class InterruptingConditionalEventExecutionSet extends BaseStartEventExec
     private ConditionExpression conditionExpression;
 
     public InterruptingConditionalEventExecutionSet() {
-        this(new IsInterrupting(),
-             new SLADueDate(),
+        this(true,
+             "",
              new ConditionExpression(new ScriptTypeValue("drools",
                                                          "")));
     }
 
-    public InterruptingConditionalEventExecutionSet(final @MapsTo("isInterrupting") IsInterrupting isInterrupting,
-                                                    final @MapsTo("slaDueDate") SLADueDate slaDueDate,
+    public InterruptingConditionalEventExecutionSet(final @MapsTo("isInterrupting") Boolean isInterrupting,
+                                                    final @MapsTo("slaDueDate") String slaDueDate,
                                                     final @MapsTo("conditionExpression") ConditionExpression conditionExpression) {
         super(isInterrupting, slaDueDate);
         this.conditionExpression = conditionExpression;

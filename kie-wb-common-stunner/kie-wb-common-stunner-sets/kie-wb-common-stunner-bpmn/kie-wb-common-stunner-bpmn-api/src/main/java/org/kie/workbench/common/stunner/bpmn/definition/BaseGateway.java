@@ -23,15 +23,17 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @MorphBase(defaultType = ParallelGateway.class)
@@ -40,10 +42,22 @@ public abstract class BaseGateway implements BPMNViewDefinition {
     @Category
     public static final transient String category = BPMNCategories.GATEWAYS;
 
-    @Property
-    @FormField
     @Valid
-    protected BPMNGeneralSet general;
+    @Property
+    @Value
+    @FieldValue
+    @FormField(type = TextAreaFieldType.class)
+    private String name;
+
+    @Property
+    @Valid
+    @Value
+    @FieldValue
+    @FormField(
+            type = TextAreaFieldType.class,
+            afterElement = "name"
+    )
+    private String documentation;
 
     @Property
     @Valid
@@ -69,13 +83,15 @@ public abstract class BaseGateway implements BPMNViewDefinition {
         initLabels();
     }
 
-    public BaseGateway(BPMNGeneralSet general,
+    public BaseGateway(String name,
+                       String documentation,
                        BackgroundSet backgroundSet,
                        FontSet fontSet,
                        CircleDimensionSet dimensionsSet,
                        AdvancedData advancedData) {
         this();
-        this.general = general;
+        this.name = name;
+        this.documentation = documentation;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
@@ -102,10 +118,6 @@ public abstract class BaseGateway implements BPMNViewDefinition {
         return labels;
     }
 
-    public BPMNGeneralSet getGeneral() {
-        return general;
-    }
-
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
@@ -114,8 +126,22 @@ public abstract class BaseGateway implements BPMNViewDefinition {
         return fontSet;
     }
 
-    public void setGeneral(final BPMNGeneralSet general) {
-        this.general = general;
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
     }
 
     public void setBackgroundSet(final BackgroundSet backgroundSet) {
@@ -145,7 +171,8 @@ public abstract class BaseGateway implements BPMNViewDefinition {
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         Objects.hashCode(general),
+                                         Objects.hashCode(name),
+                                         Objects.hashCode(documentation),
                                          Objects.hashCode(backgroundSet),
                                          Objects.hashCode(fontSet),
                                          Objects.hashCode(dimensionsSet),
@@ -160,7 +187,8 @@ public abstract class BaseGateway implements BPMNViewDefinition {
         }
         if (o instanceof BaseGateway) {
             BaseGateway other = (BaseGateway) o;
-            return Objects.equals(general, other.general) &&
+            return Objects.equals(name, other.name) &&
+                    Objects.equals(documentation, other.documentation) &&
                     Objects.equals(backgroundSet, other.backgroundSet) &&
                     Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(dimensionsSet, other.dimensionsSet) &&

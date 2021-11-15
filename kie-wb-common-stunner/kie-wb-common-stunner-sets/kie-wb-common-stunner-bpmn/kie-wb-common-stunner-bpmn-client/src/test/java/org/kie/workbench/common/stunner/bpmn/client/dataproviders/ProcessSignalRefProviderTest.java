@@ -25,9 +25,8 @@ import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.EndSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateSignalEventCatching;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateSignalEventThrowing;
-import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.CancelActivity;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.CancellingSignalEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.InterruptingSignalEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.ScopedSignalEventExecutionSet;
@@ -96,8 +95,8 @@ public class ProcessSignalRefProviderTest
 
     private Node mockStartSignalEventNode(String signalRefValue) {
         StartSignalEvent event = new StartSignalEvent();
-        event.setExecutionSet(new InterruptingSignalEventExecutionSet(new IsInterrupting(true),
-                                                                      new SLADueDate(),
+        event.setExecutionSet(new InterruptingSignalEventExecutionSet(true,
+                                                                      "",
                                                                       new SignalRef(signalRefValue)));
         return mockNode(event);
     }

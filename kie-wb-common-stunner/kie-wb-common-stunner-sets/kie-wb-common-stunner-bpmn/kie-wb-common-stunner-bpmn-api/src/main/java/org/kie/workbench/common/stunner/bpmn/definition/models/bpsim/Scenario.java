@@ -32,7 +32,7 @@ public class Scenario {
     private String name = "Simulationscenario";
 
     @XmlElement(name = "ScenarioParameters")
-    private String scenarioParameters = "";
+    private ScenarioParameters scenarioParameters = new ScenarioParameters();
 
     @XmlElement(name = "ElementParameters")
     @XmlUnwrappedCollection
@@ -57,11 +57,11 @@ public class Scenario {
         this.name = name;
     }
 
-    public String getScenarioParameters() {
+    public ScenarioParameters getScenarioParameters() {
         return scenarioParameters;
     }
 
-    public void setScenarioParameters(String scenarioParameters) {
+    public void setScenarioParameters(ScenarioParameters scenarioParameters) {
         this.scenarioParameters = scenarioParameters;
     }
 

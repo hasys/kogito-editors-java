@@ -33,11 +33,8 @@ import org.kie.workbench.common.stunner.bpmn.definition.EndNoneEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateCompensationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateConditionalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.Lane;
-import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.client.canvas.AbstractCanvasHandler;
 import org.kie.workbench.common.stunner.core.client.canvas.controls.SelectionControl;
@@ -90,9 +87,6 @@ public class ProcessCompensationRefProviderTest {
 
     @Mock
     private SelectionControl selectionControl;
-
-    @Mock
-    private Node node;
 
     @Mock
     private FormRenderingContext renderingContext;
@@ -363,33 +357,19 @@ public class ProcessCompensationRefProviderTest {
 
     private UserTask mockTask(String taskName) {
         UserTask userTask = mock(UserTask.class);
-        TaskGeneralSet generalSet = mock(TaskGeneralSet.class);
-        Name name = mock(Name.class);
-        when(userTask.getGeneral()).thenReturn(generalSet);
-        when(generalSet.getName()).thenReturn(name);
-        when(name.getValue()).thenReturn(taskName);
+        when(userTask.getName()).thenReturn(taskName);
         return userTask;
     }
 
     private BaseSubprocess mockSubProcess(String subProcessName) {
         EmbeddedSubprocess subProcess = mock(EmbeddedSubprocess.class);
-        BPMNGeneralSet generalSet = mockGeneralSet(subProcessName);
-        when(subProcess.getGeneral()).thenReturn(generalSet);
+        when(subProcess.getName()).thenReturn(subProcessName);
         return subProcess;
     }
 
     private Lane mockLane(String laneName) {
         Lane lane = mock(Lane.class);
-        BPMNGeneralSet generalSet = mockGeneralSet(laneName);
-        when(lane.getGeneral()).thenReturn(generalSet);
+        when(lane.getName()).thenReturn(laneName);
         return lane;
-    }
-
-    private BPMNGeneralSet mockGeneralSet(String name) {
-        BPMNGeneralSet generalSet = mock(BPMNGeneralSet.class);
-        Name nameProperty = mock(Name.class);
-        when(generalSet.getName()).thenReturn(nameProperty);
-        when(nameProperty.getValue()).thenReturn(name);
-        return generalSet;
     }
 }

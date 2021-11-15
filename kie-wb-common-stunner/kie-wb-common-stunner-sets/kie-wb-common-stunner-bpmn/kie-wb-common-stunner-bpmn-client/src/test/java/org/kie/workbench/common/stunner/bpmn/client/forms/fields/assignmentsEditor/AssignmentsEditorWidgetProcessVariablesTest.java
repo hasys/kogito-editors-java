@@ -34,7 +34,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectTypeValue;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
@@ -85,10 +84,6 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
     @Mock
     private UserTask userTask;
     @Mock
-    private TaskGeneralSet taskGeneralSet;
-    @Mock
-    private Name taskName;
-    @Mock
     private AbstractCanvasHandler canvasHandler;
     @Mock
     private Diagram diagram;
@@ -136,15 +131,11 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
     private View<DataObject> dataObjectView;
     @Mock
     private Node<View<DataObject>, ?> dataObjectNode;
-    @Mock
-    private Node dataObjectparentNode;
 
     @Before
     public void setup() {
         GwtMockito.initMocks(this);
-        when(userTask.getGeneral()).thenReturn(taskGeneralSet);
-        when(taskGeneralSet.getName()).thenReturn(taskName);
-        when(taskName.getValue()).thenReturn(TASK_NAME);
+        when(userTask.getName()).thenReturn(TASK_NAME);
         when(canvasSessionManager.getCurrentSession()).thenReturn(clientSession);
         when(clientSession.getCanvasHandler()).thenReturn(canvasHandler);
         when(canvasHandler.getDiagram()).thenReturn(diagram);
@@ -236,8 +227,8 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
         Node<View<DataObject>, ?> dataObjectNode;
 
         DataObject dataObject = new DataObject();
-        dataObject.getGeneral().getDocumentation().setValue("doc");
-        dataObject.setName(new Name("name"));
+        dataObject.setDocumentation("doc");
+        dataObject.setDataObjectName(new Name("name"));
         dataObject.setType(new DataObjectType(new DataObjectTypeValue("name")));
 
         dataObjectNode = new NodeImpl<>(UUID.uuid());
@@ -303,11 +294,10 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
     public void testGetProcessVariableFromDataObjects() {
 
         DataObject dataObject = new DataObject();
-        dataObject.getGeneral().getDocumentation().setValue("doc");
-        dataObject.setName(new Name("name"));
+        dataObject.setDocumentation("doc");
+        dataObject.setDataObjectName(new Name("name"));
         dataObject.setType(new DataObjectType(new DataObjectTypeValue("com.myType.dataObject")));
 
-        final String uuid = UUID.uuid();
         when(dataObjectNode.getUUID()).thenReturn("uuid");
         when(dataObjectNode.getContent()).thenReturn(dataObjectView);
         when(dataObjectView.getDefinition()).thenReturn(dataObject);
@@ -320,7 +310,7 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
         when(dataObjectNode.getUUID()).thenReturn("rootId");
 
         createWidget();
-        assertEquals(dataObject.getName().getValue() + ":" + dataObject.getType().getValue().getType(), widget.getProcessVariables());
+        assertEquals(dataObject.getDataObjectName().getValue() + ":" + dataObject.getType().getValue().getType(), widget.getProcessVariables());
     }
 
     private void testAddGraphNodes() {

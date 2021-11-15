@@ -30,7 +30,6 @@ import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.subProcess.execution.EventSubprocessExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
@@ -53,7 +52,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @CanContain(roles = {"all"})
 @CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
@@ -61,7 +60,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 public class EventSubprocess extends BaseSubprocess implements HasProcessData<ProcessData> {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
     private EventSubprocessExecutionSet executionSet;
 
@@ -71,7 +70,8 @@ public class EventSubprocess extends BaseSubprocess implements HasProcessData<Pr
     private ProcessData processData;
 
     public EventSubprocess() {
-        this(new BPMNGeneralSet("Event Sub-process"),
+        this("Event Sub-process",
+             "",
              new BackgroundSet(),
              new FontSet(),
              new RectangleDimensionsSet(),
@@ -81,7 +81,8 @@ public class EventSubprocess extends BaseSubprocess implements HasProcessData<Pr
              new AdvancedData());
     }
 
-    public EventSubprocess(final @MapsTo("general") BPMNGeneralSet general,
+    public EventSubprocess(final @MapsTo("name") String name,
+                           final @MapsTo("documentation") String documentation,
                            final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                            final @MapsTo("fontSet") FontSet fontSet,
                            final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
@@ -89,7 +90,8 @@ public class EventSubprocess extends BaseSubprocess implements HasProcessData<Pr
                            final @MapsTo("executionSet") EventSubprocessExecutionSet executionSet,
                            final @MapsTo("processData") ProcessData processData,
                            final @MapsTo("advancedData") AdvancedData advancedData) {
-        super(general,
+        super(name,
+              documentation,
               backgroundSet,
               fontSet,
               dimensionsSet,

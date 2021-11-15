@@ -39,13 +39,7 @@ public class BPMNShapeViewHandlers {
             extends FontHandler.Builder<W, V> {
 
         public FontHandlerBuilder() {
-            this.fontFamily(bean -> bean.getFontSet().getFontFamily().getValue())
-                    .fontColor(bean -> bean.getFontSet().getFontColor().getValue())
-                    .fontSize(bean -> bean.getFontSet().getFontSize().getValue())
-                    .strokeColor(bean -> bean.getFontSet().getFontBorderColor().getValue())
-                    .strokeSize(bean -> bean.getFontSet().getFontBorderSize().getValue())
-                    .strokeAlpha(bean -> getStrokeAlpha(bean.getFontSet().getFontBorderSize().getValue()))
-                    .verticalAlignment(bean -> VerticalAlignment.MIDDLE)
+            this.verticalAlignment(bean -> VerticalAlignment.MIDDLE)
                     .horizontalAlignment(bean -> HorizontalAlignment.CENTER)
                     .referencePosition(bean -> ReferencePosition.INSIDE)
                     .orientation(bean -> Orientation.HORIZONTAL)
@@ -65,9 +59,7 @@ public class BPMNShapeViewHandlers {
             extends ViewAttributesHandler.Builder<W, V> {
 
         public ViewAttributesHandlerBuilder() {
-            this.fillColor(bean -> bean.getBackgroundSet().getBgColor().getValue())
-                    .strokeColor(bean -> bean.getBackgroundSet().getBorderColor().getValue())
-                    .strokeWidth(bean -> bean.getBackgroundSet().getBorderSize().getValue());
+            this.build();
         }
     }
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
+
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -25,14 +27,9 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Radius;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.InterruptingSignalEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationAttributeSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.event.message.InterruptingMessageEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -45,58 +42,50 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseStartEvent.class)
+@Morph(base = StartEvent.class)
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class StartSignalEvent extends BaseStartEvent {
+public class StartMessageEvent extends StartEvent implements DataIOModel {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
-    protected InterruptingSignalEventExecutionSet executionSet;
+    protected InterruptingMessageEventExecutionSet executionSet;
 
     @Property
     @FormField(afterElement = "executionSet")
     @Valid
     protected DataIOSet dataIOSet;
 
-    public StartSignalEvent() {
-        this(new BPMNGeneralSet(""),
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(new Radius()),
-             new SimulationAttributeSet(),
+    public StartMessageEvent() {
+        this("",
+             "",
              new AdvancedData(),
              new DataIOSet(),
-             new InterruptingSignalEventExecutionSet());
+             new InterruptingMessageEventExecutionSet());
     }
 
-    public StartSignalEvent(final @MapsTo("general") BPMNGeneralSet general,
-                            final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                            final @MapsTo("fontSet") FontSet fontSet,
-                            final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
-                            final @MapsTo("simulationSet") SimulationAttributeSet simulationSet,
-                            final @MapsTo("advancedData") AdvancedData advancedData,
-                            final @MapsTo("dataIOSet") DataIOSet dataIOSet,
-                            final @MapsTo("executionSet") InterruptingSignalEventExecutionSet executionSet) {
-        super(general,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
-              simulationSet,
+    public StartMessageEvent(final @MapsTo("name") String name,
+                             final @MapsTo("documentation") String documentation,
+                             final @MapsTo("advancedData") AdvancedData advancedData,
+                             final @MapsTo("dataIOSet") DataIOSet dataIOSet,
+                             final @MapsTo("executionSet") InterruptingMessageEventExecutionSet executionSet) {
+
+        super(name,
+              documentation,
               advancedData);
         this.dataIOSet = dataIOSet;
         this.executionSet = executionSet;
     }
 
-    public InterruptingSignalEventExecutionSet getExecutionSet() {
+    public InterruptingMessageEventExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(final InterruptingSignalEventExecutionSet executionSet) {
+    public void setExecutionSet(final InterruptingMessageEventExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 
@@ -119,19 +108,27 @@ public class StartSignalEvent extends BaseStartEvent {
     }
 
     @Override
+    protected void initLabels() {
+        super.initLabels();
+        labels.add("messageflow_end");
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
+                                         executionSet.hashCode(),
                                          dataIOSet.hashCode(),
-                                         executionSet.hashCode());
+                                         labels.hashCode());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof StartSignalEvent) {
-            StartSignalEvent other = (StartSignalEvent) o;
+        if (o instanceof StartMessageEvent) {
+            StartMessageEvent other = (StartMessageEvent) o;
             return super.equals(other) &&
-                    dataIOSet.equals(other.dataIOSet) &&
-                    executionSet.equals(other.executionSet);
+                    Objects.equals(executionSet, other.executionSet) &&
+                    Objects.equals(dataIOSet, other.dataIOSet) &&
+                    Objects.equals(labels, other.labels);
         }
         return false;
     }

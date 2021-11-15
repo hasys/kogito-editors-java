@@ -27,8 +27,6 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.annotations.field.selector.SelectorDataProvider;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.BaseStartEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.bpmn.forms.model.ComboBoxFieldType;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
@@ -51,13 +49,13 @@ public class InterruptingErrorEventExecutionSet extends BaseStartEventExecutionS
     private ErrorRef errorRef;
 
     public InterruptingErrorEventExecutionSet() {
-        this(new IsInterrupting(),
-             new SLADueDate(),
+        this(true,
+             "",
              new ErrorRef());
     }
 
-    public InterruptingErrorEventExecutionSet(final @MapsTo("isInterrupting") IsInterrupting isInterrupting,
-                                              final @MapsTo("slaDueDate") SLADueDate slaDueDate,
+    public InterruptingErrorEventExecutionSet(final @MapsTo("isInterrupting") Boolean isInterrupting,
+                                              final @MapsTo("slaDueDate") String slaDueDate,
                                               final @MapsTo("errorRef") ErrorRef errorRef) {
         super(isInterrupting, slaDueDate);
         this.errorRef = errorRef;

@@ -30,7 +30,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOMo
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.ReusableSubprocessTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
@@ -49,7 +48,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Morph(base = BaseNonContainerSubprocess.class)
 @CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
@@ -58,7 +57,7 @@ public class ReusableSubprocess
 
     @Property
     @FormField(
-            afterElement = "general"
+            afterElement = "documentation"
     )
     @Valid
     protected ReusableSubprocessTaskExecutionSet executionSet;
@@ -71,7 +70,8 @@ public class ReusableSubprocess
     protected DataIOSet dataIOSet;
 
     public ReusableSubprocess() {
-        this(new BPMNGeneralSet("Sub-process"),
+        this("Sub-process",
+             "",
              new ReusableSubprocessTaskExecutionSet(),
              new DataIOSet(),
              new BackgroundSet(),
@@ -81,7 +81,8 @@ public class ReusableSubprocess
              new AdvancedData());
     }
 
-    public ReusableSubprocess(final @MapsTo("general") BPMNGeneralSet general,
+    public ReusableSubprocess(final @MapsTo("name") String name,
+                              final @MapsTo("documentation") String documentation,
                               final @MapsTo("executionSet") ReusableSubprocessTaskExecutionSet executionSet,
                               final @MapsTo("dataIOSet") DataIOSet dataIOSet,
                               final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
@@ -89,7 +90,8 @@ public class ReusableSubprocess
                               final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                               final @MapsTo("simulationSet") SimulationSet simulationSet,
                               final @MapsTo("advancedData") AdvancedData advancedData) {
-        super(general,
+        super(name,
+              documentation,
               backgroundSet,
               fontSet,
               dimensionsSet,

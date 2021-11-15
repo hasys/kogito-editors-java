@@ -23,9 +23,11 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.slider.type.SliderFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @Portable
@@ -43,21 +45,23 @@ public class CircleDimensionSet implements BPMNPropertySet {
                     @FieldParam(name = "precision", value = "0.0")
             }
     )
-    protected Radius radius;
+    @Value
+    @FieldValue
+    protected Double radius;
 
     public CircleDimensionSet() {
-        this(new Radius());
+        this(null);
     }
 
-    public CircleDimensionSet(final @MapsTo("radius") Radius radius) {
+    public CircleDimensionSet(final @MapsTo("radius") Double radius) {
         this.radius = radius;
     }
 
-    public Radius getRadius() {
+    public Double getRadius() {
         return radius;
     }
 
-    public void setRadius(final Radius radius) {
+    public void setRadius(final Double radius) {
         this.radius = radius;
     }
 

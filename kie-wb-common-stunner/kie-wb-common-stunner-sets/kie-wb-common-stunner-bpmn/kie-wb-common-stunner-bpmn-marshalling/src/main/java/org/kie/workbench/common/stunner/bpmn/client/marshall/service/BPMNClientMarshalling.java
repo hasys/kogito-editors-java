@@ -16,6 +16,9 @@
 
 package org.kie.workbench.common.stunner.bpmn.client.marshall.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -28,14 +31,20 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationship;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnPlane;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnShape;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.BPSimData;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.ElementParameters;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.Scenario;
+import org.kie.workbench.common.stunner.bpmn.definition.models.dc.Bounds;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewImpl;
 import org.kie.workbench.common.stunner.core.graph.impl.NodeImpl;
+
+import static java.util.stream.StreamSupport.stream;
 
 @ApplicationScoped
 public class BPMNClientMarshalling {
@@ -43,7 +52,8 @@ public class BPMNClientMarshalling {
     private static Definitions_XMLMapperImpl mapper = Definitions_XMLMapperImpl.INSTANCE;
 
     @Inject
-    public BPMNClientMarshalling() {}
+    public BPMNClientMarshalling() {
+    }
 
     @PostConstruct
     public void init() {
@@ -62,26 +72,53 @@ public class BPMNClientMarshalling {
 
     Definitions createDefinitions(Iterable<NodeImpl<ViewImpl<BPMNViewDefinition>>> nodes) {
         Definitions definitions = new Definitions();
-        Process process = new Process();
-        for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
-            process = (Process) node.getContent().getDefinition();
-        }
-        definitions.setProcess(process);
-
         BpmnDiagram bpmnDiagram = new BpmnDiagram();
         BpmnPlane plane = new BpmnPlane();
-        plane.setBpmnElement(process.getName());
+        List<ElementParameters> simulationElements = new ArrayList<>();
+
         bpmnDiagram.setBpmnPlane(plane);
         definitions.setBpmnDiagram(bpmnDiagram);
 
+        Process process = (Process) stream(nodes.spliterator(), false)
+                .map(node -> node.getContent().getDefinition())
+                .filter(node ->  node instanceof Process)
+                .findFirst().orElse(new Process());
+
+        definitions.setProcess(process);
+        plane.setBpmnElement(process.getName());
+
+        int startNodeCounter = 0;
+        for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
+            BPMNViewDefinition n = node.getContent().getDefinition();
+            if (n instanceof StartEvent) {
+                // Generating Start Event ID
+                String id = "StartEvent_" + ++startNodeCounter;
+                StartEvent startEvent = (StartEvent) n;
+                startEvent.setId(id);
+                process.getStartEvents().add(startEvent);
+
+
+                // Adding Shape to Diagram
+                plane.getBpmnShapes().add(
+                        createShapeForBounds(node.getContent().getBounds(), id)
+                );
+
+                // Adding simulation properties
+                simulationElements.add(startEvent.getElementParameters());
+            }
+        }
+
+        Scenario scenario = new Scenario();
+        scenario.setElementParameters(simulationElements);
+
+        BPSimData simData = new BPSimData();
+        simData.setScenario(scenario);
+
+        ExtensionElements extensionElements = new ExtensionElements();
+        extensionElements.setBpSimData(simData);
+
         Relationship relationship = new Relationship();
         relationship.setTarget("BPSimData");
-        ExtensionElements extensionElements = new ExtensionElements();
-        BPSimData simData = new BPSimData();
-        Scenario scenario = new Scenario();
-        scenario.setScenarioParameters("");
-        simData.setScenario(scenario);
-        extensionElements.setBpSimData(simData);
         relationship.setExtensionElements(extensionElements);
         relationship.setTarget(definitions.getId());
         relationship.setSource(definitions.getId());
@@ -90,7 +127,14 @@ public class BPMNClientMarshalling {
         return definitions;
     }
 
-    @SuppressWarnings("unchecked")
+    private BpmnShape createShapeForBounds(final org.kie.workbench.common.stunner.core.graph.content.Bounds bounds, final String id) {
+        BpmnShape shape = new BpmnShape("shape_" + id, id);
+        Bounds b = new Bounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+        shape.setBounds(b);
+
+        return shape;
+    }
+
     public Definitions unmarshall(final String raw) {
         try {
             return mapper.read(raw);

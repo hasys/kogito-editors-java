@@ -15,6 +15,8 @@
  */
 package org.kie.workbench.common.stunner.bpmn.definition.property.general;
 
+import java.util.Objects;
+
 import javax.validation.Valid;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
@@ -39,41 +41,41 @@ public class TaskGeneralSet implements BPMNPropertySet,
     @Valid
     @Property
     @FormField(type = TextAreaFieldType.class)
-    private Name name;
+    private String name;
 
     @Property
     @FormField(
             type = TextAreaFieldType.class,
             afterElement = "name"
     )
-    private Documentation documentation;
+    private String documentation;
 
     public TaskGeneralSet() {
-        this(new Name(""),
-             new Documentation());
+        this("",
+             "");
     }
 
-    public TaskGeneralSet(final @MapsTo("name") Name name,
-                          final @MapsTo("documentation") Documentation documentation) {
+    public TaskGeneralSet(final @MapsTo("name") String name,
+                          final @MapsTo("documentation") String documentation) {
         this.name = name;
         this.documentation = documentation;
     }
 
     @Override
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(final Name name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
     @Override
-    public Documentation getDocumentation() {
+    public String getDocumentation() {
         return documentation;
     }
 
-    public void setDocumentation(final Documentation documentation) {
+    public void setDocumentation(final String documentation) {
         this.documentation = documentation;
     }
 
@@ -87,8 +89,8 @@ public class TaskGeneralSet implements BPMNPropertySet,
     public boolean equals(Object o) {
         if (o instanceof TaskGeneralSet) {
             TaskGeneralSet other = (TaskGeneralSet) o;
-            return name.equals(other.name) &&
-                    documentation.equals(other.documentation);
+            return Objects.equals(name, other.name) &&
+                    Objects.equals(documentation, other.documentation);
         }
         return false;
     }

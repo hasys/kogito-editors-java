@@ -20,7 +20,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -28,16 +30,18 @@ import org.kie.soup.commons.util.Sets;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.rule.annotation.CanContain;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
@@ -49,7 +53,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Definition
 @CanContain(roles = {"lane_child"})
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
@@ -58,10 +62,24 @@ public class Lane implements BPMNViewDefinition {
     @Category
     public static final transient String category = BPMNCategories.CONTAINERS;
 
-    @Property
-    @FormField
     @Valid
-    protected BPMNGeneralSet general;
+    @Property
+    @Value
+    @FieldValue
+    @NotNull
+    @NotEmpty
+    @FormField(type = TextAreaFieldType.class)
+    private String name;
+
+    @Property
+    @Valid
+    @Value
+    @FieldValue
+    @FormField(
+            type = TextAreaFieldType.class,
+            afterElement = "name"
+    )
+    private String documentation;
 
     @Property
     @Valid
@@ -90,19 +108,22 @@ public class Lane implements BPMNViewDefinition {
             .build();
 
     public Lane() {
-        this(new BPMNGeneralSet("Lane"),
+        this("Lane",
+             "",
              new BackgroundSet(),
              new FontSet(),
              new RectangleDimensionsSet(),
              new AdvancedData());
     }
 
-    public Lane(final @MapsTo("general") BPMNGeneralSet general,
+    public Lane(final @MapsTo("name") String name,
+                final @MapsTo("documentation") String documentation,
                 final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 final @MapsTo("fontSet") FontSet fontSet,
                 final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                 final @MapsTo("advancedData") AdvancedData advancedData) {
-        this.general = general;
+        this.name = name;
+        this.documentation = documentation;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
@@ -117,10 +138,6 @@ public class Lane implements BPMNViewDefinition {
         return labels;
     }
 
-    public BPMNGeneralSet getGeneral() {
-        return general;
-    }
-
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
@@ -133,12 +150,26 @@ public class Lane implements BPMNViewDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setBackgroundSet(final BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public void setGeneral(final BPMNGeneralSet general) {
-        this.general = general;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
+    }
+
+    public void setBackgroundSet(final BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
     }
 
     public RectangleDimensionsSet getDimensionsSet() {
@@ -159,7 +190,8 @@ public class Lane implements BPMNViewDefinition {
 
     @Override
     public int hashCode() {
-        return HashUtil.combineHashCodes(general.hashCode(),
+        return HashUtil.combineHashCodes(name.hashCode(),
+                                         documentation.hashCode(),
                                          backgroundSet.hashCode(),
                                          fontSet.hashCode(),
                                          dimensionsSet.hashCode(),
@@ -170,7 +202,8 @@ public class Lane implements BPMNViewDefinition {
     public boolean equals(Object o) {
         if (o instanceof Lane) {
             Lane other = (Lane) o;
-            return Objects.equals(general, other.general) &&
+            return Objects.equals(name, other.name) &&
+                    Objects.equals(documentation, other.documentation) &&
                     Objects.equals(backgroundSet, other.backgroundSet) &&
                     Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(dimensionsSet, other.dimensionsSet) &&

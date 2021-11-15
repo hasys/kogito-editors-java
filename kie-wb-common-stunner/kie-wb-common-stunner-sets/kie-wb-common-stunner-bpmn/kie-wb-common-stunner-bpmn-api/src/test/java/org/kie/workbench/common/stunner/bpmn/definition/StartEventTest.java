@@ -19,25 +19,26 @@ package org.kie.workbench.common.stunner.bpmn.definition;
 import java.util.Set;
 
 import org.junit.Test;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.core.backend.definition.adapter.ReflectionAdapterUtils;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class BaseStartEventTest {
+public class StartEventTest {
 
     @Test
     public void testBaseStartEventCanBeContainedByALane() throws Exception {
 
-        final FakeBaseStartEvent baseStartEvent = new FakeBaseStartEvent();
+        final FakeStartEvent baseStartEvent = new FakeStartEvent();
         final Set<String> labels = ReflectionAdapterUtils.getAnnotatedFieldValue(baseStartEvent, Labels.class);
 
         assertNotNull(labels);
         assertTrue(labels.contains("lane_child"));
     }
 
-    private class FakeBaseStartEvent extends BaseStartEvent {
+    private class FakeStartEvent extends StartEvent {
 
     }
 }

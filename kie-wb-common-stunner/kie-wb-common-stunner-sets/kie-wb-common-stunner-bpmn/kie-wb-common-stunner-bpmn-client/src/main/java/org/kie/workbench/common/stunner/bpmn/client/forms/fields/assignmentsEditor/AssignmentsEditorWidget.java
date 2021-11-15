@@ -250,7 +250,7 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
     }
 
     protected static String dataObjectToProcessVariableFormat(DataObject dataObject) {
-        return dataObject.getName().getValue().replace("\n", "") + ":" + dataObject.getType().getValue().getType();
+        return dataObject.getDataObjectName().getValue().replace("\n", "") + ":" + dataObject.getType().getValue().getType();
     }
 
     protected String getSelectedElementUUID(ClientSession clientSession) {
@@ -416,17 +416,14 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
         String taskName = "Task";
         if (bpmnModel instanceof BaseTask) {
             BaseTask task = (BaseTask) bpmnModel;
-            if (task.getGeneral() != null && task.getGeneral().getName() != null &&
-                    task.getGeneral().getName().getValue() != null && task.getGeneral().getName().getValue().length() > 0) {
-                taskName = task.getGeneral().getName().getValue();
+            if (StringUtils.nonEmpty(task.getName())) {
+                taskName = task.getName();
             }
         }
         return taskName;
     }
 
     protected String formatDataTypes(final List<String> dataTypes) {
-
-        Set<String> set = getSetDataTypes();
         StringBuilder sb = new StringBuilder();
         if (dataTypes != null && !dataTypes.isEmpty()) {
             List<String> formattedDataTypes = new ArrayList<>(dataTypes.size());

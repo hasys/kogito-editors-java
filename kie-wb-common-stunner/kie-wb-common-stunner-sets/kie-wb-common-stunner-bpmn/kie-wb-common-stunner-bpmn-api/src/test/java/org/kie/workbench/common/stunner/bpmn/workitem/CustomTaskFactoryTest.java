@@ -85,13 +85,13 @@ public class CustomTaskFactoryTest {
     @Test
     public void testBuild() {
         final CustomTask customTask = tested.build(getWorkItemDefinitionName());
-        assertEquals(WID_NAME, customTask.getName());
+        assertEquals(WID_NAME, customTask.getTaskName());
         assertEquals(WID_NAME, customTask.getTaskType().getRawType());
         assertEquals(WID_NAME, customTask.getExecutionSet().getTaskName().getValue());
         assertEquals(WID_CAT, customTask.getCategory());
         assertEquals(WID_HANDLER, customTask.getDefaultHandler());
-        assertEquals(WID_DISP_NAME, customTask.getGeneral().getName().getValue());
-        assertEquals(WID_DOC, customTask.getGeneral().getDocumentation().getValue());
+        assertEquals(WID_DISP_NAME, customTask.getName());
+        assertEquals(WID_DOC, customTask.getDocumentation());
         assertEquals(WID_DESC, customTask.getDescription());
         assertEquals(WID_PARAMS + WID_RESULTS, customTask.getDataIOSet().getAssignmentsinfo().getValue());
     }
@@ -100,13 +100,12 @@ public class CustomTaskFactoryTest {
     public void testBuildItemNullWID() {
         final CustomTask customTask = tested.buildItem("Non Existent Wid Name");
         // Check for default custom task values
-        assertTrue(customTask.getName().equals("Custom Task"));
+        assertTrue(customTask.getTaskName().equals("Custom Task"));
         assertNull(customTask.getTaskType().getRawType());
         assertTrue(customTask.getExecutionSet().getTaskName().getValue().equals("Service Task"));
         assertTrue(customTask.getCategory().equals("CustomTasks"));
         assertTrue(customTask.getDefaultHandler().isEmpty());
-        assertTrue(customTask.getGeneral().getName().getValue().equals("Custom Task"));
-        assertTrue(customTask.getGeneral().getDocumentation().getValue().isEmpty());
+        assertTrue(customTask.getDocumentation().isEmpty());
         assertTrue(customTask.getDescription().equals("Custom Task"));
         assertTrue(customTask.getDataIOSet().getAssignmentsinfo().getValue().isEmpty());
     }

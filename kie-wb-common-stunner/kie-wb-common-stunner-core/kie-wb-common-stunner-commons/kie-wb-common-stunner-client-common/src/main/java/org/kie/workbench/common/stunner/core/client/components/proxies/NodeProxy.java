@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.client.canvas.AbstractCanvasHandler;
 import org.kie.workbench.common.stunner.core.client.canvas.Canvas;
 import org.kie.workbench.common.stunner.core.client.command.CanvasCommandFactory;
@@ -47,8 +46,6 @@ public class NodeProxy implements ShapeProxy {
     private Node<View<?>, Edge> targetNode;
     private Edge<ViewConnector<?>, Node> edge;
     private Node<View<?>, Edge> sourceNode;
-
-    private SessionManager sessionManager;
 
     @Inject
     public NodeProxy(final ElementProxy proxy,

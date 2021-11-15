@@ -27,9 +27,6 @@ import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.EmptyTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -59,8 +56,8 @@ public class NoneTask extends BaseTask {
     protected EmptyTaskExecutionSet executionSet;
 
     public NoneTask() {
-        this(new TaskGeneralSet(new Name("Task"),
-                                new Documentation("")),
+        this("Task",
+             "",
              new EmptyTaskExecutionSet(),
              new BackgroundSet(),
              new FontSet(),
@@ -70,15 +67,17 @@ public class NoneTask extends BaseTask {
              new AdvancedData());
     }
 
-    public NoneTask(final @MapsTo("general") TaskGeneralSet general,
+    public NoneTask(final @MapsTo("name") String name,
+                    final @MapsTo("documentation") String documentation,
                     final @MapsTo("executionSet") EmptyTaskExecutionSet executionSet,
                     final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     final @MapsTo("fontSet") FontSet fontSet,
                     final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     final @MapsTo("simulationSet") SimulationSet simulationSet,
                     final @MapsTo("taskType") TaskType taskType,
-                    final @MapsTo("advancedData")AdvancedData advancedData) {
-        super(general,
+                    final @MapsTo("advancedData") AdvancedData advancedData) {
+        super(name,
+              documentation,
               backgroundSet,
               fontSet,
               dimensionsSet,

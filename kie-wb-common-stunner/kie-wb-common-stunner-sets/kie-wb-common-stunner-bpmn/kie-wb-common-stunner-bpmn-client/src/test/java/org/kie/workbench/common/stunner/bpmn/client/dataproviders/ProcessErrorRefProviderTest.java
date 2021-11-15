@@ -23,9 +23,8 @@ import java.util.Map;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.EndErrorEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateErrorEventCatching;
-import org.kie.workbench.common.stunner.bpmn.definition.StartErrorEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartErrorEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.CancelActivity;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.error.CancellingErrorEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.error.ErrorEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.error.ErrorRef;
@@ -81,8 +80,8 @@ public class ProcessErrorRefProviderTest
 
     private Element mockStartErrorEventNode(String errorRefValue) {
         StartErrorEvent event = new StartErrorEvent();
-        event.setExecutionSet(new InterruptingErrorEventExecutionSet(new IsInterrupting(true),
-                                                                     new SLADueDate(),
+        event.setExecutionSet(new InterruptingErrorEventExecutionSet(true,
+                                                                     "",
                                                                      new ErrorRef(errorRefValue)));
         return mockNode(event);
     }

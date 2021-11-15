@@ -66,7 +66,7 @@ public class GatewayShapeDef
     @Override
     public SizeHandler<BaseGateway, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .radius(task -> task.getDimensionsSet().getRadius().getValue())
+                .radius(task -> task.getDimensionsSet().getRadius())
                 .build();
     }
 

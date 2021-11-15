@@ -23,7 +23,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSe
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.signal.CancellingSignalEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 
@@ -34,7 +33,6 @@ import static org.mockito.Mockito.mock;
 
 public class IntermediateSignalEventCatchingTest {
 
-    private BPMNGeneralSet general;
     private BackgroundSet backgroundSet;
     private FontSet fontSet;
     private CircleDimensionSet dimensionSet;
@@ -46,7 +44,6 @@ public class IntermediateSignalEventCatchingTest {
 
     @Before
     public void setUp() {
-        general = mock(BPMNGeneralSet.class);
         backgroundSet = mock(BackgroundSet.class);
         fontSet = mock(FontSet.class);
         dimensionSet = mock(CircleDimensionSet.class);
@@ -54,7 +51,8 @@ public class IntermediateSignalEventCatchingTest {
         advancedData = mock(AdvancedData.class);
         cancellingSignalEventExecutionSet = mock(CancellingSignalEventExecutionSet.class);
 
-        tested = new IntermediateSignalEventCatching(general,
+        tested = new IntermediateSignalEventCatching("",
+                                                     "",
                                                      backgroundSet,
                                                      fontSet,
                                                      dimensionSet,
@@ -84,7 +82,8 @@ public class IntermediateSignalEventCatchingTest {
     @Test
     public void testHashCode() {
         IntermediateSignalEventCatching compare =
-                new IntermediateSignalEventCatching(general,
+                new IntermediateSignalEventCatching("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,
@@ -97,7 +96,8 @@ public class IntermediateSignalEventCatchingTest {
     @Test
     public void testEquals() {
         IntermediateSignalEventThrowing compare1 = new IntermediateSignalEventThrowing();
-        IntermediateSignalEventCatching compare2 = new IntermediateSignalEventCatching(general,
+        IntermediateSignalEventCatching compare2 = new IntermediateSignalEventCatching("",
+                                                                                       "",
                                                                                        backgroundSet,
                                                                                        fontSet,
                                                                                        dimensionSet,
@@ -107,7 +107,8 @@ public class IntermediateSignalEventCatchingTest {
         CancellingSignalEventExecutionSet executionSet = new CancellingSignalEventExecutionSet();
         executionSet.setSlaDueDate(new SLADueDate("12/25/1983"));
         IntermediateSignalEventCatching compare3 =
-                new IntermediateSignalEventCatching(general,
+                new IntermediateSignalEventCatching("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,
@@ -115,7 +116,8 @@ public class IntermediateSignalEventCatchingTest {
                                                     advancedData,
                                                     executionSet);
         IntermediateSignalEventCatching compare4 =
-                new IntermediateSignalEventCatching(general,
+                new IntermediateSignalEventCatching("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,

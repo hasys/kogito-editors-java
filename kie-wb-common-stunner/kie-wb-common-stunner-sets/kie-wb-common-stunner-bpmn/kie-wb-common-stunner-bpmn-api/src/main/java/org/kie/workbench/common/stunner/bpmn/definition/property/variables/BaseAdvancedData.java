@@ -17,9 +17,8 @@
 package org.kie.workbench.common.stunner.bpmn.definition.property.variables;
 
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.MetaDataAttributes;
 
 public interface BaseAdvancedData extends BPMNPropertySet {
 
-    MetaDataAttributes getMetaDataAttributes();
+    String getMetaDataAttributes();
 }

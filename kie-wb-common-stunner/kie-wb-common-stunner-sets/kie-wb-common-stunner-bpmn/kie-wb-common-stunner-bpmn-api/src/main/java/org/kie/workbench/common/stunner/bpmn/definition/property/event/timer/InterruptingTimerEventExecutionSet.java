@@ -25,8 +25,6 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.BaseStartEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
@@ -41,13 +39,13 @@ public class InterruptingTimerEventExecutionSet extends BaseStartEventExecutionS
     private TimerSettings timerSettings;
 
     public InterruptingTimerEventExecutionSet() {
-        this(new IsInterrupting(true),
-             new SLADueDate(),
+        this(true,
+             "",
              new TimerSettings());
     }
 
-    public InterruptingTimerEventExecutionSet(final @MapsTo("isInterrupting") IsInterrupting isInterrupting,
-                                              final @MapsTo("slaDueDate") SLADueDate slaDueDate,
+    public InterruptingTimerEventExecutionSet(final @MapsTo("isInterrupting") Boolean isInterrupting,
+                                              final @MapsTo("slaDueDate") String slaDueDate,
                                               final @MapsTo("timerSettings") TimerSettings timerSettings) {
         super(isInterrupting, slaDueDate);
         this.timerSettings = timerSettings;

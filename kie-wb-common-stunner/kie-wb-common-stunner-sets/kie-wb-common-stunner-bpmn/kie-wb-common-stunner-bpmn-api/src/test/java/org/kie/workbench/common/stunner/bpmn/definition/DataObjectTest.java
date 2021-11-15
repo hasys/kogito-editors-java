@@ -20,16 +20,13 @@ import org.junit.Test;
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectTypeValue;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BgColor;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSize;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class DataObjectTest {
 
@@ -43,22 +40,10 @@ public class DataObjectTest {
     }
 
     @Test
-    public void getGeneral() {
-        assertNotNull(dataObject.getGeneral());
-    }
-
-    @Test
-    public void setGeneral() {
-        BPMNGeneralSet general = new BPMNGeneralSet();
-        dataObject.setGeneral(general);
-        assertEquals(general, dataObject.getGeneral());
-    }
-
-    @Test
     public void setName() {
         Name name = new Name(this.getClass().getSimpleName());
-        dataObject.setName(name);
-        assertEquals(name, dataObject.getName());
+        dataObject.setDataObjectName(name);
+        assertEquals(name, dataObject.getDataObjectName());
     }
 
     @Test
@@ -83,12 +68,12 @@ public class DataObjectTest {
     public void testNotEquals() {
         DataObject dataObject1 = new DataObject();
         DataObject dataObject2 = new DataObject();
-        dataObject1.setName(new Name("dataObject1"));
-        dataObject2.setName(new Name("dataObject2"));
+        dataObject1.setDataObjectName(new Name("dataObject1"));
+        dataObject2.setDataObjectName(new Name("dataObject2"));
         // Test Name
         assertNotEquals(dataObject1, dataObject2);
         // Reset
-        dataObject2.setName(new Name("dataObject1"));
+        dataObject2.setDataObjectName(new Name("dataObject1"));
         assertEquals(dataObject1, dataObject2);
         // Test Type
         DataObjectType dataObjectType = new DataObjectType();
@@ -99,16 +84,14 @@ public class DataObjectTest {
         dataObject2.setType(new DataObjectType());
         assertEquals(dataObject1, dataObject2);
         // Test General Set
-        BPMNGeneralSet generalSet = new BPMNGeneralSet();
-        generalSet.setName(new Name("someName"));
-        dataObject2.setGeneral(generalSet);
+        dataObject2.setName("someName");
         assertNotEquals(dataObject1, dataObject2);
         // Reset
-        dataObject2.setGeneral(new BPMNGeneralSet());
+        dataObject2.setName("");
         assertEquals(dataObject1, dataObject2);
         // Test Background Set
         BackgroundSet backgroundSet = new BackgroundSet();
-        backgroundSet.setBgColor(new BgColor("Black"));
+        backgroundSet.setBgColor("Black");
         dataObject2.setBackgroundSet(backgroundSet);
         assertNotEquals(dataObject1, dataObject2);
         // Reset

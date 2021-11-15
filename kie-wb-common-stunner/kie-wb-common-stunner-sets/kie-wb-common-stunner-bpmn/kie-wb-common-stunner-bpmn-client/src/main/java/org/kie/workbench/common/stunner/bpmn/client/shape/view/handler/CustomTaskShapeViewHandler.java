@@ -52,7 +52,7 @@ public class CustomTaskShapeViewHandler
     public void handle(final CustomTask bean,
                        final SVGShapeView<?> view) {
         // Obtain the work item's icon data url.
-        final WorkItemDefinition wid = workItemDefinitionRegistry.get().get(bean.getName());
+        final WorkItemDefinition wid = workItemDefinitionRegistry.get().get(bean.getTaskName());
         final String iconData;
 
         if (null != wid

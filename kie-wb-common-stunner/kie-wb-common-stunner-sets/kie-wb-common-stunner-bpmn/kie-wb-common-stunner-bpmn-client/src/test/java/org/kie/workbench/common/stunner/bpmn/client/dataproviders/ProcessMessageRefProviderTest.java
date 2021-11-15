@@ -23,9 +23,8 @@ import java.util.Map;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.EndMessageEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateMessageEventCatching;
-import org.kie.workbench.common.stunner.bpmn.definition.StartMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.CancelActivity;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.message.CancellingMessageEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.message.InterruptingMessageEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.message.MessageEventExecutionSet;
@@ -80,8 +79,8 @@ public class ProcessMessageRefProviderTest
 
     private Element mockStartMessageEventNode(String messageRefValue) {
         StartMessageEvent event = new StartMessageEvent();
-        event.setExecutionSet(new InterruptingMessageEventExecutionSet(new IsInterrupting(true),
-                                                                       new SLADueDate(),
+        event.setExecutionSet(new InterruptingMessageEventExecutionSet(true,
+                                                                       "",
                                                                        new MessageRef(messageRefValue, "")));
         return mockNode(event);
     }

@@ -25,8 +25,11 @@ import javax.inject.Inject;
 import elemental2.promise.Promise;
 import org.kie.workbench.common.stunner.bpmn.client.workitem.WorkItemDefinitionClientService;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
+import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnShape;
 import org.kie.workbench.common.stunner.bpmn.factory.BPMNDiagramFactory;
 import org.kie.workbench.common.stunner.bpmn.workitem.WorkItemDefinition;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
@@ -42,6 +45,8 @@ import org.kie.workbench.common.stunner.core.diagram.MetadataImpl;
 import org.kie.workbench.common.stunner.core.graph.Graph;
 import org.kie.workbench.common.stunner.core.graph.Node;
 import org.kie.workbench.common.stunner.core.graph.content.definition.Definition;
+import org.kie.workbench.common.stunner.core.graph.content.view.ViewImpl;
+import org.kie.workbench.common.stunner.core.graph.impl.NodeImpl;
 import org.kie.workbench.common.stunner.core.graph.util.GraphUtils;
 import org.kie.workbench.common.stunner.kogito.client.service.AbstractKogitoClientDiagramService;
 import org.uberfire.client.promise.Promises;
@@ -178,6 +183,17 @@ public class BPMNClientDiagramService extends AbstractKogitoClientDiagramService
         final Node<Definition<BPMNDiagram>, ?> diagramNode = GraphUtils.getFirstNode((Graph<?, Node>) diagram.getGraph(), Process.class);
 
         diagramNode.getContent().setDefinition(definitions.getProcess());
+
+
+        for (StartEvent event : definitions.getProcess().getStartEvents()) {
+            for (BpmnShape shape : definitions.getBpmnDiagram().getBpmnPlane().getBpmnShapes()) {
+                if (shape.getBpmnElement().equals(event.getId())) {
+                    NodeImpl<ViewImpl<BPMNViewDefinition>> node = new NodeImpl<>(event.getId());
+                    node.getContent().setDefinition(event);
+                    diagram.getGraph().addNode((Node) event);
+                }
+            }
+        }
 
         updateDiagramSet(diagramNode, fileName);
         updateClientMetadata(diagram);

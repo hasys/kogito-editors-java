@@ -25,8 +25,7 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 
 import static org.junit.Assert.assertEquals;
@@ -60,25 +59,9 @@ public class StartNoneEventTest {
     }
 
     @Test
-    public void testBPMNGeneralSetNameValid() {
-        BPMNGeneralSet bpmnGeneralSet = new BPMNGeneralSet();
-        bpmnGeneralSet.setName(new Name(NAME_VALID));
-        Set<ConstraintViolation<BPMNGeneralSet>> violations = this.validator.validate(bpmnGeneralSet);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    public void testBPMNGeneralSetNameEmpty() {
-        BPMNGeneralSet bpmnGeneralSet = new BPMNGeneralSet();
-        bpmnGeneralSet.setName(new Name(""));
-        Set<ConstraintViolation<BPMNGeneralSet>> violations = this.validator.validate(bpmnGeneralSet);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
     public void testStartNoneEventNameValid() {
         StartNoneEvent startNoneEvent = new StartNoneEvent();
-        startNoneEvent.getGeneral().setName(new Name(NAME_VALID));
+        startNoneEvent.setName(NAME_VALID);
         Set<ConstraintViolation<StartNoneEvent>> violations = this.validator.validate(startNoneEvent);
         assertTrue(violations.isEmpty());
     }
@@ -86,7 +69,7 @@ public class StartNoneEventTest {
     @Test
     public void testStartNoneEventNameEmpty() {
         StartNoneEvent startNoneEvent = new StartNoneEvent();
-        startNoneEvent.getGeneral().setName(new Name(""));
+        startNoneEvent.setName("");
         Set<ConstraintViolation<StartNoneEvent>> violations = this.validator.validate(startNoneEvent);
         assertTrue(violations.isEmpty());
     }

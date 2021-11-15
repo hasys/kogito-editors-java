@@ -91,7 +91,7 @@ public class EndEventShapeDef
     @Override
     public SizeHandler<BaseEndEvent, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .radius(task -> task.getDimensionsSet().getRadius().getValue())
+                .radius(task -> task.getDimensionsSet().getRadius())
                 .build();
     }
 

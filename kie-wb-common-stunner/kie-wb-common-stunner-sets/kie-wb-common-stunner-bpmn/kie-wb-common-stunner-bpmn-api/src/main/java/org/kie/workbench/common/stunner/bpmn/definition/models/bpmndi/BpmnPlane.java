@@ -15,6 +15,7 @@
  */
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class BpmnPlane {
 
     @XmlElement(name = "BPMNShape")
     @XmlUnwrappedCollection
-    private List<BpmnShape> bpmnShapes;
+    private List<BpmnShape> bpmnShapes = new ArrayList<>();
 
     @XmlElement(name = "BPMNEdge")
     @XmlUnwrappedCollection

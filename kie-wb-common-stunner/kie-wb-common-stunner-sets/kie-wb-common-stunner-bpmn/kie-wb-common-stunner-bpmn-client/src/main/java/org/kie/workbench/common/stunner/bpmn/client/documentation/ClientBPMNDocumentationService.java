@@ -496,7 +496,7 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
             return Optional.ofNullable(definition)
                     .filter(def -> def instanceof CustomTask)
                     .map(def -> (CustomTask) def)
-                    .map(org.kie.workbench.common.stunner.bpmn.workitem.CustomTask::getName)
+                    .map(org.kie.workbench.common.stunner.bpmn.workitem.CustomTask::getTaskName)
                     .map(name -> Optional.ofNullable(workItemDefinitionRegistry
                                                              .get()
                                                              .get(name))
@@ -519,7 +519,7 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
             return Optional.ofNullable(definition)
                     .filter(def -> def instanceof CustomTask)
                     .map(def -> (CustomTask) def)
-                    .map(org.kie.workbench.common.stunner.bpmn.workitem.CustomTask::getName)
+                    .map(org.kie.workbench.common.stunner.bpmn.workitem.CustomTask::getTaskName)
                     .map(name -> Optional.ofNullable(workItemDefinitionRegistry
                                                              .get()
                                                              .get(name))

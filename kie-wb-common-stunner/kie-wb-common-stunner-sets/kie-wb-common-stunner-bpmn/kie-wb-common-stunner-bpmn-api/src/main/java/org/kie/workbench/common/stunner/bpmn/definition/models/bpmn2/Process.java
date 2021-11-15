@@ -15,12 +15,17 @@
  */
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,7 +42,6 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.Fiel
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.selectors.listBox.type.ListBoxFieldType;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNBaseInfo;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
@@ -56,6 +60,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.definition.La
 import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.rule.annotation.CanContain;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
+import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.processing.fields.fieldInitializers.nestedForms.SubFormFieldInitializer.COLLAPSIBLE_CONTAINER;
 import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.processing.fields.fieldInitializers.nestedForms.SubFormFieldInitializer.FIELD_CONTAINER_PARAM;
@@ -223,6 +228,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
 
     public static final Double WIDTH = 950d;
     public static final Double HEIGHT = 950d;
+
+    @XmlElement(name = "startEvent")
+    @XmlUnwrappedCollection
+    @XmlElements({
+            @XmlElement(name = "_StartNoneEvent", type = StartNoneEvent.class),
+            @XmlElement(name = "_StartCompensationEvent", type = StartCompensationEvent.class)
+    })
+    private List<StartEvent> startEvents = new ArrayList<>();
 
     public Process() {
         this("",
@@ -396,7 +409,6 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         return labels;
     }
 
-
     public RectangleDimensionsSet getDimensionsSet() {
         return dimensionsSet;
     }
@@ -446,11 +458,6 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     }
 
     @Override
-    public BPMNBaseInfo getGeneral() {
-        return null;
-    }
-
-    @Override
     public RootProcessAdvancedData getAdvancedData() {
         return advancedData;
     }
@@ -460,26 +467,36 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.advancedData = advancedData;
     }
 
+    public List<StartEvent> getStartEvents() {
+        return startEvents;
+    }
+
+    public void setStartEvents(List<StartEvent> startEvents) {
+        this.startEvents = startEvents;
+    }
+
     @Override
     public int hashCode() {
-        return HashUtil.combineHashCodes(processData.hashCode(),
-                                         caseManagementSet.hashCode(),
-                                         backgroundSet.hashCode(),
-                                         fontSet.hashCode(),
-                                         dimensionsSet.hashCode(),
-                                         advancedData.hashCode());
+        return HashUtil.combineHashCodes(Objects.hashCode(processData),
+                                         Objects.hashCode(caseManagementSet),
+                                         Objects.hashCode(backgroundSet),
+                                         Objects.hashCode(fontSet),
+                                         Objects.hashCode(dimensionsSet),
+                                         Objects.hashCode(advancedData),
+                                         Objects.hashCode(startEvents));
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Process) {
             Process other = (Process) o;
-            return processData.equals(other.processData) &&
-                    caseManagementSet.equals(other.caseManagementSet) &&
-                    backgroundSet.equals(other.backgroundSet) &&
-                    fontSet.equals(other.fontSet) &&
-                    dimensionsSet.equals(other.dimensionsSet) &&
-                    advancedData.equals(other.advancedData);
+            return Objects.equals(processData, other.processData) &&
+                    Objects.equals(caseManagementSet, other.caseManagementSet) &&
+                    Objects.equals(backgroundSet, other.backgroundSet) &&
+                    Objects.equals(fontSet, other.fontSet) &&
+                    Objects.equals(dimensionsSet, other.dimensionsSet) &&
+                    Objects.equals(advancedData, other.advancedData) &&
+                    Objects.equals(startEvents, other.startEvents);
         }
         return false;
     }

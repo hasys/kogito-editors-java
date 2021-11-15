@@ -24,6 +24,12 @@ public class ProcessingTime {
     @XmlElement(name = "NormalDistribution")
     private NormalDistribution normalDistribution;
 
+    public ProcessingTime() {}
+
+    public ProcessingTime(NormalDistribution normalDistribution) {
+        this.normalDistribution = normalDistribution;
+    }
+
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
 

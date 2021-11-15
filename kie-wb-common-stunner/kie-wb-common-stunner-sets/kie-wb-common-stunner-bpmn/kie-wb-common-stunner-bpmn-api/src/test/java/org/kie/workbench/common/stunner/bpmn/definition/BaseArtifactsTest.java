@@ -18,7 +18,6 @@ package org.kie.workbench.common.stunner.bpmn.definition;
 
 import org.junit.Test;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BgColor;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Height;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
@@ -90,11 +89,9 @@ public class BaseArtifactsTest {
         assertTrue(tested.equals(new DataObject()));
         assertFalse(tested.equals(""));
         final DataObject dataObject = new DataObject();
-        BgColor color = new BgColor();
-        color.setValue("Black");
-        dataObject.getBackgroundSet().setBgColor(color);
+        dataObject.getBackgroundSet().setBgColor("Black");
         assertFalse(tested.equals(dataObject));
-        tested.getBackgroundSet().setBgColor(color);
+        tested.getBackgroundSet().setBgColor("Black");
         assertTrue(tested.equals(dataObject));
         dataObject.getFontSet().setFontSize(new FontSize(11.0));
         assertFalse(tested.equals(dataObject));
@@ -116,7 +113,12 @@ public class BaseArtifactsTest {
         }
 
         @Override
-        public BPMNBaseInfo getGeneral() {
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public String getDocumentation() {
             return null;
         }
     }

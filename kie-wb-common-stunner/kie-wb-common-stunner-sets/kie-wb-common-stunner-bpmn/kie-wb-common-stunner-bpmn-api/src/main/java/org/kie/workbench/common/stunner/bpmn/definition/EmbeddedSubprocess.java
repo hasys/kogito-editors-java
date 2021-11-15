@@ -31,7 +31,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.subProcess.execution.EmbeddedSubprocessExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
@@ -54,7 +53,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @CanContain(roles = {"all"})
 @CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
@@ -62,7 +61,7 @@ public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
                                                                   HasProcessData<ProcessData> {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
     private EmbeddedSubprocessExecutionSet executionSet;
 
@@ -73,7 +72,8 @@ public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
 
     public EmbeddedSubprocess() {
         this(
-                new BPMNGeneralSet("Sub-process"),
+                "Sub-process",
+                "",
                 new BackgroundSet(),
                 new FontSet(),
                 new RectangleDimensionsSet(),
@@ -83,15 +83,17 @@ public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
                 new AdvancedData());
     }
 
-    public EmbeddedSubprocess(final @MapsTo("general") BPMNGeneralSet general,
+    public EmbeddedSubprocess(final @MapsTo("name") String name,
+                              final @MapsTo("documentation") String documentation,
                               final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                               final @MapsTo("fontSet") FontSet fontSet,
                               final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                               final @MapsTo("simulationSet") SimulationSet simulationSet,
                               final @MapsTo("executionSet") EmbeddedSubprocessExecutionSet executionSet,
                               final @MapsTo("processData") ProcessData processData,
-                              final@MapsTo("advancedData") AdvancedData advancedData) {
-        super(general,
+                              final @MapsTo("advancedData") AdvancedData advancedData) {
+        super(name,
+              documentation,
               backgroundSet,
               fontSet,
               dimensionsSet,

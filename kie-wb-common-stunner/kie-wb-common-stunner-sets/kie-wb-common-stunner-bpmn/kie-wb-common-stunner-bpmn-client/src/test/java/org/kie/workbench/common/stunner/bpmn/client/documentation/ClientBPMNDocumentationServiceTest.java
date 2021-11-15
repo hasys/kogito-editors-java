@@ -47,11 +47,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.imports
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.imports.WSDLImport;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.notification.NotificationsInfo;
 import org.kie.workbench.common.stunner.bpmn.definition.property.reassignment.ReassignmentsInfo;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
@@ -346,8 +342,8 @@ public class ClientBPMNDocumentationServiceTest {
                 advancedData
         );
 
-        userTask = new UserTask(new TaskGeneralSet(new Name(TASK_NAME),
-                                                   new Documentation(TASK_DOC)),
+        userTask = new UserTask(TASK_NAME,
+                                TASK_DOC,
                                 new UserTaskExecutionSet(new TaskName(TASK_NAME),
                                                          new Actors(),
                                                          new Groupid(TASK_GROUPID),
@@ -379,8 +375,8 @@ public class ClientBPMNDocumentationServiceTest {
                                 new TaskType(TaskTypes.USER),
                                 new AdvancedData());
 
-        embeddedSubprocess = new EmbeddedSubprocess(new BPMNGeneralSet(new Name(SUB_PROCESS_NAME),
-                                                                       new Documentation(SUB_PROCESS_DOCUMENTATION)),
+        embeddedSubprocess = new EmbeddedSubprocess(SUB_PROCESS_NAME,
+                                                    SUB_PROCESS_DOCUMENTATION,
                                                     new BackgroundSet(),
                                                     new FontSet(),
                                                     new RectangleDimensionsSet(),
@@ -431,20 +427,19 @@ public class ClientBPMNDocumentationServiceTest {
         when(subprocessId.value()).thenReturn(EmbeddedSubprocess.class.getName());
 
         //adapters mock for task
-        final TaskGeneralSet taskGeneral = userTask.getGeneral();
         final UserTaskExecutionSet taskExecutionSet = userTask.getExecutionSet();
         when(definitionAdapter.getCategory(eq(userTask))).thenReturn(BPMNCategories.ACTIVITIES);
         when(definitionAdapter.getPropertyFields(eq(userTask))).thenReturn(new String[]{"taskGeneral.documentation", "taskGeneral.name", "taskExecutionSet.subject", "taskExecutionSet.groupId", "taskExecutionSet.priority", "taskExecutionSet.assignmentsInfo", "taskExecutionSet.description"});
-        when(definitionAdapter.getProperty(eq(userTask), eq("taskGeneral.documentation"))).thenReturn((Optional) Optional.of(taskGeneral.getDocumentation()));
-        when(definitionAdapter.getProperty(eq(userTask), eq("taskGeneral.name"))).thenReturn((Optional) Optional.of(taskGeneral.getName()));
+        when(definitionAdapter.getProperty(eq(userTask), eq("taskGeneral.documentation"))).thenReturn((Optional) Optional.of(userTask.getDocumentation()));
+        when(definitionAdapter.getProperty(eq(userTask), eq("taskGeneral.name"))).thenReturn((Optional) Optional.of(userTask.getName()));
         when(definitionAdapter.getProperty(eq(userTask), eq("taskExecutionSet.subject"))).thenReturn((Optional) Optional.of(taskExecutionSet.getSubject()));
         when(definitionAdapter.getProperty(eq(userTask), eq("taskExecutionSet.groupId"))).thenReturn((Optional) Optional.of(taskExecutionSet.getGroupid()));
         when(definitionAdapter.getProperty(eq(userTask), eq("taskExecutionSet.priority"))).thenReturn((Optional) Optional.of(taskExecutionSet.getPriority()));
         when(definitionAdapter.getProperty(eq(userTask), eq("taskExecutionSet.assignmentsInfo"))).thenReturn((Optional) Optional.of(taskExecutionSet.getAssignmentsinfo()));
         when(definitionAdapter.getProperty(eq(userTask), eq("taskExecutionSet.description"))).thenReturn((Optional) Optional.of(taskExecutionSet.getDescription()));
 
-        mockProperty(taskGeneral.getDocumentation(), TASK_DOCUMENTATION, DOCUMENTATION_CAPTION);
-        mockProperty(taskGeneral, TASK_NAME, NAME_CAPTION);
+        mockProperty(userTask.getDocumentation(), TASK_DOCUMENTATION, DOCUMENTATION_CAPTION);
+        mockProperty(userTask.getName(), TASK_NAME, NAME_CAPTION);
         mockProperty(taskExecutionSet.getSubject(), TASK_SUBJECT, SUBJECT_CAPTION);
         mockProperty(taskExecutionSet.getGroupid(), TASK_GROUPID, GROUP_CAPTION);
         mockProperty(taskExecutionSet.getPriority(), TASK_PRIORITY, PRIORITY_CAPTION);
@@ -453,18 +448,16 @@ public class ClientBPMNDocumentationServiceTest {
         when(decorators.getDecorator(taskExecutionSet.getAssignmentsinfo())).thenReturn(Optional.of(() -> ASSIGNEMNTS));
 
         //adapters mock for subprocess
-        final BPMNGeneralSet subprocessGeneral = embeddedSubprocess.getGeneral();
         final EmbeddedSubprocessExecutionSet subprocessExecutionSet = embeddedSubprocess.getExecutionSet();
         when(definitionAdapter.getCategory(eq(embeddedSubprocess))).thenReturn(BPMNCategories.SUB_PROCESSES);
         when(definitionAdapter.getPropertyFields(eq(embeddedSubprocess))).thenReturn(new String[]{"subprocessGeneral.documentation", "subprocessGeneral.name", "subprocessExecutionSet.onEntryAction", "subprocessExecutionSet.onExitAction", "subprocessExecutionSet.isAsync"});
-        when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessGeneral.documentation"))).thenReturn((Optional) Optional.of(subprocessGeneral.getDocumentation()));
-        when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessGeneral.name"))).thenReturn((Optional) Optional.of(subprocessGeneral.getName()));
+        when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessGeneral.documentation"))).thenReturn((Optional) Optional.of(embeddedSubprocess.getDocumentation()));
+        when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessGeneral.name"))).thenReturn((Optional) Optional.of(embeddedSubprocess.getName()));
         when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessExecutionSet.onEntryAction"))).thenReturn((Optional) Optional.of(subprocessExecutionSet.getOnEntryAction()));
         when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessExecutionSet.onExitAction"))).thenReturn((Optional) Optional.of(subprocessExecutionSet.getOnExitAction()));
         when(definitionAdapter.getProperty(eq(embeddedSubprocess), eq("subprocessExecutionSet.isAsync"))).thenReturn((Optional) Optional.of(subprocessExecutionSet.getIsAsync()));
 
-        mockProperty(subprocessGeneral.getDocumentation(), SUB_PROCESS_DOCUMENTATION, DOCUMENTATION_CAPTION);
-        mockProperty(subprocessGeneral, SUB_PROCESS_NAME, NAME_CAPTION);
+        mockProperty(embeddedSubprocess.getDocumentation(), SUB_PROCESS_DOCUMENTATION, DOCUMENTATION_CAPTION);
 
         mockProperty(subprocessExecutionSet.getOnEntryAction(), ON_ENTRY_ACTION, ON_ENTRY_CAPTION);
         mockProperty(subprocessExecutionSet.getOnExitAction(), ON_EXIT_ACTION, ON_EXIT_CAPTION);
@@ -597,7 +590,7 @@ public class ClientBPMNDocumentationServiceTest {
         assertProperty(taskProperties[1], TASK_DESCRIPTION, DESCRIPTION_CAPTION,
                        userTask.getExecutionSet().getDescription());
         assertProperty(taskProperties[2], TASK_DOCUMENTATION, DOCUMENTATION_CAPTION,
-                       userTask.getGeneral().getDocumentation());
+                       userTask.getDocumentation());
         assertProperty(taskProperties[3], TASK_GROUPID, GROUP_CAPTION,
                        userTask.getExecutionSet().getGroupid());
         assertProperty(taskProperties[4], TASK_PRIORITY, PRIORITY_CAPTION,
@@ -616,7 +609,7 @@ public class ClientBPMNDocumentationServiceTest {
         //assert subprocess properties
         final KeyValue[] subprocessProperties = subprocess.getProperties();
         assertProperty(subprocessProperties[0], SUB_PROCESS_DOCUMENTATION, DOCUMENTATION_CAPTION,
-                       embeddedSubprocess.getGeneral().getDocumentation());
+                       embeddedSubprocess.getDocumentation());
         assertProperty(subprocessProperties[1], "false", ISASYNC_CAPTION,
                        embeddedSubprocess.getExecutionSet().getIsAsync());
         assertProperty(subprocessProperties[2], ON_ENTRY_ACTION, ON_ENTRY_CAPTION,

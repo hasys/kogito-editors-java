@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -27,18 +29,14 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Radius;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.BaseStartEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationAttributeSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
+import org.kie.workbench.common.stunner.core.util.StringUtils;
 
 import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.processing.fields.fieldInitializers.nestedForms.SubFormFieldInitializer.COLLAPSIBLE_CONTAINER;
 import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.processing.fields.fieldInitializers.nestedForms.SubFormFieldInitializer.FIELD_CONTAINER_PARAM;
@@ -46,41 +44,34 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseStartEvent.class)
+@Morph(base = StartEvent.class)
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class StartNoneEvent extends BaseStartEvent {
+@XmlRootElement(name = "startEvent", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
+public class StartNoneEvent extends StartEvent {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
+    @XmlTransient
     protected BaseStartEventExecutionSet executionSet;
 
     public StartNoneEvent() {
-        this(new BPMNGeneralSet(""),
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(new Radius()),
-             new SimulationAttributeSet(),
+        this("",
+             "",
              new AdvancedData(),
              new BaseStartEventExecutionSet());
     }
 
-    public StartNoneEvent(final @MapsTo("general") BPMNGeneralSet general,
-                          final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                          final @MapsTo("fontSet") FontSet fontSet,
-                          final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
-                          final @MapsTo("simulationSet") SimulationAttributeSet simulationSet,
+    public StartNoneEvent(final @MapsTo("name") String name,
+                          final @MapsTo("documentation") String documentation,
                           final @MapsTo("advancedData") AdvancedData advancedData,
                           final @MapsTo("executionSet") BaseStartEventExecutionSet executionSet) {
-        super(general,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
-              simulationSet,
+        super(name,
+              documentation,
               advancedData);
         this.executionSet = executionSet;
     }
@@ -91,6 +82,34 @@ public class StartNoneEvent extends BaseStartEvent {
 
     public void setExecutionSet(BaseStartEventExecutionSet executionSet) {
         this.executionSet = executionSet;
+    }
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+    Variable is not used and always null. Getters/setters redirect data from other execution sets.
+    Execution sets not removed due to how forms works now, should be refactored during the migration
+    to the new forms.
+     */
+    @Override
+    public ExtensionElements getExtensionElements() {
+        ExtensionElements elements = super.getExtensionElements();
+        if (StringUtils.nonEmpty(this.getExecutionSet().getSlaDueDate())) {
+            MetaData sla = new MetaData("customSLADueDate", this.getExecutionSet().getSlaDueDate());
+            elements.getMetaData().add(sla);
+        }
+
+        return elements.getMetaData().isEmpty() ? null : elements;
+    }
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+    Variable is not used and always null. Getters/setters redirect data from other execution sets.
+    Execution sets not removed due to how forms works now, should be refactored during the migration
+    to the new forms.
+     */
+    @Override
+    public void setExtensionElements(ExtensionElements extensionElements) {
+        super.setExtensionElements(extensionElements);
     }
 
     @Override

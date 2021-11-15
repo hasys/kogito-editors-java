@@ -22,31 +22,46 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
-import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
-@MorphBase(defaultType = EndNoneEvent.class)
 public abstract class BaseEndEvent implements BPMNViewDefinition,
                                               DataIOModel {
 
     @Category
     public static final transient String category = BPMNCategories.END_EVENTS;
     @Labels
-    protected final Set<String> labels = new HashSet<String>();
-    @Property
-    @FormField
+    protected final Set<String> labels = new HashSet<>();
+
     @Valid
-    protected BPMNGeneralSet general;
+    @Value
+    @FieldValue
+    @Property
+    @FormField(type = TextAreaFieldType.class)
+    private String name;
+
+    @Valid
+    @Value
+    @FieldValue
+    @Property
+    @FormField(
+            type = TextAreaFieldType.class,
+            afterElement = "name"
+    )
+    private String documentation;
+
     @Property
     @Valid
     protected BackgroundSet backgroundSet;
@@ -65,13 +80,15 @@ public abstract class BaseEndEvent implements BPMNViewDefinition,
         initLabels();
     }
 
-    public BaseEndEvent(final BPMNGeneralSet general,
+    public BaseEndEvent(final @MapsTo("name") String name,
+                        final @MapsTo("documentation") String documentation,
                         final BackgroundSet backgroundSet,
                         final FontSet fontSet,
                         final CircleDimensionSet dimensionsSet,
                         final AdvancedData advancedData) {
         this();
-        this.general = general;
+        this.name = name;
+        this.documentation = documentation;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
@@ -119,12 +136,22 @@ public abstract class BaseEndEvent implements BPMNViewDefinition,
         return labels;
     }
 
-    public BPMNGeneralSet getGeneral() {
-        return general;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public void setGeneral(final BPMNGeneralSet general) {
-        this.general = general;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
     }
 
     public BackgroundSet getBackgroundSet() {
@@ -162,7 +189,8 @@ public abstract class BaseEndEvent implements BPMNViewDefinition,
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         Objects.hashCode(general),
+                                         Objects.hashCode(name),
+                                         Objects.hashCode(documentation),
                                          Objects.hashCode(backgroundSet),
                                          Objects.hashCode(fontSet),
                                          Objects.hashCode(dimensionsSet),
@@ -174,7 +202,8 @@ public abstract class BaseEndEvent implements BPMNViewDefinition,
     public boolean equals(Object o) {
         if (o instanceof BaseEndEvent) {
             BaseEndEvent other = (BaseEndEvent) o;
-            return Objects.equals(general, other.general) &&
+            return Objects.equals(name, other.name) &&
+                    Objects.equals(documentation, other.documentation) &&
                     Objects.equals(backgroundSet, other.backgroundSet) &&
                     Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(dimensionsSet, other.dimensionsSet) &&

@@ -26,8 +26,6 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.annotations.field.selector.SelectorDataProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.BaseStartEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.bpmn.forms.model.ComboBoxFieldType;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
@@ -48,13 +46,13 @@ public class InterruptingSignalEventExecutionSet extends BaseStartEventExecution
     private SignalRef signalRef;
 
     public InterruptingSignalEventExecutionSet() {
-        this(new IsInterrupting(),
-             new SLADueDate(),
+        this(true,
+             "",
              new SignalRef());
     }
 
-    public InterruptingSignalEventExecutionSet(final @MapsTo("isInterrupting") IsInterrupting isInterrupting,
-                                               final @MapsTo("slaDueDate") SLADueDate slaDueDate,
+    public InterruptingSignalEventExecutionSet(final @MapsTo("isInterrupting") Boolean isInterrupting,
+                                               final @MapsTo("slaDueDate") String slaDueDate,
                                                final @MapsTo("signalRef") SignalRef signalRef) {
         super(isInterrupting, slaDueDate);
         this.signalRef = signalRef;

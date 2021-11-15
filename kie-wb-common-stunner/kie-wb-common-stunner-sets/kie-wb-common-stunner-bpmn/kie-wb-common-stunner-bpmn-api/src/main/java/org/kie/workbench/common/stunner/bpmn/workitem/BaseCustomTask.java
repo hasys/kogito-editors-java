@@ -21,7 +21,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.BaseTask;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
@@ -32,13 +31,14 @@ public abstract class BaseCustomTask extends BaseTask {
     @Category
     public static final transient String category = BPMNCategories.CUSTOM_TASKS;
 
-    public BaseCustomTask(TaskGeneralSet general,
+    public BaseCustomTask(String name,
+                          String documentation,
                           BackgroundSet backgroundSet,
                           FontSet fontSet,
                           RectangleDimensionsSet dimensionsSet,
                           SimulationSet simulationSet,
                           TaskType taskType,
                           AdvancedData advancedData) {
-        super(general, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType, advancedData);
+        super(name, documentation, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType, advancedData);
     }
 }

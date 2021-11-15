@@ -16,11 +16,15 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.property.simulation;
 
+import java.util.Objects;
+
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @Portable
@@ -28,38 +32,47 @@ import org.kie.workbench.common.stunner.core.util.HashUtil;
 public class SimulationAttributeSet implements BPMNPropertySet {
 
     @Property
-    private Min min;
+    @Value
+    private Double min;
 
     @Property
-    private Max max;
+    @Value
+    private Double max;
 
     @Property
-    private Mean mean;
+    @Value
+    private Double mean;
 
     @Property
-    private TimeUnit timeUnit;
+    @Value
+    @FieldValue
+    private String timeUnit;
 
     @Property
-    private StandardDeviation standardDeviation;
+    @Value
+    @FieldValue
+    private Double standardDeviation;
 
     @Property
-    private DistributionType distributionType;
+    @Value
+    @FieldValue
+    private String distributionType;
 
     public SimulationAttributeSet() {
-        this(new Min(),
-             new Max(),
-             new Mean(),
-             new TimeUnit(),
-             new StandardDeviation(),
-             new DistributionType());
+        this(0d,
+             0d,
+             0d,
+             "ms",
+             0d,
+             "normal");
     }
 
-    public SimulationAttributeSet(final @MapsTo("min") Min min,
-                                  final @MapsTo("max") Max max,
-                                  final @MapsTo("mean") Mean mean,
-                                  final @MapsTo("timeUnit") TimeUnit timeUnit,
-                                  final @MapsTo("standardDeviation") StandardDeviation standardDeviation,
-                                  final @MapsTo("distributionType") DistributionType distributionType) {
+    public SimulationAttributeSet(final @MapsTo("min") Double min,
+                                  final @MapsTo("max") Double max,
+                                  final @MapsTo("mean") Double mean,
+                                  final @MapsTo("timeUnit") String timeUnit,
+                                  final @MapsTo("standardDeviation") Double standardDeviation,
+                                  final @MapsTo("distributionType") String distributionType) {
         this.min = min;
         this.max = max;
         this.mean = mean;
@@ -68,88 +81,74 @@ public class SimulationAttributeSet implements BPMNPropertySet {
         this.distributionType = distributionType;
     }
 
-    public SimulationAttributeSet(final Double min,
-                                  final Double max,
-                                  final Double mean,
-                                  final String timeUnit,
-                                  final Double standardDeviation,
-                                  final String distributionType) {
-        this.min = new Min(min);
-        this.max = new Max(max);
-        this.mean = new Mean(mean);
-        this.timeUnit = new TimeUnit(timeUnit);
-        this.standardDeviation = new StandardDeviation(standardDeviation);
-        this.distributionType = new DistributionType(distributionType);
-    }
-
-    public Min getMin() {
+    public Double getMin() {
         return min;
     }
 
-    public Max getMax() {
+    public Double getMax() {
         return max;
     }
 
-    public Mean getMean() {
+    public Double getMean() {
         return mean;
     }
 
-    public TimeUnit getTimeUnit() {
+    public String getTimeUnit() {
         return timeUnit;
     }
 
-    public StandardDeviation getStandardDeviation() {
+    public Double getStandardDeviation() {
         return standardDeviation;
     }
 
-    public DistributionType getDistributionType() {
+    public String getDistributionType() {
         return distributionType;
     }
 
-    public void setMin(final Min min) {
+    public void setMin(final Double min) {
         this.min = min;
     }
 
-    public void setMax(final Max max) {
+    public void setMax(final Double max) {
         this.max = max;
     }
 
-    public void setMean(final Mean mean) {
+    public void setMean(final Double mean) {
         this.mean = mean;
     }
 
-    public void setTimeUnit(final TimeUnit timeUnit) {
+    public void setTimeUnit(final String timeUnit) {
         this.timeUnit = timeUnit;
     }
 
-    public void setStandardDeviation(final StandardDeviation standardDeviation) {
+    public void setStandardDeviation(final Double standardDeviation) {
         this.standardDeviation = standardDeviation;
     }
 
-    public void setDistributionType(final DistributionType distributionType) {
+    public void setDistributionType(final String distributionType) {
         this.distributionType = distributionType;
     }
 
     @Override
     public int hashCode() {
-        return HashUtil.combineHashCodes(min.hashCode(),
-                                         max.hashCode(),
-                                         mean.hashCode(),
-                                         timeUnit.hashCode(),
-                                         standardDeviation.hashCode(),
-                                         distributionType.hashCode());
+        return HashUtil.combineHashCodes(Objects.hashCode(min),
+                                         Objects.hashCode(max),
+                                         Objects.hashCode(mean),
+                                         Objects.hashCode(timeUnit),
+                                         Objects.hashCode(standardDeviation),
+                                         Objects.hashCode(distributionType));
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof SimulationAttributeSet) {
             SimulationAttributeSet other = (SimulationAttributeSet) o;
-            return min.equals(other.min) &&
-                    max.equals(other.max) &&
-                    mean.equals(other.mean) &&
-                    timeUnit.equals(other.timeUnit) &&
-                    standardDeviation.equals(other.standardDeviation) &&
-                    distributionType.equals(other.distributionType);
+            return Objects.equals(min, other.min) &&
+                    Objects.equals(max, other.max) &&
+                    Objects.equals(mean, other.mean) &&
+                    Objects.equals(timeUnit, other.timeUnit) &&
+                    Objects.equals(standardDeviation, other.standardDeviation) &&
+                    Objects.equals(distributionType, other.distributionType);
         }
         return false;
     }

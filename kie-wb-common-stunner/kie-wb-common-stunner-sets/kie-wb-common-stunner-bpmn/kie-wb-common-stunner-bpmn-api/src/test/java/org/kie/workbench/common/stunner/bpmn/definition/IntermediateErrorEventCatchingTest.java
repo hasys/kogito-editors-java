@@ -23,7 +23,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSe
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.error.CancellingErrorEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.SLADueDate;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 
@@ -34,7 +33,6 @@ import static org.mockito.Mockito.mock;
 
 public class IntermediateErrorEventCatchingTest {
 
-    private BPMNGeneralSet general;
     private BackgroundSet backgroundSet;
     private FontSet fontSet;
     private CircleDimensionSet dimensionSet;
@@ -46,7 +44,6 @@ public class IntermediateErrorEventCatchingTest {
 
     @Before
     public void setUp() {
-        general = mock(BPMNGeneralSet.class);
         backgroundSet = mock(BackgroundSet.class);
         fontSet = mock(FontSet.class);
         dimensionSet = mock(CircleDimensionSet.class);
@@ -55,7 +52,8 @@ public class IntermediateErrorEventCatchingTest {
 
         cancellingErrorEventExecutionSet = mock(CancellingErrorEventExecutionSet.class);
 
-        tested = new IntermediateErrorEventCatching(general,
+        tested = new IntermediateErrorEventCatching("",
+                                                    "",
                                                     backgroundSet,
                                                     fontSet,
                                                     dimensionSet,
@@ -85,7 +83,8 @@ public class IntermediateErrorEventCatchingTest {
     @Test
     public void testHashCode() {
         IntermediateErrorEventCatching compare =
-                new IntermediateErrorEventCatching(general,
+                new IntermediateErrorEventCatching("",
+                                                   "",
                                                    backgroundSet,
                                                    fontSet,
                                                    dimensionSet,
@@ -98,7 +97,8 @@ public class IntermediateErrorEventCatchingTest {
     @Test
     public void testEquals() {
         IntermediateSignalEventThrowing compare1 = new IntermediateSignalEventThrowing();
-        IntermediateErrorEventCatching compare2 = new IntermediateErrorEventCatching(general,
+        IntermediateErrorEventCatching compare2 = new IntermediateErrorEventCatching("",
+                                                                                     "",
                                                                                      backgroundSet,
                                                                                      fontSet,
                                                                                      dimensionSet,
@@ -108,7 +108,8 @@ public class IntermediateErrorEventCatchingTest {
         CancellingErrorEventExecutionSet executionSet = new CancellingErrorEventExecutionSet();
         executionSet.setSlaDueDate(new SLADueDate("12/25/1983"));
         IntermediateErrorEventCatching compare3 =
-                new IntermediateErrorEventCatching(general,
+                new IntermediateErrorEventCatching("",
+                                                   "",
                                                    backgroundSet,
                                                    fontSet,
                                                    dimensionSet,
@@ -116,7 +117,8 @@ public class IntermediateErrorEventCatchingTest {
                                                    advancedData,
                                                    executionSet);
         IntermediateErrorEventCatching compare4 =
-                new IntermediateErrorEventCatching(general,
+                new IntermediateErrorEventCatching("",
+                                                   "",
                                                    backgroundSet,
                                                    fontSet,
                                                    dimensionSet,

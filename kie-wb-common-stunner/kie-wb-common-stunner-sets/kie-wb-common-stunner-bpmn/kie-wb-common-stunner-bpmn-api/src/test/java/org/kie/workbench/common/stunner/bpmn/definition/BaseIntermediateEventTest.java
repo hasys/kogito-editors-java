@@ -22,7 +22,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,7 +34,6 @@ public class BaseIntermediateEventTest {
     private static final String FAKE_LABEL = "fake_label";
     private static final String ANOTHER_LABEL = "another_label";
 
-    private BPMNGeneralSet generalSet;
     private BackgroundSet backgroundSet;
     private FontSet fontSet;
     private CircleDimensionSet dimensionsSet;
@@ -45,7 +43,6 @@ public class BaseIntermediateEventTest {
 
     @Before
     public void setUp() {
-        generalSet = mock(BPMNGeneralSet.class);
         backgroundSet = mock(BackgroundSet.class);
         fontSet = mock(FontSet.class);
         dimensionsSet = mock(CircleDimensionSet.class);
@@ -57,19 +54,6 @@ public class BaseIntermediateEventTest {
     public void initLabels() {
         tested.initLabels();
         assertTrue(tested.labels.contains(FAKE_LABEL));
-    }
-
-    @Test
-    public void getGeneral() {
-        tested.general = generalSet;
-        assertEquals(generalSet, tested.getGeneral());
-    }
-
-    @Test
-    public void setGeneral() {
-        tested.general = null;
-        tested.setGeneral(generalSet);
-        assertEquals(generalSet, tested.general);
     }
 
     @Test
@@ -131,7 +115,6 @@ public class BaseIntermediateEventTest {
 
     @Test
     public void testEquals() {
-        tested.general = mock(BPMNGeneralSet.class);
         tested.backgroundSet = mock(BackgroundSet.class);
         tested.fontSet = mock(FontSet.class);
         tested.dimensionsSet = mock(CircleDimensionSet.class);
@@ -141,14 +124,12 @@ public class BaseIntermediateEventTest {
         IntermediateTimerEvent compare1 = new IntermediateTimerEvent();
 
         FakeBaseIntermediateEventTest compare2 = new FakeBaseIntermediateEventTest();
-        compare2.general = mock(BPMNGeneralSet.class);
         compare2.backgroundSet = mock(BackgroundSet.class);
         compare2.fontSet = mock(FontSet.class);
         compare2.dimensionsSet = mock(CircleDimensionSet.class);
         compare2.labels.add(ANOTHER_LABEL);
 
         FakeBaseIntermediateEventTest compare3 = new FakeBaseIntermediateEventTest();
-        compare3.general = generalSet;
         compare3.backgroundSet = backgroundSet;
         compare3.fontSet = fontSet;
         compare3.dimensionsSet = dimensionsSet;

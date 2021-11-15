@@ -25,9 +25,8 @@ import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.EndEscalationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateEscalationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateEscalationEventThrowing;
-import org.kie.workbench.common.stunner.bpmn.definition.StartEscalationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.CancelActivity;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.IsInterrupting;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.escalation.CancellingEscalationEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.escalation.EscalationEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.escalation.EscalationRef;
@@ -94,8 +93,8 @@ public class ProcessEscalationRefProviderTest extends AbstractProcessFilteredNod
 
     private Node mockStartEscalationEventNode(String escalationRefValue) {
         StartEscalationEvent event = new StartEscalationEvent();
-        event.setExecutionSet(new InterruptingEscalationEventExecutionSet(new IsInterrupting(true),
-                                                                          new SLADueDate(),
+        event.setExecutionSet(new InterruptingEscalationEventExecutionSet(true,
+                                                                          "",
                                                                           new EscalationRef(escalationRefValue)));
         return mockNode(event);
     }

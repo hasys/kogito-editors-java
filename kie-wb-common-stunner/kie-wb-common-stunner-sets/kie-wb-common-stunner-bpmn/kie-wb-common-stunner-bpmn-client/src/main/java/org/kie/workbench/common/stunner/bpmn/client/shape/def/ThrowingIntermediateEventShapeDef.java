@@ -67,7 +67,7 @@ public class ThrowingIntermediateEventShapeDef
     @Override
     public SizeHandler<BaseThrowingIntermediateEvent, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .radius(task -> task.getDimensionsSet().getRadius().getValue())
+                .radius(task -> task.getDimensionsSet().getRadius())
                 .build();
     }
 

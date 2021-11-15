@@ -100,7 +100,7 @@ public class CatchingIntermediateEventShapeDef
     @Override
     public SizeHandler<BaseCatchingIntermediateEvent, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .radius(task -> task.getDimensionsSet().getRadius().getValue())
+                .radius(task -> task.getDimensionsSet().getRadius())
                 .build();
     }
 

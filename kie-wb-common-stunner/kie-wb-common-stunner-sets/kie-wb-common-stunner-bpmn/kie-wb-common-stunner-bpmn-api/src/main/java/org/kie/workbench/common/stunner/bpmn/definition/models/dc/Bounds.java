@@ -33,6 +33,15 @@ public class Bounds {
     @XmlAttribute
     private double y;
 
+    public Bounds() {}
+
+    public Bounds(double x, double y, double width, double height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
 

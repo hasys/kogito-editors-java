@@ -24,17 +24,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.forms.adf.engine.shared.FormElementFilter;
-import org.kie.workbench.common.stunner.bpmn.definition.BaseStartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.StartCompensationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartConditionalEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartErrorEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartEscalationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartMessageEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartNoneEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartSignalEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.StartTimerEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartCompensationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartConditionalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartErrorEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartTimerEvent;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.client.canvas.AbstractCanvasHandler;
 import org.kie.workbench.common.stunner.core.client.session.ClientSession;
@@ -117,7 +117,7 @@ public class StartEventFilterProviderFactoryTest {
 
     @Test
     public void testFilterProviderShowIsInterruptingField() {
-        BaseStartEvent[] testedClasses = {
+        StartEvent[] testedClasses = {
                 new StartSignalEvent(),
                 new StartTimerEvent(),
                 new StartConditionalEvent(),
@@ -131,7 +131,7 @@ public class StartEventFilterProviderFactoryTest {
 
     @Test
     public void testFilterProviderHideIsInterruptingField() {
-        BaseStartEvent[] test1Classes = {
+        StartEvent[] test1Classes = {
                 new StartNoneEvent(),
                 new StartCompensationEvent(),
                 new StartSignalEvent(),
@@ -146,7 +146,7 @@ public class StartEventFilterProviderFactoryTest {
                 forEach(catchingIntermediateEvent ->
                                 testStartEventFilterProviderHideIsInterruptingField(catchingIntermediateEvent));
 
-        BaseStartEvent[] test2Classes = {
+        StartEvent[] test2Classes = {
                 new StartNoneEvent(),
                 new StartCompensationEvent(),
                 new StartErrorEvent(),
@@ -177,7 +177,7 @@ public class StartEventFilterProviderFactoryTest {
         assertFalse(formElementFilter.getPredicate().test(definition));
     }
 
-    private void testStartEventFilterProviderShowIsInterruptingField(BaseStartEvent filterEvent) {
+    private void testStartEventFilterProviderShowIsInterruptingField(StartEvent filterEvent) {
         when(view.getDefinition()).thenReturn(filterEvent);
 
         Class<?> filterClass = filterEvent.getClass();
@@ -194,7 +194,7 @@ public class StartEventFilterProviderFactoryTest {
         assertTrue(formElementFilter.getPredicate().test(definition));
     }
 
-    private void testStartEventFilterProviderHideIsInterruptingField(BaseStartEvent filterEvent) {
+    private void testStartEventFilterProviderHideIsInterruptingField(StartEvent filterEvent) {
         when(parentView.getDefinition()).thenReturn(otherNode);
         when(view.getDefinition()).thenReturn(filterEvent);
 

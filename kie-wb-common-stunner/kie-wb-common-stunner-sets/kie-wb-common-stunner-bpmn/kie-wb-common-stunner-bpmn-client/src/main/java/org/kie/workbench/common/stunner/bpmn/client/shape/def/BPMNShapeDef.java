@@ -55,7 +55,7 @@ public interface BPMNShapeDef<W extends BPMNViewDefinition, V extends ShapeView>
     }
 
     default BPMNShapeViewHandlers.ViewAttributesHandlerBuilder<W, V> newViewAttributesHandlerBuilder() {
-        return new BPMNShapeViewHandlers.ViewAttributesHandlerBuilder<W, V>();
+        return new BPMNShapeViewHandlers.ViewAttributesHandlerBuilder<>();
     }
 
     default FontHandler<W, V> newFontHandler() {

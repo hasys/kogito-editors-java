@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -27,13 +27,8 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Radius;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.conditional.InterruptingConditionalEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationAttributeSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.event.escalation.InterruptingEscalationEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -46,65 +41,87 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseStartEvent.class)
+@Morph(base = StartEvent.class)
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class StartConditionalEvent extends BaseStartEvent {
+public class StartEscalationEvent extends StartEvent {
 
     @Property
-    @FormField(afterElement = "general")
+    @FormField(afterElement = "documentation")
     @Valid
-    protected InterruptingConditionalEventExecutionSet executionSet;
+    private InterruptingEscalationEventExecutionSet executionSet;
 
-    public StartConditionalEvent() {
-        this((new BPMNGeneralSet("")),
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(new Radius()),
-             new SimulationAttributeSet(),
+    @Property
+    @FormField(afterElement = "executionSet")
+    @Valid
+    private DataIOSet dataIOSet;
+
+    public StartEscalationEvent() {
+        this("",
+             "",
              new AdvancedData(),
-             new InterruptingConditionalEventExecutionSet());
+             new DataIOSet(),
+             new InterruptingEscalationEventExecutionSet());
     }
 
-    public StartConditionalEvent(final @MapsTo("general") BPMNGeneralSet general,
-                                 final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                                 final @MapsTo("fontSet") FontSet fontSet,
-                                 final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
-                                 final @MapsTo("simulationSet") SimulationAttributeSet simulationSet,
-                                 final @MapsTo("advancedData") AdvancedData advancedData,
-                                 final @MapsTo("executionSet") InterruptingConditionalEventExecutionSet executionSet) {
-        super(general,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
-              simulationSet,
+    public StartEscalationEvent(final @MapsTo("name") String name,
+                                final @MapsTo("documentation") String documentation,
+                                final @MapsTo("advancedData") AdvancedData advancedData,
+                                final @MapsTo("dataIOSet") DataIOSet dataIOSet,
+                                final @MapsTo("executionSet") InterruptingEscalationEventExecutionSet executionSet) {
+        super(name,
+              documentation,
               advancedData);
         this.executionSet = executionSet;
+        this.dataIOSet = dataIOSet;
     }
 
-    public InterruptingConditionalEventExecutionSet getExecutionSet() {
+    public InterruptingEscalationEventExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(InterruptingConditionalEventExecutionSet executionSet) {
+    public void setExecutionSet(InterruptingEscalationEventExecutionSet executionSet) {
         this.executionSet = executionSet;
+    }
+
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
+    }
+
+    public void setDataIOSet(DataIOSet dataIOSet) {
+        this.dataIOSet = dataIOSet;
+    }
+
+    @Override
+    public boolean hasOutputVars() {
+        return true;
+    }
+
+    @Override
+    public boolean isSingleOutputVar() {
+        return true;
     }
 
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
-                                         Objects.hashCode(executionSet));
+                                         Objects.hashCode(executionSet),
+                                         Objects.hashCode(dataIOSet));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof StartConditionalEvent) {
-            StartConditionalEvent other = (StartConditionalEvent) o;
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof StartEscalationEvent) {
+            StartEscalationEvent other = (StartEscalationEvent) o;
             return super.equals(other) &&
-                    Objects.equals(executionSet, other.executionSet);
+                    Objects.equals(executionSet, other.executionSet) &&
+                    Objects.equals(dataIOSet, other.dataIOSet);
         }
         return false;
     }

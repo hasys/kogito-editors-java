@@ -30,6 +30,15 @@ public class MetaData {
     @XmlElement(name = "metaValue", namespace = "http://www.jboss.org/drools")
     private String metaValue;
 
+    public MetaData() {
+
+    }
+
+    public MetaData(String name, String value) {
+        this.name = name;
+        this.metaValue = value;
+    }
+
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
 

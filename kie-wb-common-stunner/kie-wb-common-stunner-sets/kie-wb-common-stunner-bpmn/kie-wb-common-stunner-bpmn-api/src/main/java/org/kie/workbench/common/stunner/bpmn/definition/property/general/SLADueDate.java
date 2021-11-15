@@ -18,6 +18,9 @@ package org.kie.workbench.common.stunner.bpmn.definition.property.general;
 
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlElement;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldDefinition;
@@ -35,6 +38,8 @@ public class SLADueDate implements BPMNProperty {
 
     @Value
     @FieldValue
+    @XmlCData
+    @XmlElement(name = "metaValue")
     private String value;
 
     public SLADueDate() {
