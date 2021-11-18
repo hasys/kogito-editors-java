@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -27,11 +27,8 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.event.error.ErrorEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.event.message.MessageEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -44,50 +41,43 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseEndEvent.class)
+@Morph(base = EndEvent.class)
 @FormDefinition(
         startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class EndErrorEvent extends BaseEndEvent {
+public class EndMessageEvent extends EndEvent {
 
     @Property
     @FormField(afterElement = "documentation")
     @Valid
-    protected ErrorEventExecutionSet executionSet;
+    protected MessageEventExecutionSet executionSet;
 
     @Property
     @FormField(afterElement = "executionSet")
     protected DataIOSet dataIOSet;
 
-    public EndErrorEvent() {
+    public EndMessageEvent() {
         this("",
              "",
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(),
-             new ErrorEventExecutionSet(),
              new AdvancedData(),
+             new MessageEventExecutionSet(),
              new DataIOSet());
     }
 
-    public EndErrorEvent(final @MapsTo("name") String name,
-                         final @MapsTo("documentation") String documentation,
-                         final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                         final @MapsTo("fontSet") FontSet fontSet,
-                         final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
-                         final @MapsTo("executionSet") ErrorEventExecutionSet executionSet,
-                         final @MapsTo("advancedData") AdvancedData advancedData,
-                         final @MapsTo("dataIOSet") DataIOSet dataIOSet) {
+    public EndMessageEvent(final @MapsTo("name") String name,
+                           final @MapsTo("documentation") String documentation,
+                           final @MapsTo("advancedData") AdvancedData advancedData,
+                           final @MapsTo("executionSet") MessageEventExecutionSet executionSet,
+                           final @MapsTo("dataIOSet") DataIOSet dataIOSet) {
         super(name,
               documentation,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
               advancedData);
         this.executionSet = executionSet;
         this.dataIOSet = dataIOSet;
+
+        labels.add("messageflow_start");
     }
 
     @Override
@@ -100,11 +90,11 @@ public class EndErrorEvent extends BaseEndEvent {
         return true;
     }
 
-    public ErrorEventExecutionSet getExecutionSet() {
+    public MessageEventExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(ErrorEventExecutionSet executionSet) {
+    public void setExecutionSet(MessageEventExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 
@@ -117,27 +107,22 @@ public class EndErrorEvent extends BaseEndEvent {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof EndErrorEvent)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        EndErrorEvent that = (EndErrorEvent) o;
-
-        return Objects.equals(executionSet, that.executionSet)
-                && Objects.equals(dataIOSet, that.dataIOSet);
-    }
-
-    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
                                          executionSet.hashCode(),
-                                         dataIOSet.hashCode());
+                                         dataIOSet.hashCode(),
+                                         labels.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof EndMessageEvent) {
+            EndMessageEvent other = (EndMessageEvent) o;
+            return super.equals(other) &&
+                    Objects.equals(executionSet, other.executionSet) &&
+                    Objects.equals(dataIOSet, other.dataIOSet) &&
+                    Objects.equals(labels, other.labels);
+        }
+        return false;
     }
 }

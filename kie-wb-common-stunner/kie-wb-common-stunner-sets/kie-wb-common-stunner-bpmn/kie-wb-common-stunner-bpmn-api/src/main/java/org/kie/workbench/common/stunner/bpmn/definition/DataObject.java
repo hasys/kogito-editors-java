@@ -91,12 +91,10 @@ public class DataObject extends BaseArtifacts {
                       final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                       final @MapsTo("advancedData") AdvancedData advancedData) {
 
-        super(backgroundSet, fontSet, dimensionsSet, advancedData);
+        super(name, documentation, backgroundSet, fontSet, dimensionsSet, advancedData);
         this.dataObjectName = dataObjectName;
         this.dataObjectName.setValue(this.dataObjectName.getValue());
         this.type = type;
-        this.name = name;
-        this.documentation = documentation;
     }
 
     public Set<String> getLabels() {

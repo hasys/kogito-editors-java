@@ -23,8 +23,6 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
-import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
@@ -33,32 +31,14 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
-import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
-public abstract class BaseIntermediateEvent
+public abstract class BaseIntermediateEvent extends FlowElement
         implements BPMNViewDefinition,
                    DataIOModel {
 
     @Labels
     protected final Set<String> labels = new HashSet<>();
-
-    @Valid
-    @Value
-    @FieldValue
-    @Property
-    @FormField(type = TextAreaFieldType.class)
-    private String name;
-
-    @Property
-    @FormField(
-            type = TextAreaFieldType.class,
-            afterElement = "name"
-    )
-    @Value
-    @FieldValue
-    @Valid
-    private String documentation;
 
     @Property
     @Valid
@@ -168,10 +148,14 @@ public abstract class BaseIntermediateEvent
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         Objects.hashCode(name),
-                                         Objects.hashCode(documentation),
+                                         super.hashCode(),
                                          Objects.hashCode(backgroundSet),
                                          Objects.hashCode(fontSet),
                                          Objects.hashCode(dimensionsSet),
@@ -187,8 +171,7 @@ public abstract class BaseIntermediateEvent
         }
         if (o instanceof BaseIntermediateEvent) {
             BaseIntermediateEvent other = (BaseIntermediateEvent) o;
-            return Objects.equals(name, other.name) &&
-                    Objects.equals(documentation, other.documentation) &&
+            return super.equals(other) &&
                     Objects.equals(backgroundSet, other.backgroundSet) &&
                     Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(dimensionsSet, other.dimensionsSet) &&

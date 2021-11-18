@@ -19,7 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.client.forms.fields.multipleInstan
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.forms.processing.engine.handling.ValidationResult;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.ReusableSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
@@ -52,10 +52,10 @@ public class MultipleInstanceVariableEditorTest {
     private static final String ERROR_MESSAGE = "ERROR_MESSAGE";
 
     @Mock
-    private Node<View<BPMNDefinition>, Edge> node;
+    private Node<View<FlowElement>, Edge> node;
 
     @Mock
-    private View<BPMNDefinition> view;
+    private View<FlowElement> view;
 
     @Mock
     private ClientTranslationService translationService;
@@ -110,26 +110,26 @@ public class MultipleInstanceVariableEditorTest {
         testValidateInvalidValue(mock(MultipleInstanceSubprocess.class));
     }
 
-    private void testValidateValueOk(BPMNDefinition definition) {
+    private void testValidateValueOk(FlowElement definition) {
         doTest(definition, NOT_USED_NAME, VALID, "");
     }
 
-    private void testValidateValueAlreadyUsedAsInput(BPMNDefinition definition) {
+    private void testValidateValueAlreadyUsedAsInput(FlowElement definition) {
         when(translationService.getValue(INPUT_ASSIGNMENT_ALREADY_EXISTS_ERROR, INPUT1)).thenReturn(ERROR_MESSAGE);
         doTest(definition, INPUT1, ERROR, ERROR_MESSAGE);
     }
 
-    private void testValidateValueAlreadyUsedAsOutput(BPMNDefinition definition) {
+    private void testValidateValueAlreadyUsedAsOutput(FlowElement definition) {
         when(translationService.getValue(OUTPUT_ASSIGNMENT_ALREADY_EXISTS_ERROR, OUTPUT1)).thenReturn(ERROR_MESSAGE);
         doTest(definition, OUTPUT1, ERROR, ERROR_MESSAGE);
     }
 
-    private void testValidateInvalidValue(BPMNDefinition definition) {
+    private void testValidateInvalidValue(FlowElement definition) {
         when(translationService.getValue(INVALID_VARIABLE_NAME_ERROR)).thenReturn(ERROR_MESSAGE);
         doTest(definition, "####", ERROR, ERROR_MESSAGE);
     }
 
-    private void doTest(BPMNDefinition definition, String value, ValidationResult.State expectedState, String expectedMessage) {
+    private void doTest(FlowElement definition, String value, ValidationResult.State expectedState, String expectedMessage) {
         when(node.getContent()).thenReturn(view);
         when(view.getDefinition()).thenReturn(definition);
         MultipleInstanceVariableValidator validator = new MultipleInstanceVariableValidator(node, translationService);

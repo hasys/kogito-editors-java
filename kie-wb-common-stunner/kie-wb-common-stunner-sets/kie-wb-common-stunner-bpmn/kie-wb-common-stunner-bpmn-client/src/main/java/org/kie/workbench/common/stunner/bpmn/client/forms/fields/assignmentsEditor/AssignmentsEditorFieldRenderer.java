@@ -25,7 +25,7 @@ import org.kie.workbench.common.forms.dynamic.client.rendering.formGroups.FormGr
 import org.kie.workbench.common.forms.dynamic.client.rendering.formGroups.impl.def.DefaultFormGroup;
 import org.kie.workbench.common.forms.dynamic.service.shared.RenderMode;
 import org.kie.workbench.common.stunner.bpmn.client.forms.util.BPMNFormsContextUtils;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.forms.model.AssignmentsEditorFieldDefinition;
 import org.kie.workbench.common.stunner.bpmn.forms.model.AssignmentsEditorFieldType;
 
@@ -51,8 +51,8 @@ public class AssignmentsEditorFieldRenderer extends FieldRenderer<AssignmentsEdi
 
         assignmentsEditor.setBPMNModel(null);
         Object model = BPMNFormsContextUtils.getModel(renderingContext);
-        if (model instanceof BPMNDefinition) {
-            assignmentsEditor.setBPMNModel((BPMNDefinition) model);
+        if (model instanceof FlowElement) {
+            assignmentsEditor.setBPMNModel((FlowElement) model);
         }
 
         formGroup.render(assignmentsEditor, field);

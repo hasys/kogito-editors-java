@@ -133,6 +133,11 @@ public abstract class BaseConnector implements BPMNViewDefinition {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
                                          Objects.hashCode(name),

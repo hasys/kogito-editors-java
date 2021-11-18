@@ -20,13 +20,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
-import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
@@ -36,33 +32,13 @@ import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
-import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @MorphBase(defaultType = EmbeddedSubprocess.class)
-public abstract class BaseSubprocess implements BPMNViewDefinition {
+public abstract class BaseSubprocess extends FlowElement implements BPMNViewDefinition {
 
     @Category
     public static final transient String category = BPMNCategories.SUB_PROCESSES;
-
-    @Property
-    @Valid
-    @Value
-    @FieldValue
-    @NotNull
-    @NotEmpty
-    @FormField(type = TextAreaFieldType.class)
-    private String name;
-
-    @Property
-    @Valid
-    @Value
-    @FieldValue
-    @FormField(
-            type = TextAreaFieldType.class,
-            afterElement = "name"
-    )
-    private String documentation;
 
     @Property
     @Valid
@@ -105,8 +81,7 @@ public abstract class BaseSubprocess implements BPMNViewDefinition {
                           final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                           final @MapsTo("simulationSet") SimulationSet simulationSet,
                           final @MapsTo("advancedData") AdvancedData advancedData) {
-        this.name = name;
-        this.documentation = documentation;
+        super(name, documentation);
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
@@ -131,24 +106,6 @@ public abstract class BaseSubprocess implements BPMNViewDefinition {
 
     public String getCategory() {
         return category;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getDocumentation() {
-        return documentation;
-    }
-
-    public void setDocumentation(String documentation) {
-        this.documentation = documentation;
     }
 
     public BackgroundSet getBackgroundSet() {
@@ -196,10 +153,14 @@ public abstract class BaseSubprocess implements BPMNViewDefinition {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         Objects.hashCode(name),
-                                         Objects.hashCode(documentation),
+                                         super.hashCode(),
                                          Objects.hashCode(backgroundSet),
                                          Objects.hashCode(fontSet),
                                          Objects.hashCode(simulationSet),
@@ -212,8 +173,7 @@ public abstract class BaseSubprocess implements BPMNViewDefinition {
     public boolean equals(Object o) {
         if (o instanceof BaseSubprocess) {
             BaseSubprocess other = (BaseSubprocess) o;
-            return Objects.equals(name, other.name) &&
-                    Objects.equals(documentation, other.documentation) &&
+            return super.equals(other) &&
                     Objects.equals(backgroundSet, other.backgroundSet) &&
                     Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(simulationSet, other.simulationSet) &&

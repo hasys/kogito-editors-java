@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -22,9 +24,6 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
@@ -35,34 +34,53 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseEndEvent.class)
+@Morph(base = EndEvent.class)
 @FormDefinition(
         startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class EndTerminateEvent extends BaseEndEvent {
+@XmlRootElement(name = "endEvent", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
+public class EndTerminateEvent extends EndEvent {
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+     */
+    private TerminateEventDefinition terminateEventDefinition = new TerminateEventDefinition();
 
     public EndTerminateEvent() {
         this("",
              "",
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(),
              new AdvancedData());
     }
 
     public EndTerminateEvent(final @MapsTo("name") String name,
                              final @MapsTo("documentation") String documentation,
-                             final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                             final @MapsTo("fontSet") FontSet fontSet,
-                             final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
                              final @MapsTo("advancedData") AdvancedData advancedData) {
         super(name,
               documentation,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
               advancedData);
+    }
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+     */
+    public TerminateEventDefinition getTerminateEventDefinition() {
+        return terminateEventDefinition;
+    }
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+     */
+    public void setTerminateEventDefinition(TerminateEventDefinition terminateEventDefinition) {
+        this.terminateEventDefinition = terminateEventDefinition;
+    }
+
+    /*
+    It should be null if nothing is present otherwise it will be marshalled as empty element
+     */
+    @Override
+    public ExtensionElements getExtensionElements() {
+        return super.getExtensionElements().getMetaData().isEmpty() ? null : super.getExtensionElements();
     }
 }

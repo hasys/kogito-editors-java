@@ -41,4 +41,9 @@ public abstract class BaseCustomTask extends BaseTask {
                           AdvancedData advancedData) {
         super(name, documentation, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType, advancedData);
     }
+
+    @Override
+    public String getId() {
+        return null;
+    }
 }

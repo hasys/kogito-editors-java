@@ -237,6 +237,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     })
     private List<StartEvent> startEvents = new ArrayList<>();
 
+    @XmlElement(name = "endEvent")
+    @XmlUnwrappedCollection
+    @XmlElements({
+            @XmlElement(name = "_EndNoneEvent", type = EndNoneEvent.class),
+            @XmlElement(name = "_EndTerminateEvent", type = EndTerminateEvent.class)
+    })
+    private List<EndEvent> endEvents = new ArrayList<>();
+
     public Process() {
         this("",
              "",
@@ -475,6 +483,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.startEvents = startEvents;
     }
 
+    public List<EndEvent> getEndEvents() {
+        return endEvents;
+    }
+
+    public void setEndEvents(List<EndEvent> endEvents) {
+        this.endEvents = endEvents;
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(processData),
@@ -483,7 +499,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                                          Objects.hashCode(fontSet),
                                          Objects.hashCode(dimensionsSet),
                                          Objects.hashCode(advancedData),
-                                         Objects.hashCode(startEvents));
+                                         Objects.hashCode(startEvents),
+                                         Objects.hashCode(endEvents));
     }
 
     @Override
@@ -496,7 +513,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                     Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(dimensionsSet, other.dimensionsSet) &&
                     Objects.equals(advancedData, other.advancedData) &&
-                    Objects.equals(startEvents, other.startEvents);
+                    Objects.equals(startEvents, other.startEvents) &&
+                    Objects.equals(endEvents, other.endEvents);
         }
         return false;
     }

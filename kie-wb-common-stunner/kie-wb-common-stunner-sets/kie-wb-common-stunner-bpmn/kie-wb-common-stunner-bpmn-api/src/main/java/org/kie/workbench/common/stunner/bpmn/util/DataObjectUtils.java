@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.core.client.session.ClientSession;
 import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.Element;
@@ -32,7 +32,7 @@ public class DataObjectUtils {
 
     private static boolean isBPMNDefinition(Node node) {
         return node.getContent() instanceof View &&
-                ((View) node.getContent()).getDefinition() instanceof BPMNDefinition;
+                ((View) node.getContent()).getDefinition() instanceof FlowElement;
     }
 
     public static Set<DataObject> findDataObjects(ClientSession session, GraphUtils graphUtils, Node selectedElement, Set<String> parentIds) {
@@ -44,7 +44,7 @@ public class DataObjectUtils {
         // Only return Data Objects that have the same id as the current as the parent and its parent recursively
         return StreamSupport.stream(nodes.spliterator(), false)
                 .filter(DataObjectUtils::isBPMNDefinition)
-                .map(elm -> (Node<View<BPMNDefinition>, Edge>) elm)
+                .map(elm -> (Node<View<FlowElement>, Edge>) elm)
                 .filter(elm -> {
                     if (elm.getContent().getDefinition() instanceof DataObject) {
                         final Element parent = graphUtils.getParent(elm);

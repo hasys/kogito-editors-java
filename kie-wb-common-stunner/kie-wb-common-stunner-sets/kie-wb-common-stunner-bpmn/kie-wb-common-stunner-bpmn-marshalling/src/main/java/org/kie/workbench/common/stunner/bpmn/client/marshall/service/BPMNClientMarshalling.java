@@ -26,8 +26,10 @@ import javax.xml.stream.XMLStreamException;
 
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationship;
@@ -81,31 +83,38 @@ public class BPMNClientMarshalling {
 
         Process process = (Process) stream(nodes.spliterator(), false)
                 .map(node -> node.getContent().getDefinition())
-                .filter(node ->  node instanceof Process)
+                .filter(node -> node instanceof Process)
                 .findFirst().orElse(new Process());
 
         definitions.setProcess(process);
         plane.setBpmnElement(process.getName());
 
-        int startNodeCounter = 0;
         for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
             BPMNViewDefinition n = node.getContent().getDefinition();
+            if (n instanceof FlowElement) {
+                ((FlowElement) n).setId(IdGenerator.getNextIdFor(n));
+            }
+
             if (n instanceof StartEvent) {
-                // Generating Start Event ID
-                String id = "StartEvent_" + ++startNodeCounter;
                 StartEvent startEvent = (StartEvent) n;
-                startEvent.setId(id);
                 process.getStartEvents().add(startEvent);
-
-
-                // Adding Shape to Diagram
-                plane.getBpmnShapes().add(
-                        createShapeForBounds(node.getContent().getBounds(), id)
-                );
 
                 // Adding simulation properties
                 simulationElements.add(startEvent.getElementParameters());
             }
+
+            if (n instanceof EndEvent) {
+                EndEvent endEvent = (EndEvent) n;
+                process.getEndEvents().add(endEvent);
+
+                // Adding simulation properties
+                simulationElements.add(endEvent.getElementParameters());
+            }
+
+            // Adding Shape to Diagram
+            plane.getBpmnShapes().add(
+                    createShapeForBounds(node.getContent().getBounds(), n.getId())
+            );
         }
 
         Scenario scenario = new Scenario();

@@ -27,13 +27,13 @@ import javax.inject.Inject;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorData;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
 import org.kie.workbench.common.forms.dynamic.service.shared.FormRenderingContext;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseTask;
-import org.kie.workbench.common.stunner.bpmn.definition.EndCompensationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateCompensationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateCompensationEventThrowing;
 import org.kie.workbench.common.stunner.bpmn.definition.Lane;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndCompensationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.compensation.ActivityRef;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
@@ -88,7 +88,7 @@ public class ProcessCompensationRefProvider implements SelectorDataProvider {
             } while (levels < 2);
 
             compensableNodes.stream()
-                    .map(node -> buildPair(node.getUUID(), (BPMNDefinition) (((View) node.getContent()).getDefinition())))
+                    .map(node -> buildPair(node.getUUID(), (FlowElement) (((View) node.getContent()).getDefinition())))
                     .forEach(pair -> values.put(pair.getK1(), pair.getK2()));
 
             ActivityRef currentActivityRef = null;
@@ -100,7 +100,7 @@ public class ProcessCompensationRefProvider implements SelectorDataProvider {
             if (currentActivityRef != null && !isEmpty(currentActivityRef.getValue()) && !values.containsKey(currentActivityRef.getValue())) {
                 Node configured = diagram.getGraph().getNode(currentActivityRef.getValue());
                 if (configured != null) {
-                    Pair<Object, String> pair = buildPair(configured.getUUID(), (BPMNDefinition) ((View) configured.getContent()).getDefinition());
+                    Pair<Object, String> pair = buildPair(configured.getUUID(), (FlowElement) ((View) configured.getContent()).getDefinition());
                     values.put(pair.getK1(), pair.getK2());
                 }
             }
@@ -155,7 +155,7 @@ public class ProcessCompensationRefProvider implements SelectorDataProvider {
         return node.getContent() instanceof View && ((View) node.getContent()).getDefinition() instanceof BaseTask;
     }
 
-    private static Pair<Object, String> buildPair(final String uuid, final BPMNDefinition definition) {
+    private static Pair<Object, String> buildPair(final String uuid, final FlowElement definition) {
         String name = definition.getName();
         return new Pair<>(uuid, isEmpty(name) ? uuid : name);
     }

@@ -19,8 +19,8 @@ package org.kie.workbench.common.stunner.bpmn.client.canvas.controls.keyboard.sh
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.kie.workbench.common.stunner.bpmn.definition.BaseEndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.NoneTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.qualifiers.BPMN;
 import org.kie.workbench.common.stunner.core.client.canvas.controls.keyboard.KeysMatcher;
 import org.kie.workbench.common.stunner.core.client.canvas.controls.keyboard.shortcut.AbstractAppendNodeShortcut;
@@ -55,7 +55,7 @@ public class AppendNoneTaskShortcut extends AbstractAppendNodeShortcut {
     }
 
     private boolean selectedElementIsEndEvent(final Element selectedElement) {
-        return getElementDefinition(selectedElement) instanceof BaseEndEvent;
+        return getElementDefinition(selectedElement) instanceof EndEvent;
     }
 
     @Override

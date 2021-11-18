@@ -20,9 +20,9 @@ package org.kie.workbench.common.stunner.bpmn.client.canvas.controls;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.kie.workbench.common.stunner.bpmn.definition.BaseEndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseGateway;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseIntermediateEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.bpmn.qualifiers.BPMN;
 import org.kie.workbench.common.stunner.core.client.canvas.AbstractCanvasHandler;
@@ -43,7 +43,7 @@ public class BPMNInlineTextEditorControl extends CanvasInlineTextEditorControl {
 
     @Override
     public boolean isFiltered(Object bean) {
-        if (bean instanceof BaseGateway || bean instanceof BaseEndEvent ||
+        if (bean instanceof BaseGateway || bean instanceof EndEvent ||
                 bean instanceof StartEvent || bean instanceof BaseIntermediateEvent) {
             return false;
         }

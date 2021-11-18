@@ -109,7 +109,7 @@ public class BaseArtifactsTest {
                                  FontSet fontSet,
                                  RectangleDimensionsSet dimensionsSet,
                                  AdvancedData advancedData) {
-            super(backgroundSet, fontSet, dimensionsSet, advancedData);
+            super(null, null, backgroundSet, fontSet, dimensionsSet, advancedData);
         }
 
         @Override

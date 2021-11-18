@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2021 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.kie.workbench.common.stunner.bpmn.definition;
-
-/**
- * Marker interface for all BPMN definitions.
+/*
+    Not part of BPMN specification but simplifies migration from old marshallers.
  */
-public interface BPMNViewDefinition extends FlowElementInterface {
+public interface FlowElementInterface extends BaseElement {
 
+    String getName();
 }

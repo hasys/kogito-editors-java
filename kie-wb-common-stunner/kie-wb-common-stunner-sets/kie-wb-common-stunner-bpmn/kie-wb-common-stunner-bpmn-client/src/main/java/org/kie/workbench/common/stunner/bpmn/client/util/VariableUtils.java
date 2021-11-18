@@ -31,18 +31,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseAdHocSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseReusableSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseUserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.EndErrorEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.EndEscalationEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.EndMessageEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.EndSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateErrorEventCatching;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateEscalationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateEscalationEventThrowing;
@@ -51,6 +47,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.IntermediateMessageEvent
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateSignalEventCatching;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateSignalEventThrowing;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndErrorEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEscalationEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartErrorEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
@@ -81,8 +81,8 @@ public class VariableUtils {
 
     private static final String PROPERTY_IN_PREFIX = "[din]";
     private static final String PROPERTY_OUT_PREFIX = "[dout]";
-    private final static BiFunction<String, Pair<BPMNDefinition, Node<View<BPMNDefinition>, Edge>>, Collection<VariableUsage>> NO_USAGES = (s, pair) -> Collections.emptyList();
-    private final static Map<Predicate<BPMNDefinition>, BiFunction<String, Pair<BPMNDefinition, Node<View<BPMNDefinition>, Edge>>, Collection<VariableUsage>>> findFunctions = buildFindFunctions();
+    private final static BiFunction<String, Pair<FlowElement, Node<View<FlowElement>, Edge>>, Collection<VariableUsage>> NO_USAGES = (s, pair) -> Collections.emptyList();
+    private final static Map<Predicate<FlowElement>, BiFunction<String, Pair<FlowElement, Node<View<FlowElement>, Edge>>, Collection<VariableUsage>>> findFunctions = buildFindFunctions();
 
     @SuppressWarnings("unchecked")
     public static Collection<VariableUsage> findVariableUsages(Graph graph, String variableName,
@@ -105,13 +105,13 @@ public class VariableUtils {
         }
         return StreamSupport.stream(nodes.spliterator(), false)
                 .filter(VariableUtils::isBPMNDefinition)
-                .map(node -> (Node<View<BPMNDefinition>, Edge>) node)
+                .map(node -> (Node<View<FlowElement>, Edge>) node)
                 .map(node -> lookupFindFunction(node.getContent().getDefinition()).orElse(NO_USAGES).apply(variableName, Pair.newPair(node.getContent().getDefinition(), node)))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    private static Collection<VariableUsage> findVariableUsages(String variableName, AssignmentsInfo assignmentsInfo, String displayName, Node<View<BPMNDefinition>, Edge> node) {
+    private static Collection<VariableUsage> findVariableUsages(String variableName, AssignmentsInfo assignmentsInfo, String displayName, Node<View<FlowElement>, Edge> node) {
         Collection<VariableUsage> result = new ArrayList<>();
         if (assignmentsInfo != null) {
             Map<String, VariableUsage> decodedVariableUsages = decodeVariableUsages(assignmentsInfo.getValue(), node, displayName);
@@ -122,7 +122,7 @@ public class VariableUtils {
         return result;
     }
 
-    private static Collection<VariableUsage> findVariableUsages(String variableName, MultipleInstanceSubprocess subprocess, Node<View<BPMNDefinition>, Edge> node) {
+    private static Collection<VariableUsage> findVariableUsages(String variableName, MultipleInstanceSubprocess subprocess, Node<View<FlowElement>, Edge> node) {
         final Collection<VariableUsage> result = new ArrayList<>();
         addVariableUsages(result, variableName,
                           subprocess.getExecutionSet().getMultipleInstanceCollectionInput().getValue(), subprocess.getExecutionSet().getMultipleInstanceDataInput().getValue(),
@@ -131,7 +131,7 @@ public class VariableUtils {
         return result;
     }
 
-    private static Collection<VariableUsage> findVariableUsages(String variableName, BaseUserTask userTask, Node<View<BPMNDefinition>, Edge> node) {
+    private static Collection<VariableUsage> findVariableUsages(String variableName, BaseUserTask userTask, Node<View<FlowElement>, Edge> node) {
         final String displayName = userTask.getName();
         final Collection<VariableUsage> result = findVariableUsages(variableName, userTask.getExecutionSet().getAssignmentsinfo(), displayName, node);
         addVariableUsages(result, variableName,
@@ -141,7 +141,7 @@ public class VariableUtils {
         return result;
     }
 
-    private static Collection<VariableUsage> findVariableUsages(String variableName, BaseReusableSubprocess subprocess, Node<View<BPMNDefinition>, Edge> node) {
+    private static Collection<VariableUsage> findVariableUsages(String variableName, BaseReusableSubprocess subprocess, Node<View<FlowElement>, Edge> node) {
         final String displayName = subprocess.getName();
         final Collection<VariableUsage> result = findVariableUsages(variableName, subprocess.getDataIOSet().getAssignmentsinfo(), displayName, node);
         addVariableUsages(result, variableName,
@@ -154,7 +154,7 @@ public class VariableUtils {
     private static void addVariableUsages(Collection<VariableUsage> variableUsages, String variableName,
                                           String miInputCollection, String miDataInput,
                                           String miOutputCollection, String miDataOutput,
-                                          String displayName, Node<View<BPMNDefinition>, Edge> node) {
+                                          String displayName, Node<View<FlowElement>, Edge> node) {
         if (variableName.equals(miInputCollection)) {
             variableUsages.add(new VariableUsage(variableName, VariableUsage.USAGE_TYPE.MULTIPLE_INSTANCE_INPUT_COLLECTION, node, displayName));
         }
@@ -171,10 +171,10 @@ public class VariableUtils {
 
     private static boolean isBPMNDefinition(Node node) {
         return node.getContent() instanceof View &&
-                ((View) node.getContent()).getDefinition() instanceof BPMNDefinition;
+                ((View) node.getContent()).getDefinition() instanceof FlowElement;
     }
 
-    private static String getDisplayName(BPMNDefinition definition) {
+    private static String getDisplayName(FlowElement definition) {
         return definition.getName();
     }
 
@@ -285,7 +285,7 @@ public class VariableUtils {
         return variables.toString();
     }
 
-    private static Optional<BiFunction<String, Pair<BPMNDefinition, Node<View<BPMNDefinition>, Edge>>, Collection<VariableUsage>>> lookupFindFunction(BPMNDefinition definition) {
+    private static Optional<BiFunction<String, Pair<FlowElement, Node<View<FlowElement>, Edge>>, Collection<VariableUsage>>> lookupFindFunction(FlowElement definition) {
         //This code should ideally be based on an iteration plus the invocation of Class.isAssignableFrom method, but unfortunately not available in GWT client classes
         return findFunctions.entrySet().stream()
                 .filter(entry -> entry.getKey().test(definition))
@@ -293,8 +293,8 @@ public class VariableUtils {
                 .findFirst();
     }
 
-    private static Map<Predicate<BPMNDefinition>, BiFunction<String, Pair<BPMNDefinition, Node<View<BPMNDefinition>, Edge>>, Collection<VariableUsage>>> buildFindFunctions() {
-        Map<Predicate<BPMNDefinition>, BiFunction<String, Pair<BPMNDefinition, Node<View<BPMNDefinition>, Edge>>, Collection<VariableUsage>>> findFunctions = new HashMap<>();
+    private static Map<Predicate<FlowElement>, BiFunction<String, Pair<FlowElement, Node<View<FlowElement>, Edge>>, Collection<VariableUsage>>> buildFindFunctions() {
+        Map<Predicate<FlowElement>, BiFunction<String, Pair<FlowElement, Node<View<FlowElement>, Edge>>, Collection<VariableUsage>>> findFunctions = new HashMap<>();
         findFunctions.put(d -> d instanceof BusinessRuleTask, (s, pair) -> findVariableUsages(s, ((BusinessRuleTask) pair.getK1()).getDataIOSet().getAssignmentsinfo(), getDisplayName(pair.getK1()), pair.getK2()));
         findFunctions.put(d -> d instanceof BaseUserTask, (s, pair) -> findVariableUsages(s, ((BaseUserTask) pair.getK1()), pair.getK2()));
         findFunctions.put(d -> d instanceof CustomTask, (s, pair) -> findVariableUsages(s, ((CustomTask) pair.getK1()).getDataIOSet().getAssignmentsinfo(), getDisplayName(pair.getK1()), pair.getK2()));

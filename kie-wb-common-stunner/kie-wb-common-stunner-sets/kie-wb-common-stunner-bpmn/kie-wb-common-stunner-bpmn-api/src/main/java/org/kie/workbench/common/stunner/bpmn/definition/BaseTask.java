@@ -26,7 +26,6 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.kie.soup.commons.util.Maps;
 import org.kie.soup.commons.util.Sets;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
@@ -43,7 +42,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphPr
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @MorphBase(defaultType = NoneTask.class, targets = {BaseNonContainerSubprocess.class})
-public abstract class BaseTask implements BPMNViewDefinition {
+public abstract class BaseTask extends FlowElement implements BPMNViewDefinition {
 
     public static final Set<String> TASK_LABELS = new Sets.Builder<String>()
             .add("all")
@@ -61,18 +60,6 @@ public abstract class BaseTask implements BPMNViewDefinition {
 
     @Category
     public static final transient String category = BPMNCategories.ACTIVITIES;
-
-    @Valid
-    @Property
-    @FormField(type = TextAreaFieldType.class)
-    private String name;
-
-    @Property
-    @FormField(
-            type = TextAreaFieldType.class,
-            afterElement = "name"
-    )
-    private String documentation;
 
     @Property
     @MorphProperty(binder = TaskTypeMorphPropertyBinding.class)
@@ -135,7 +122,7 @@ public abstract class BaseTask implements BPMNViewDefinition {
                     final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     final @MapsTo("simulationSet") SimulationSet simulationSet,
                     final @MapsTo("taskType") TaskType taskType,
-                    final@MapsTo("advancedData") AdvancedData advancedData) {
+                    final @MapsTo("advancedData") AdvancedData advancedData) {
         this.name = name;
         this.documentation = documentation;
         this.backgroundSet = backgroundSet;
@@ -221,10 +208,14 @@ public abstract class BaseTask implements BPMNViewDefinition {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         Objects.hashCode(name),
-                                         Objects.hashCode(documentation),
+                                         super.hashCode(),
                                          Objects.hashCode(taskType),
                                          Objects.hashCode(backgroundSet),
                                          Objects.hashCode(fontSet),
@@ -238,8 +229,7 @@ public abstract class BaseTask implements BPMNViewDefinition {
     public boolean equals(Object o) {
         if (o instanceof BaseTask) {
             BaseTask other = (BaseTask) o;
-            return Objects.equals(name, other.name) &&
-                    Objects.equals(documentation, other.documentation) &&
+            return super.equals(other) &&
                     Objects.equals(taskType, other.taskType) &&
                     Objects.equals(backgroundSet, other.backgroundSet) &&
                     Objects.equals(fontSet, other.fontSet) &&

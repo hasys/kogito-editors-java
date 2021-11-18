@@ -24,10 +24,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
@@ -72,7 +72,7 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
     private static final String PARENT_NODE_PROCESS_VARIABLES = "ESPV1:java.lang.String,ESPV2:java.lang.String";
     List<Node> graphNodes = new ArrayList<>();
     @Mock
-    private BPMNDefinition bpmnModel;
+    private FlowElement bpmnModel;
     @GwtMock
     private AssignmentsEditorWidget widget;
     @Mock

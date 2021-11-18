@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -27,10 +27,7 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.compensation.CompensationEventExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -43,13 +40,13 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseEndEvent.class)
+@Morph(base = EndEvent.class)
 @FormDefinition(
         startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class EndCompensationEvent extends BaseEndEvent {
+public class EndCompensationEvent extends EndEvent {
 
     @Property
     @FormField(afterElement = "documentation")
@@ -59,25 +56,16 @@ public class EndCompensationEvent extends BaseEndEvent {
     public EndCompensationEvent() {
         this("",
              "",
-             new BackgroundSet(),
-             new FontSet(),
-             new CircleDimensionSet(),
              new AdvancedData(),
              new CompensationEventExecutionSet());
     }
 
     public EndCompensationEvent(final @MapsTo("name") String name,
                                 final @MapsTo("documentation") String documentation,
-                                final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                                final @MapsTo("fontSet") FontSet fontSet,
-                                final @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet,
                                 final @MapsTo("advancedData") AdvancedData advancedData,
                                 final @MapsTo("executionSet") CompensationEventExecutionSet executionSet) {
         super(name,
               documentation,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
               advancedData);
         this.executionSet = executionSet;
     }

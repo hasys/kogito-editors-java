@@ -30,7 +30,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
-public abstract class BaseArtifacts implements BPMNViewDefinition {
+public abstract class BaseArtifacts extends FlowElement implements BPMNViewDefinition {
 
     @Category
     public static final transient String category = BPMNCategories.ARTIFACTS;
@@ -50,10 +50,13 @@ public abstract class BaseArtifacts implements BPMNViewDefinition {
     @Valid
     protected AdvancedData advancedData;
 
-    public BaseArtifacts(final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+    public BaseArtifacts(final @MapsTo("name") String name,
+                         final @MapsTo("documentation") String documentation,
+                         final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                          final @MapsTo("fontSet") FontSet fontSet,
                          final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                          final @MapsTo("advancedData")AdvancedData advancedData) {
+        super(name, documentation);
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
@@ -94,6 +97,11 @@ public abstract class BaseArtifacts implements BPMNViewDefinition {
 
     public void setAdvancedData(AdvancedData advancedData) {
         this.advancedData = advancedData;
+    }
+
+    @Override
+    public String getId() {
+        return null;
     }
 
     @Override

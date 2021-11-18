@@ -25,9 +25,9 @@ import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseFileVariables;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessVariables;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
@@ -81,7 +81,7 @@ public class VariablesProvider
 
                 StreamSupport.stream(nodes.spliterator(), false)
                         .filter(this::isBPMNDefinition)
-                        .map(elm -> (Node<View<BPMNDefinition>, Edge>) elm)
+                        .map(elm -> (Node<View<FlowElement>, Edge>) elm)
                         .forEach(elm -> processNode(elm, result));
 
                 CaseFileVariables caseVars = bpmnDiagram.getCaseManagementSet().getCaseFileVariables();
@@ -92,7 +92,7 @@ public class VariablesProvider
         return result;
     }
 
-    private void processNode(Node<View<BPMNDefinition>, Edge> elm, Collection<Pair<Object, String>> result) {
+    private void processNode(Node<View<FlowElement>, Edge> elm, Collection<Pair<Object, String>> result) {
             if(elm.getContent().getDefinition() instanceof DataObject) {
                 DataObject dataObject = (DataObject)elm.getContent().getDefinition();
                 String name = dataObject.getDataObjectName().getValue();
@@ -102,7 +102,7 @@ public class VariablesProvider
 
     protected boolean isBPMNDefinition(Node node) {
         return node.getContent() instanceof View &&
-                ((View) node.getContent()).getDefinition() instanceof BPMNDefinition;
+                ((View) node.getContent()).getDefinition() instanceof FlowElement;
     }
 
     private void addPropertyVariableToResult(Collection<Pair<Object, String>> result, String element) {

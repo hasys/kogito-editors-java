@@ -189,6 +189,11 @@ public class Lane implements BPMNViewDefinition {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(name.hashCode(),
                                          documentation.hashCode(),

@@ -19,6 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.definition;
 import java.util.Set;
 
 import org.junit.Test;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.core.backend.definition.adapter.ReflectionAdapterUtils;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 
@@ -30,14 +31,14 @@ public class BaseEndEventTest {
     @Test
     public void testBaseEndEventCanBeContainedByALane() throws Exception {
 
-        final FakeBaseEndEvent baseEndEvent = new FakeBaseEndEvent();
+        final FakeEndEvent baseEndEvent = new FakeEndEvent();
         final Set<String> labels = ReflectionAdapterUtils.getAnnotatedFieldValue(baseEndEvent, Labels.class);
 
         assertNotNull(labels);
         assertTrue(labels.contains("lane_child"));
     }
 
-    private class FakeBaseEndEvent extends BaseEndEvent {
+    private class FakeEndEvent extends EndEvent {
 
     }
 }

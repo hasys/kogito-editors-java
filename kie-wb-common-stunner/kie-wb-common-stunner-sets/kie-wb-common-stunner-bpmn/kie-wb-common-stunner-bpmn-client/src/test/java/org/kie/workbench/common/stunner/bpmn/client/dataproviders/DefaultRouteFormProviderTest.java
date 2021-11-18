@@ -25,8 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorData;
 import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.ExclusiveGateway;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.InclusiveGateway;
 import org.kie.workbench.common.stunner.bpmn.definition.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
@@ -190,7 +190,7 @@ public class DefaultRouteFormProviderTest
     }
 
     protected Edge mockEdge(String uuid,
-                            BPMNDefinition targetNodeDefinition) {
+                            FlowElement targetNodeDefinition) {
         Edge edge = mock(Edge.class);
         Node node = mockNode(targetNodeDefinition);
         when(edge.getUUID()).thenReturn(uuid);

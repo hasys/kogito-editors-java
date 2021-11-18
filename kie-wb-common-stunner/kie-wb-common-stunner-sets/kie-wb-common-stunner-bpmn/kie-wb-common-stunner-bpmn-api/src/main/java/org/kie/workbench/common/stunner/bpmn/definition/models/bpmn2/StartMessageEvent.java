@@ -79,6 +79,8 @@ public class StartMessageEvent extends StartEvent implements DataIOModel {
               advancedData);
         this.dataIOSet = dataIOSet;
         this.executionSet = executionSet;
+
+        labels.add("messageflow_end");
     }
 
     public InterruptingMessageEventExecutionSet getExecutionSet() {
@@ -108,17 +110,10 @@ public class StartMessageEvent extends StartEvent implements DataIOModel {
     }
 
     @Override
-    protected void initLabels() {
-        super.initLabels();
-        labels.add("messageflow_end");
-    }
-
-    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
                                          executionSet.hashCode(),
-                                         dataIOSet.hashCode(),
-                                         labels.hashCode());
+                                         dataIOSet.hashCode());
     }
 
     @Override
@@ -127,8 +122,7 @@ public class StartMessageEvent extends StartEvent implements DataIOModel {
             StartMessageEvent other = (StartMessageEvent) o;
             return super.equals(other) &&
                     Objects.equals(executionSet, other.executionSet) &&
-                    Objects.equals(dataIOSet, other.dataIOSet) &&
-                    Objects.equals(labels, other.labels);
+                    Objects.equals(dataIOSet, other.dataIOSet);
         }
         return false;
     }

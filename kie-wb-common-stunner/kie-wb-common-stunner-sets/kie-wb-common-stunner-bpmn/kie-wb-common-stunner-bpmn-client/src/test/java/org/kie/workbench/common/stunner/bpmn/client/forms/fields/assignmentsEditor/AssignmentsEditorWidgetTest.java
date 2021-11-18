@@ -35,13 +35,13 @@ import org.kie.workbench.common.stunner.bpmn.client.forms.fields.model.Assignmen
 import org.kie.workbench.common.stunner.bpmn.client.forms.fields.model.AssignmentParser;
 import org.kie.workbench.common.stunner.bpmn.client.forms.fields.model.Variable;
 import org.kie.workbench.common.stunner.bpmn.client.forms.util.StringUtils;
-import org.kie.workbench.common.stunner.bpmn.definition.BPMNDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
-import org.kie.workbench.common.stunner.bpmn.definition.EndNoneEvent;
-import org.kie.workbench.common.stunner.bpmn.definition.EndTerminateEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndNoneEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndTerminateEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartNoneEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
@@ -195,7 +195,7 @@ public class AssignmentsEditorWidgetTest extends AssignmentBaseTest {
                                                                 any());
         doCallRealMethod().when(widget).showAssignmentsDialog();
         doCallRealMethod().when(widget).showDataIOEditor(any());
-        doCallRealMethod().when(widget).setBPMNModel(any(BPMNDefinition.class));
+        doCallRealMethod().when(widget).setBPMNModel(any(FlowElement.class));
         doCallRealMethod().when(widget).formatDataTypes(any(List.class));
         doCallRealMethod().when(widget).getTaskName();
         doCallRealMethod().when(widget).getDisallowedPropertyNames();
@@ -428,15 +428,6 @@ public class AssignmentsEditorWidgetTest extends AssignmentBaseTest {
                                                                       widget.getDisallowedPropertyNames());
         assertEquals("",
                      assignmentsInfoString);
-    }
-
-    @Test
-    public void testSetBPMNModelNoDataIO() {
-        widget.setBPMNModel(sequenceFlow);
-        assertFalse(widget.hasInputVars);
-        assertFalse(widget.isSingleInputVar);
-        assertFalse(widget.hasOutputVars);
-        assertFalse(widget.isSingleOutputVar);
     }
 
     @Test
