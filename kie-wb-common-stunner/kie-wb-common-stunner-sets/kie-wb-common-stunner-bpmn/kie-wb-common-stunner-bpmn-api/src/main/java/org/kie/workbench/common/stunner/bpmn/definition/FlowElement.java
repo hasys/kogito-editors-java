@@ -73,6 +73,7 @@ public abstract class FlowElement implements FlowElementInterface {
         this.documentation = documentation;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -81,6 +82,7 @@ public abstract class FlowElement implements FlowElementInterface {
         this.name = name;
     }
 
+    @Override
     public String getDocumentation() {
         return documentation;
     }
@@ -89,6 +91,7 @@ public abstract class FlowElement implements FlowElementInterface {
         this.documentation = documentation;
     }
 
+    @Override
     public String getId() {
         return id;
     }

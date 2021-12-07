@@ -48,7 +48,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.EventGateway;
 import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.ExclusiveGateway;
-import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.FlowElementInterface;
 import org.kie.workbench.common.stunner.bpmn.definition.GenericServiceTask;
 import org.kie.workbench.common.stunner.bpmn.definition.InclusiveGateway;
@@ -72,7 +71,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.NoneTask;
 import org.kie.workbench.common.stunner.bpmn.definition.ParallelGateway;
 import org.kie.workbench.common.stunner.bpmn.definition.ReusableSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.ScriptTask;
-import org.kie.workbench.common.stunner.bpmn.definition.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.TextAnnotation;
 import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndCompensationEvent;
@@ -83,6 +81,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndNoneEven
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndTerminateEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartCompensationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartConditionalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartErrorEvent;
@@ -109,7 +108,7 @@ import static org.kie.workbench.common.stunner.bpmn.client.shape.view.handler.BP
 
 @Dependent
 public class BPMNShapeFactory
-        implements ShapeFactory<FlowElement, Shape> {
+        implements ShapeFactory<FlowElementInterface, Shape> {
 
     private final BasicShapesFactory basicShapesFactory;
     private final SVGShapeFactory svgShapeFactory;
@@ -328,7 +327,7 @@ public class BPMNShapeFactory
 
     @Override
     @SuppressWarnings("all")
-    public Shape newShape(final FlowElement definition) {
+    public Shape newShape(final FlowElementInterface definition) {
         return delegateShapeFactory.newShape(definition);
     }
 

@@ -18,6 +18,7 @@ package org.kie.workbench.common.stunner.bpmn.definition.property.connectors;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -25,11 +26,13 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
+import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.common.ConditionExpression;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptTypeValue;
 import org.kie.workbench.common.stunner.bpmn.forms.model.ConditionEditorFieldType;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @Portable
@@ -42,7 +45,10 @@ public class SequenceFlowExecutionSet implements BPMNPropertySet {
     @Property
     @FormField
     @Valid
-    private Priority priority;
+    @Value
+    @Pattern(regexp = "^$|^[1-9][0-9]*", message = "Must be a positive integer")
+    @FieldValue
+    private String priority;
 
     @Property
     @FormField(afterElement = "priority",
@@ -52,23 +58,23 @@ public class SequenceFlowExecutionSet implements BPMNPropertySet {
     private ConditionExpression conditionExpression;
 
     public SequenceFlowExecutionSet() {
-        this(new Priority(""),
+        this("",
              new ConditionExpression(new ScriptTypeValue("java",
                                                          ""))
         );
     }
 
-    public SequenceFlowExecutionSet(final @MapsTo("priority") Priority priority,
+    public SequenceFlowExecutionSet(final @MapsTo("priority") String priority,
                                     final @MapsTo("conditionExpression") ConditionExpression conditionExpression) {
         this.priority = priority;
         this.conditionExpression = conditionExpression;
     }
 
-    public Priority getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(final Priority priority) {
+    public void setPriority(final String priority) {
         this.priority = priority;
     }
 

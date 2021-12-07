@@ -16,6 +16,7 @@
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -244,6 +245,10 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
             @XmlElement(name = "_EndTerminateEvent", type = EndTerminateEvent.class)
     })
     private List<EndEvent> endEvents = new ArrayList<>();
+
+    @XmlElement(name = "sequenceFlow")
+    @XmlUnwrappedCollection
+    private Set<SequenceFlow> sequenceFlows = new HashSet<>();
 
     public Process() {
         this("",
@@ -491,6 +496,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.endEvents = endEvents;
     }
 
+    public Set<SequenceFlow> getSequenceFlows() {
+        return sequenceFlows;
+    }
+
+    public void setSequenceFlows(Set<SequenceFlow> sequenceFlows) {
+        this.sequenceFlows = sequenceFlows;
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(processData),
@@ -500,21 +513,23 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                                          Objects.hashCode(dimensionsSet),
                                          Objects.hashCode(advancedData),
                                          Objects.hashCode(startEvents),
-                                         Objects.hashCode(endEvents));
+                                         Objects.hashCode(endEvents),
+                                         Objects.hashCode(sequenceFlows));
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Process) {
             Process other = (Process) o;
-            return Objects.equals(processData, other.processData) &&
-                    Objects.equals(caseManagementSet, other.caseManagementSet) &&
-                    Objects.equals(backgroundSet, other.backgroundSet) &&
-                    Objects.equals(fontSet, other.fontSet) &&
-                    Objects.equals(dimensionsSet, other.dimensionsSet) &&
-                    Objects.equals(advancedData, other.advancedData) &&
-                    Objects.equals(startEvents, other.startEvents) &&
-                    Objects.equals(endEvents, other.endEvents);
+            return Objects.equals(processData, other.processData)
+                    && Objects.equals(caseManagementSet, other.caseManagementSet)
+                    && Objects.equals(backgroundSet, other.backgroundSet)
+                    && Objects.equals(fontSet, other.fontSet)
+                    && Objects.equals(dimensionsSet, other.dimensionsSet)
+                    && Objects.equals(advancedData, other.advancedData)
+                    && Objects.equals(startEvents, other.startEvents)
+                    && Objects.equals(endEvents, other.endEvents)
+                    && Objects.equals(sequenceFlows, other.sequenceFlows);
         }
         return false;
     }

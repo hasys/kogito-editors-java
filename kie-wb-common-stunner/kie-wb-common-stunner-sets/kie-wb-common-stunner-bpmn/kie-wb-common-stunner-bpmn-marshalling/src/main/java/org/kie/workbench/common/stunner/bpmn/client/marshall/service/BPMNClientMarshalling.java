@@ -18,12 +18,14 @@ package org.kie.workbench.common.stunner.bpmn.client.marshall.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.xml.stream.XMLStreamException;
 
+import elemental2.dom.DomGlobal;
 import org.kie.workbench.common.stunner.bpmn.BPMNDefinitionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
@@ -33,16 +35,23 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationship;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnDiagram;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnEdge;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnPlane;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnShape;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.BPSimData;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.ElementParameters;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.Scenario;
 import org.kie.workbench.common.stunner.bpmn.definition.models.dc.Bounds;
+import org.kie.workbench.common.stunner.bpmn.definition.models.di.Waypoint;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
+import org.kie.workbench.common.stunner.core.graph.Edge;
+import org.kie.workbench.common.stunner.core.graph.content.view.ControlPoint;
+import org.kie.workbench.common.stunner.core.graph.content.view.ViewConnector;
+import org.kie.workbench.common.stunner.core.graph.content.view.ViewConnectorImpl;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewImpl;
 import org.kie.workbench.common.stunner.core.graph.impl.NodeImpl;
 
@@ -64,7 +73,6 @@ public class BPMNClientMarshalling {
     @SuppressWarnings("unchecked")
     public String marshall(final Diagram diagram) {
         Definitions definitions = createDefinitions(diagram.getGraph().nodes());
-
         try {
             return mapper.write(definitions);
         } catch (XMLStreamException e) {
@@ -73,6 +81,7 @@ public class BPMNClientMarshalling {
     }
 
     Definitions createDefinitions(Iterable<NodeImpl<ViewImpl<BPMNViewDefinition>>> nodes) {
+        IdGenerator.reset();
         Definitions definitions = new Definitions();
         BpmnDiagram bpmnDiagram = new BpmnDiagram();
         BpmnPlane plane = new BpmnPlane();
@@ -89,8 +98,19 @@ public class BPMNClientMarshalling {
         definitions.setProcess(process);
         plane.setBpmnElement(process.getName());
 
+        nodes.forEach(DomGlobal.console::info);
+        DomGlobal.console.warn("Finished");
+
         for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
             BPMNViewDefinition n = node.getContent().getDefinition();
+            if (n instanceof Process) {
+                continue;
+            }
+
+            DomGlobal.console.info(n);
+            DomGlobal.console.info(node.getOutEdges());
+            DomGlobal.console.info(node.getInEdges());
+            DomGlobal.console.warn("Finished again");
             if (n instanceof FlowElement) {
                 ((FlowElement) n).setId(IdGenerator.getNextIdFor(n));
             }
@@ -101,6 +121,21 @@ public class BPMNClientMarshalling {
 
                 // Adding simulation properties
                 simulationElements.add(startEvent.getElementParameters());
+
+                List<String> outgoing = new ArrayList<>();
+                node.getOutEdges().forEach(edge -> {
+                    if (edge.getContent() instanceof ViewConnectorImpl) {
+                        ViewConnector connector = (ViewConnector) edge.getContent();
+                        if (connector.getDefinition() instanceof SequenceFlow) {
+                            SequenceFlow flow = (SequenceFlow) connector.getDefinition();
+                            process.getSequenceFlows().add(flow);
+                            flow.setSourceRef(startEvent.getId());
+                            outgoing.add(flow.getId());
+                        }
+                    }
+                });
+
+                //startEvent.setOutgoing(outgoing);
             }
 
             if (n instanceof EndEvent) {
@@ -109,6 +144,18 @@ public class BPMNClientMarshalling {
 
                 // Adding simulation properties
                 simulationElements.add(endEvent.getElementParameters());
+
+                List<String> incoming = new ArrayList<>();
+                node.getInEdges().forEach(edge -> {
+                    for (SequenceFlow flow : process.getSequenceFlows()) {
+                        if (Objects.equals(flow.getId(), getId(edge))) {
+                            flow.setTargetRef(endEvent.getId());
+                            incoming.add(flow.getId());
+                        }
+                    }
+                });
+
+                //endEvent.setIncoming(incoming);
             }
 
             // Adding Shape to Diagram
@@ -134,6 +181,34 @@ public class BPMNClientMarshalling {
         definitions.setRelationship(relationship);
 
         return definitions;
+    }
+
+    private BpmnEdge createBpmnEdge(SequenceFlow flow, ControlPoint[] controlPoints) {
+        BpmnEdge edge = new BpmnEdge();
+        edge.setId("edge_shape_" + flow.getSourceRef() + "_to_shape_" + flow.getTargetRef());
+        edge.setBpmnElement(flow.getId());
+
+        List<Waypoint> waypoints = new ArrayList<>();
+        for (ControlPoint point : controlPoints) {
+            Waypoint waypoint = new Waypoint();
+            waypoint.setX(point.getLocation().getX());
+            waypoint.setY(point.getLocation().getY());
+            waypoints.add(waypoint);
+        }
+        edge.setWaypoint(waypoints);
+        return edge;
+    }
+
+    private String getId(Edge edge) {
+        if (edge.getContent() instanceof ViewConnectorImpl) {
+            ViewConnector connector = (ViewConnector) edge.getContent();
+            if (connector.getDefinition() instanceof SequenceFlow) {
+                SequenceFlow flow = (SequenceFlow) connector.getDefinition();
+                return flow.getId();
+            }
+        }
+
+        return null;
     }
 
     private BpmnShape createShapeForBounds(final org.kie.workbench.common.stunner.core.graph.content.Bounds bounds, final String id) {

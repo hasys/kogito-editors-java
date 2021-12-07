@@ -22,8 +22,6 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.factory.graph.EdgeFactory;
 import org.kie.workbench.common.stunner.core.rule.annotation.CanConnect;
@@ -51,20 +49,12 @@ public class NonDirectionalAssociation extends Association {
 
     public NonDirectionalAssociation() {
         this("",
-             "",
-             new BackgroundSet(COLOR,
-                               BORDER_COLOR,
-                               BORDER_SIZE),
-             new FontSet());
+             "");
     }
 
     public NonDirectionalAssociation(final @MapsTo("name") String name,
-                                     final @MapsTo("documentation") String documentation,
-                                     final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                                     final @MapsTo("fontSet") FontSet fontSet) {
+                                     final @MapsTo("documentation") String documentation) {
         super(name,
-              documentation,
-              backgroundSet,
-              fontSet);
+              documentation);
     }
 }

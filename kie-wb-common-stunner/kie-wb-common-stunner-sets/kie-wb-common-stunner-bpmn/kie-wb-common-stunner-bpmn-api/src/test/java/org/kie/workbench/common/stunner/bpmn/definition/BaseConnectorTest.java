@@ -19,6 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.definition;
 import java.util.Set;
 
 import org.junit.Test;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BaseConnector;
 import org.kie.workbench.common.stunner.core.backend.definition.adapter.ReflectionAdapterUtils;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 

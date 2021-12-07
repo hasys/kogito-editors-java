@@ -25,7 +25,7 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.stunner.bpmn.definition.SequenceFlow;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -80,7 +80,7 @@ public class SequenceFlowPriorityTest {
     public void testSequenceFlowExecutionSetPriorityValid() {
         for (String test : PRIORITY_VALID) {
             SequenceFlowExecutionSet sequenceFlowExecutionSet = new SequenceFlowExecutionSet();
-            sequenceFlowExecutionSet.setPriority(new Priority(test));
+            sequenceFlowExecutionSet.setPriority(test);
             Set<ConstraintViolation<SequenceFlowExecutionSet>> violations = this.validator.validate(sequenceFlowExecutionSet);
             assertTrue(violations.isEmpty());
         }
@@ -89,7 +89,7 @@ public class SequenceFlowPriorityTest {
     @Test
     public void testSequenceFlowExecutionSetPriorityEmpty() {
         SequenceFlowExecutionSet sequenceFlowExecutionSet = new SequenceFlowExecutionSet();
-        sequenceFlowExecutionSet.setPriority(new Priority(""));
+        sequenceFlowExecutionSet.setPriority("");
         Set<ConstraintViolation<SequenceFlowExecutionSet>> violations = this.validator.validate(sequenceFlowExecutionSet);
         assertTrue(violations.isEmpty());
     }
@@ -98,7 +98,7 @@ public class SequenceFlowPriorityTest {
     public void testSequenceFlowExecutionSetPriorityInvalid() {
         for (String test : PRIORITY_INVALID) {
             SequenceFlowExecutionSet sequenceFlowExecutionSet = new SequenceFlowExecutionSet();
-            sequenceFlowExecutionSet.setPriority(new Priority(test));
+            sequenceFlowExecutionSet.setPriority(test);
             Set<ConstraintViolation<SequenceFlowExecutionSet>> violations = this.validator.validate(sequenceFlowExecutionSet);
             assertEquals(1,
                          violations.size());
@@ -109,7 +109,7 @@ public class SequenceFlowPriorityTest {
     public void testSequenceFlowPriorityValid() {
         for (String test : PRIORITY_VALID) {
             SequenceFlow sequenceFlow = new SequenceFlow();
-            sequenceFlow.getExecutionSet().setPriority(new Priority(test));
+            sequenceFlow.getExecutionSet().setPriority(test);
             Set<ConstraintViolation<SequenceFlow>> violations = this.validator.validate(sequenceFlow);
             assertTrue(violations.isEmpty());
         }
@@ -119,7 +119,7 @@ public class SequenceFlowPriorityTest {
     public void testSequenceFlowPriorityInvalid() {
         for (String test : PRIORITY_INVALID) {
             SequenceFlow sequenceFlow = new SequenceFlow();
-            sequenceFlow.getExecutionSet().setPriority(new Priority(test));
+            sequenceFlow.getExecutionSet().setPriority(test);
             Set<ConstraintViolation<SequenceFlow>> violations = this.validator.validate(sequenceFlow);
             assertEquals(1,
                          violations.size());

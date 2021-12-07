@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -27,9 +30,12 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
+import org.kie.workbench.common.stunner.bpmn.definition.AdHocSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.EventSubprocess;
+import org.kie.workbench.common.stunner.bpmn.definition.MultipleInstanceSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.property.connectors.SequenceFlowExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptTypeValue;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.factory.graph.EdgeFactory;
@@ -68,38 +74,48 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
         arguments = {"Sequence flow connectors cannot exceed the parent's subprocess bounds. " +
                 "Both source and target nodes must be in the same subprocess."})
 @FormDefinition(
-        startElement = "general",
+        startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
+@XmlRootElement(name = "sequenceFlow", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class SequenceFlow extends BaseConnector {
 
     @Property
     @FormField(
-            afterElement = "general"
+            afterElement = "documentation"
     )
     @Valid
+    @XmlTransient
     protected SequenceFlowExecutionSet executionSet;
+
+    @XmlAttribute
+    private String id;
+
+    // This variable is never assigner, used for marshalling,
+    // get and set methods leads to executionSet.priority
+    @XmlAttribute(namespace = "http://www.jboss.org/drools")
+    private String priority;
+
+    @XmlAttribute
+    private String sourceRef;
+
+    @XmlAttribute
+    private String targetRef;
+
+    private ConditionExpression conditionExpression;
 
     public SequenceFlow() {
         this("",
              "",
-             new SequenceFlowExecutionSet(),
-             new BackgroundSet(COLOR,
-                               BORDER_COLOR,
-                               BORDER_SIZE),
-             new FontSet());
+             new SequenceFlowExecutionSet());
     }
 
     public SequenceFlow(final @MapsTo("name") String name,
                         final @MapsTo("documentation") String documentation,
-                        final @MapsTo("executionSet") SequenceFlowExecutionSet executionSet,
-                        final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                        final @MapsTo("fontSet") FontSet fontSet) {
+                        final @MapsTo("executionSet") SequenceFlowExecutionSet executionSet) {
         super(name,
-              documentation,
-              backgroundSet,
-              fontSet);
+              documentation);
         this.executionSet = executionSet;
     }
 
@@ -112,8 +128,62 @@ public class SequenceFlow extends BaseConnector {
     }
 
     @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPriority() {
+        return executionSet.getPriority();
+    }
+
+    public void setPriority(String priority) {
+        executionSet.setPriority(priority);
+    }
+
+    public String getSourceRef() {
+        return sourceRef;
+    }
+
+    public void setSourceRef(String sourceRef) {
+        this.sourceRef = sourceRef;
+    }
+
+    public String getTargetRef() {
+        return targetRef;
+    }
+
+    public void setTargetRef(String targetRef) {
+        this.targetRef = targetRef;
+    }
+
+    public ConditionExpression getConditionExpression() {
+        ConditionExpression expression = new ConditionExpression();
+        expression.setLanguage(executionSet.getConditionExpression().getValue().getLanguage());
+        expression.setValue(executionSet.getConditionExpression().getValue().getScript());
+
+        return expression;
+    }
+
+    public void setConditionExpression(ConditionExpression conditionExpression) {
+        ScriptTypeValue scriptTypeValue = new ScriptTypeValue();
+        scriptTypeValue.setScript(conditionExpression.getValue());
+        scriptTypeValue.setLanguage(conditionExpression.getLanguage());
+
+        org.kie.workbench.common.stunner.bpmn.definition.property.common.ConditionExpression expression = new org.kie.workbench.common.stunner.bpmn.definition.property.common.ConditionExpression(scriptTypeValue);
+
+        executionSet = new SequenceFlowExecutionSet();
+        executionSet.setConditionExpression(expression);
+    }
+
+    @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
+                                         Objects.hashCode(sourceRef),
+                                         Objects.hashCode(targetRef),
                                          Objects.hashCode(executionSet));
     }
 
@@ -121,9 +191,10 @@ public class SequenceFlow extends BaseConnector {
     public boolean equals(Object o) {
         if (o instanceof SequenceFlow) {
             SequenceFlow other = (SequenceFlow) o;
-            return super.equals(other) &&
-                    Objects.equals(executionSet,
-                                   other.executionSet);
+            return super.equals(other)
+                    && Objects.equals(sourceRef, other.sourceRef)
+                    && Objects.equals(targetRef, other.targetRef)
+                    && Objects.equals(executionSet, other.executionSet);
         }
         return false;
     }

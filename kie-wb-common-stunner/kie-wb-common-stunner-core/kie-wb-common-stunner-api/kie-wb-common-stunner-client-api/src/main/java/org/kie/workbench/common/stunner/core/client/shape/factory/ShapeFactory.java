@@ -38,7 +38,7 @@ import org.kie.workbench.common.stunner.core.definition.shape.Glyph;
 public interface ShapeFactory<W, S extends Shape> {
 
     /**
-     * Builds a new Shape instance for the specified Defintiion bean.
+     * Builds a new Shape instance for the specified Definition bean.
      * @param instance the Definition (bean) instance.
      * @return a new Shape instance.
      */

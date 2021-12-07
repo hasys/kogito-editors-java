@@ -19,7 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.client.shape.def;
 import java.util.function.Supplier;
 
 import org.kie.workbench.common.stunner.bpmn.client.resources.BPMNGlyphFactory;
-import org.kie.workbench.common.stunner.bpmn.definition.SequenceFlow;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeView;
 import org.kie.workbench.common.stunner.core.client.shape.view.handler.FontHandler;
 import org.kie.workbench.common.stunner.core.definition.shape.Glyph;

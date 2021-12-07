@@ -16,6 +16,8 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,6 +36,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.definition.Ca
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
+import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @MorphBase(defaultType = StartNoneEvent.class)
 public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
@@ -42,6 +45,9 @@ public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
     @Category
     @XmlTransient
     public static final transient String category = BPMNCategories.START_EVENTS;
+
+    @XmlUnwrappedCollection
+    private List<String> outgoing = new ArrayList<>();
 
     @Labels
     @XmlTransient
@@ -67,7 +73,8 @@ public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
     @XmlTransient
     private ElementParameters elementParameters = new ElementParameters();
 
-    public StartEvent() {}
+    public StartEvent() {
+    }
 
     public StartEvent(final String name,
                       final String documentation,
@@ -133,10 +140,19 @@ public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
         this.elementParameters = elementParameters;
     }
 
+    public List<String> getOutgoing() {
+        return outgoing;
+    }
+
+    public void setOutgoing(List<String> outgoing) {
+        this.outgoing = outgoing;
+    }
+
     @Override
     public int hashCode() {
-        return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         super.hashCode(),
+        return HashUtil.combineHashCodes(super.hashCode(),
+                                         Objects.hashCode(getClass()),
+                                         Objects.hashCode(outgoing),
                                          Objects.hashCode(labels),
                                          Objects.hashCode(elementParameters));
     }
@@ -146,6 +162,7 @@ public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
         if (o instanceof StartEvent) {
             StartEvent other = (StartEvent) o;
             return super.equals(other)
+                    && Objects.equals(outgoing, other.outgoing)
                     && Objects.equals(labels, other.labels)
                     && Objects.equals(elementParameters, other.elementParameters);
         }

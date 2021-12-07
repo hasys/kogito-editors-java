@@ -35,7 +35,7 @@ public class BpmnPlane {
 
     @XmlElement(name = "BPMNEdge")
     @XmlUnwrappedCollection
-    private List<BpmnEdge> bpmnEdges;
+    private List<BpmnEdge> bpmnEdges = new ArrayList<>();
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.

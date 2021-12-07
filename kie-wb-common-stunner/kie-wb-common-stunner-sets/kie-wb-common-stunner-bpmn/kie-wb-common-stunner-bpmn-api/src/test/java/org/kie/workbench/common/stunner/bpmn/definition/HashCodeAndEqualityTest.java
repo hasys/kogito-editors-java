@@ -23,6 +23,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndMessageE
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndTerminateEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartCompensationEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartConditionalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEscalationEvent;
@@ -1345,36 +1346,36 @@ public class HashCodeAndEqualityTest {
                              new SequenceFlowExecutionSet(null,
                                                           null))
 
-                .addTrueCase(new SequenceFlowExecutionSet(new Priority(),
+                .addTrueCase(new SequenceFlowExecutionSet("",
                                                           new ConditionExpression()),
-                             new SequenceFlowExecutionSet(new Priority(),
+                             new SequenceFlowExecutionSet("",
                                                           new ConditionExpression()))
 
-                .addTrueCase(new SequenceFlowExecutionSet(new Priority("1"),
+                .addTrueCase(new SequenceFlowExecutionSet("1",
                                                           new ConditionExpression(new ScriptTypeValue("a",
                                                                                                       "b"))),
-                             new SequenceFlowExecutionSet(new Priority("1"),
+                             new SequenceFlowExecutionSet("1",
                                                           new ConditionExpression(new ScriptTypeValue("a",
                                                                                                       "b"))))
 
-                .addFalseCase(new SequenceFlowExecutionSet(new Priority("1"),
+                .addFalseCase(new SequenceFlowExecutionSet("1",
                                                            new ConditionExpression(new ScriptTypeValue("a",
                                                                                                        "b"))),
-                              new SequenceFlowExecutionSet(new Priority("2"),
+                              new SequenceFlowExecutionSet("2",
                                                            new ConditionExpression(new ScriptTypeValue("a",
                                                                                                        "b"))))
 
-                .addFalseCase(new SequenceFlowExecutionSet(new Priority("1"),
+                .addFalseCase(new SequenceFlowExecutionSet("1",
                                                            new ConditionExpression(new ScriptTypeValue("a",
                                                                                                        "b"))),
-                              new SequenceFlowExecutionSet(new Priority("1"),
+                              new SequenceFlowExecutionSet("1",
                                                            new ConditionExpression(new ScriptTypeValue("X",
                                                                                                        "Y"))))
 
-                .addFalseCase(new SequenceFlowExecutionSet(new Priority("1"),
+                .addFalseCase(new SequenceFlowExecutionSet("1",
                                                            new ConditionExpression(new ScriptTypeValue("a",
                                                                                                        "b"))),
-                              new SequenceFlowExecutionSet(new Priority("2"),
+                              new SequenceFlowExecutionSet("2",
                                                            new ConditionExpression(new ScriptTypeValue("X",
                                                                                                        "Y"))))
                 .test();
@@ -3325,12 +3326,12 @@ public class HashCodeAndEqualityTest {
     public void testDirectionalAssociationEqualsAndHashCode() {
         TestCaseBuilder.newTestCase()
                 .addTrueCase(new DirectionalAssociation(), new DirectionalAssociation())
-                .addTrueCase(new DirectionalAssociation("", "", new BackgroundSet(), new FontSet()),
-                             new DirectionalAssociation("", "", new BackgroundSet(), new FontSet()))
+                .addTrueCase(new DirectionalAssociation("", ""),
+                             new DirectionalAssociation("", ""))
                 .addFalseCase(new DirectionalAssociation(),
-                              new DirectionalAssociation("", "", new BackgroundSet(), new FontSet()))
+                              new DirectionalAssociation("", ""))
                 .addFalseCase(new DirectionalAssociation(),
-                              new DirectionalAssociation(null, null, null, null))
+                              new DirectionalAssociation(null, null))
                 .test();
     }
 
@@ -3338,12 +3339,12 @@ public class HashCodeAndEqualityTest {
     public void testNonDirectionalAssociationEqualsAndHashCode() {
         TestCaseBuilder.newTestCase()
                 .addTrueCase(new DirectionalAssociation(), new DirectionalAssociation())
-                .addTrueCase(new DirectionalAssociation("", "", new BackgroundSet(), new FontSet()),
-                             new DirectionalAssociation("", "", new BackgroundSet(), new FontSet()))
+                .addTrueCase(new DirectionalAssociation("", ""),
+                             new DirectionalAssociation("", ""))
                 .addFalseCase(new DirectionalAssociation(),
-                              new DirectionalAssociation("", "", new BackgroundSet(), new FontSet()))
+                              new DirectionalAssociation("", ""))
                 .addFalseCase(new DirectionalAssociation(),
-                              new DirectionalAssociation(null, null, null, null))
+                              new DirectionalAssociation(null, null))
                 .test();
     }
 

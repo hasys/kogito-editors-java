@@ -16,9 +16,12 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
@@ -35,6 +38,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.definition.Ca
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
+import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @MorphBase(defaultType = EndNoneEvent.class)
 public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
@@ -58,6 +62,10 @@ public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
             .add("cm_nop")
             .build();
 
+    @XmlUnwrappedCollection
+    @XmlElement(name = "incoming")
+    private List<String> incoming = new ArrayList<>();
+
     /*
     Simulation parameters for the start event. Used in Simulation section during marshalling/unmarshalling
     This parameter currently not changed by Stunner but can preserve users values.
@@ -66,7 +74,8 @@ public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
     @XmlTransient
     private ElementParameters elementParameters = new ElementParameters();
 
-    public EndEvent() {}
+    public EndEvent() {
+    }
 
     public EndEvent(final @MapsTo("name") String name,
                     final @MapsTo("documentation") String documentation,
@@ -133,10 +142,19 @@ public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
         this.elementParameters = elementParameters;
     }
 
+    public List<String> getIncoming() {
+        return incoming;
+    }
+
+    public void setIncoming(List<String> incoming) {
+        this.incoming = incoming;
+    }
+
     @Override
     public int hashCode() {
-        return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
-                                         super.hashCode(),
+        return HashUtil.combineHashCodes(super.hashCode(),
+                                         Objects.hashCode(getClass()),
+                                         Objects.hashCode(incoming),
                                          Objects.hashCode(labels),
                                          Objects.hashCode(elementParameters));
     }
@@ -146,6 +164,7 @@ public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
         if (o instanceof EndEvent) {
             EndEvent other = (EndEvent) o;
             return super.equals(other)
+                    && Objects.equals(incoming, other.incoming)
                     && Objects.equals(labels, other.labels)
                     && Objects.equals(elementParameters, other.elementParameters);
         }
