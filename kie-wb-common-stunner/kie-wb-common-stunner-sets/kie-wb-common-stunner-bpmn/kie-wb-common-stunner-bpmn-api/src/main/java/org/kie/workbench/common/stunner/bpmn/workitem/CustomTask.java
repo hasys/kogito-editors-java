@@ -26,11 +26,8 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
@@ -100,9 +97,6 @@ public class CustomTask extends BaseCustomTask implements DataIOModel {
              "",
              new DataIOSet(),
              new CustomTaskExecutionSet(),
-             new BackgroundSet(),
-             new FontSet(),
-             new RectangleDimensionsSet(),
              new SimulationSet(),
              new TaskType(TaskTypes.SERVICE_TASK),
              new AdvancedData());
@@ -116,17 +110,11 @@ public class CustomTask extends BaseCustomTask implements DataIOModel {
                       @MapsTo("documentation") String documentation,
                       @MapsTo("dataIOSet") DataIOSet dataIOSet,
                       @MapsTo("executionSet") CustomTaskExecutionSet executionSet,
-                      @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                      @MapsTo("fontSet") FontSet fontSet,
-                      @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                       @MapsTo("simulationSet") SimulationSet simulationSet,
                       @MapsTo("taskType") TaskType taskType,
                       @MapsTo("advancedData") AdvancedData advancedData) {
         super(name,
               documentation,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
               simulationSet,
               taskType,
               advancedData);

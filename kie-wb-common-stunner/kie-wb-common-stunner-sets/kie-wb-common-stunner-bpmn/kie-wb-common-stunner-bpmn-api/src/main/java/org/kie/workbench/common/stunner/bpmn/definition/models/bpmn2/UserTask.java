@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import javax.validation.Valid;
 
@@ -25,9 +25,6 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
@@ -65,9 +62,6 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
         this("Task",
              "",
              new UserTaskExecutionSet(),
-             new BackgroundSet(),
-             new FontSet(),
-             new RectangleDimensionsSet(),
              new SimulationSet(),
              new TaskType(TaskTypes.USER),
              new AdvancedData());
@@ -76,17 +70,11 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
     public UserTask(final @MapsTo("name") String name,
                     final @MapsTo("documentation") String documentation,
                     final @MapsTo("executionSet") UserTaskExecutionSet executionSet,
-                    final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                    final @MapsTo("fontSet") FontSet fontSet,
-                    final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     final @MapsTo("simulationSet") SimulationSet simulationSet,
                     final @MapsTo("taskType") TaskType taskType,
                     final @MapsTo("advancedData") AdvancedData advancedData) {
         super(name,
               documentation,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
               simulationSet,
               taskType,
               advancedData);

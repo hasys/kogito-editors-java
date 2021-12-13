@@ -19,6 +19,7 @@ package org.kie.workbench.common.stunner.bpmn.definition;
 import java.util.Set;
 
 import org.junit.Test;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BaseTask;
 import org.kie.workbench.common.stunner.core.backend.definition.adapter.ReflectionAdapterUtils;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 
@@ -40,7 +41,7 @@ public class BaseTaskTest {
     private class FakeBaseTask extends BaseTask {
 
         FakeBaseTask() {
-            super("","", null, null, null, null, null, null);
+            super("", "", null, null, null);
         }
     }
 }

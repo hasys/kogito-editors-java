@@ -56,8 +56,6 @@ public class CustomTaskShapeDef extends BaseDimensionedShapeDef
     @Override
     public SizeHandler<CustomTask, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .width(task -> task.getDimensionsSet().getWidth().getValue())
-                .height(task -> task.getDimensionsSet().getHeight().getValue())
                 .minWidth(task -> 25d)
                 .maxWidth(task -> 400d)
                 .minHeight(task -> 25d)
@@ -77,8 +75,8 @@ public class CustomTaskShapeDef extends BaseDimensionedShapeDef
     public SVGShapeView<?> newViewInstance(final BPMNSVGViewFactory factory,
                                            final CustomTask workItem) {
 
-        return newViewInstance(Optional.ofNullable(workItem.getDimensionsSet().getWidth()),
-                               Optional.ofNullable(workItem.getDimensionsSet().getHeight()),
+        return newViewInstance(Optional.ofNullable(null),
+                               Optional.ofNullable(null),
                                factory.serviceTask());
     }
 

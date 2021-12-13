@@ -16,7 +16,7 @@
 
 package org.kie.workbench.common.stunner.bpmn.client.forms.filters;
 
-import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 
 public class UserTaskFilterProviderTest extends MultipleInstanceNodeFilterProviderTest {
 

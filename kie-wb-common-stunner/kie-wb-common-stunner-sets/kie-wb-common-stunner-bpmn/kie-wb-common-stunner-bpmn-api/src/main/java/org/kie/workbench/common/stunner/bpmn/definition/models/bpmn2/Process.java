@@ -250,6 +250,20 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     @XmlUnwrappedCollection
     private Set<SequenceFlow> sequenceFlows = new HashSet<>();
 
+    @XmlElement(name = "task")
+    @XmlUnwrappedCollection
+    @XmlElements({
+            @XmlElement(name = "_NoneTask", type = NoneTask.class)
+    })
+    private List<BaseTask> tasks = new ArrayList<>();
+
+    @XmlElement(name = "scriptTask")
+    @XmlUnwrappedCollection
+    @XmlElements({
+            @XmlElement(name = "_ScriptTask", type = ScriptTask.class)
+    })
+    private List<BaseTask> scriptTasks = new ArrayList<>();
+
     public Process() {
         this("",
              "",
@@ -496,6 +510,22 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.endEvents = endEvents;
     }
 
+    public List<BaseTask> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<BaseTask> tasks) {
+        this.tasks = tasks;
+    }
+
+    public List<BaseTask> getScriptTasks() {
+        return scriptTasks;
+    }
+
+    public void setScriptTasks(List<BaseTask> scriptTasks) {
+        this.scriptTasks = scriptTasks;
+    }
+
     public Set<SequenceFlow> getSequenceFlows() {
         return sequenceFlows;
     }
@@ -514,6 +544,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                                          Objects.hashCode(advancedData),
                                          Objects.hashCode(startEvents),
                                          Objects.hashCode(endEvents),
+                                         Objects.hashCode(tasks),
+                                         Objects.hashCode(scriptTasks),
                                          Objects.hashCode(sequenceFlows));
     }
 
@@ -529,6 +561,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                     && Objects.equals(advancedData, other.advancedData)
                     && Objects.equals(startEvents, other.startEvents)
                     && Objects.equals(endEvents, other.endEvents)
+                    && Objects.equals(tasks, other.tasks)
+                    && Objects.equals(scriptTasks, other.scriptTasks)
                     && Objects.equals(sequenceFlows, other.sequenceFlows);
         }
         return false;

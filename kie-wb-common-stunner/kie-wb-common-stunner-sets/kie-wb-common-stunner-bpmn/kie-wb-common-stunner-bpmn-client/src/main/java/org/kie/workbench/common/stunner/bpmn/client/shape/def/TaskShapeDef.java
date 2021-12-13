@@ -24,12 +24,12 @@ import org.kie.soup.commons.util.Maps;
 import org.kie.workbench.common.stunner.bpmn.client.resources.BPMNGlyphFactory;
 import org.kie.workbench.common.stunner.bpmn.client.resources.BPMNSVGViewFactory;
 import org.kie.workbench.common.stunner.bpmn.client.shape.view.handler.TaskViewHandler;
-import org.kie.workbench.common.stunner.bpmn.definition.BaseTask;
-import org.kie.workbench.common.stunner.bpmn.definition.BusinessRuleTask;
-import org.kie.workbench.common.stunner.bpmn.definition.GenericServiceTask;
-import org.kie.workbench.common.stunner.bpmn.definition.NoneTask;
-import org.kie.workbench.common.stunner.bpmn.definition.ScriptTask;
-import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BaseTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BusinessRuleTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.GenericServiceTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.NoneTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 import org.kie.workbench.common.stunner.bpmn.workitem.CustomTask;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasTitle.HorizontalAlignment;
 import org.kie.workbench.common.stunner.core.client.shape.view.handler.CompositeShapeViewHandler;
@@ -79,8 +79,6 @@ public class TaskShapeDef extends BaseDimensionedShapeDef
     @Override
     public SizeHandler<BaseTask, SVGShapeView> newSizeHandler() {
         return newSizeHandlerBuilder()
-                .width(task -> task.getDimensionsSet().getWidth().getValue())
-                .height(task -> task.getDimensionsSet().getHeight().getValue())
                 .minWidth(task -> 50d)
                 .maxWidth(task -> 400d)
                 .minHeight(task -> 50d)
@@ -100,8 +98,8 @@ public class TaskShapeDef extends BaseDimensionedShapeDef
     public SVGShapeView<?> newViewInstance(final BPMNSVGViewFactory factory,
                                            final BaseTask task) {
 
-        return newViewInstance(Optional.ofNullable(task.getDimensionsSet().getWidth()),
-                               Optional.ofNullable(task.getDimensionsSet().getHeight()),
+        return newViewInstance(Optional.ofNullable(null),
+                               Optional.ofNullable(null),
                                VIEW_RESOURCES.getResource(factory, task));
     }
 

@@ -25,7 +25,7 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

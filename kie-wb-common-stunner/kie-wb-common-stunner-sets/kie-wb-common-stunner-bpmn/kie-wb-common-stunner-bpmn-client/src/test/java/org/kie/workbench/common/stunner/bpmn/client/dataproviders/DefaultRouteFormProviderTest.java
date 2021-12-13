@@ -28,8 +28,8 @@ import org.kie.workbench.common.forms.dynamic.model.config.SelectorDataProvider;
 import org.kie.workbench.common.stunner.bpmn.definition.ExclusiveGateway;
 import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.InclusiveGateway;
-import org.kie.workbench.common.stunner.bpmn.definition.ScriptTask;
-import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
 import org.kie.workbench.common.stunner.core.client.canvas.controls.SelectionControl;
 import org.kie.workbench.common.stunner.core.definition.adapter.AdapterManager;
@@ -91,9 +91,6 @@ public class DefaultRouteFormProviderTest
                                           null,
                                           null,
                                           null,
-                                          null,
-                                          null,
-                                          null,
                                           null);
         when(definitionAdapter.getTitle(eq(userTask1))).thenReturn("User Task");
         outEdges.add(mockEdge("Edge1",
@@ -104,18 +101,12 @@ public class DefaultRouteFormProviderTest
                                           null,
                                           null,
                                           null,
-                                          null,
-                                          null,
-                                          null,
                                           null);
         when(definitionAdapter.getTitle(eq(userTask2))).thenReturn("User Task");
         outEdges.add(mockEdge("Edge2",
                               userTask2));
 
         ScriptTask scriptTask3 = new ScriptTask("ScriptTask3",
-                                                null,
-                                                null,
-                                                null,
                                                 null,
                                                 null,
                                                 null,

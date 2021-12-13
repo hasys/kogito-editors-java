@@ -30,9 +30,9 @@ import org.kie.workbench.common.stunner.bpmn.client.components.palette.BPMNCateg
 import org.kie.workbench.common.stunner.bpmn.client.documentation.decorator.PropertyDecorators;
 import org.kie.workbench.common.stunner.bpmn.client.shape.factory.BPMNShapeFactory;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
-import org.kie.workbench.common.stunner.bpmn.definition.EmbeddedSubprocess;
-import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EmbeddedSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.property.assignee.Actors;
 import org.kie.workbench.common.stunner.bpmn.definition.property.assignee.Groupid;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
@@ -368,9 +368,6 @@ public class ClientBPMNDocumentationServiceTest {
                                                          new OnExitAction(new ScriptTypeListValue().addValue(new ScriptTypeValue())),
                                                          new Content(),
                                                          new SLADueDate()),
-                                new BackgroundSet(),
-                                new FontSet(),
-                                new RectangleDimensionsSet(),
                                 new SimulationSet(),
                                 new TaskType(TaskTypes.USER),
                                 new AdvancedData());

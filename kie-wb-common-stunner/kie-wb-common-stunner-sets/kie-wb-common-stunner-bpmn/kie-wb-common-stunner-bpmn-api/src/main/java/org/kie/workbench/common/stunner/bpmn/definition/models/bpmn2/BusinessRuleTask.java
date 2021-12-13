@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import javax.validation.Valid;
 
@@ -25,13 +24,12 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.task.ReusableSubprocessTaskExecutionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.BusinessRuleTaskExecutionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -45,22 +43,24 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @Portable
 @Bindable
 @Definition
-@Morph(base = BaseNonContainerSubprocess.class)
-@CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
+@CanDock(roles = {"IntermediateEventOnActivityBoundary"})
+@Morph(base = BaseTask.class)
 @FormDefinition(
-        startElement = "name",
+        startElement = "general",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class ReusableSubprocess
-        extends BaseReusableSubprocess<ReusableSubprocessTaskExecutionSet> implements DataIOModel {
+public class BusinessRuleTask extends BaseTask implements DataIOModel {
+
+    public static final String EXECUTION_SET = "executionSet";
+    public static final String DATA_IO_SET = "dataIOSet";
 
     @Property
     @FormField(
-            afterElement = "documentation"
+            afterElement = "general"
     )
     @Valid
-    protected ReusableSubprocessTaskExecutionSet executionSet;
+    protected BusinessRuleTaskExecutionSet executionSet;
 
     @Property
     @FormField(
@@ -69,33 +69,27 @@ public class ReusableSubprocess
     @Valid
     protected DataIOSet dataIOSet;
 
-    public ReusableSubprocess() {
-        this("Sub-process",
+    public BusinessRuleTask() {
+        this("Task",
              "",
-             new ReusableSubprocessTaskExecutionSet(),
+             new BusinessRuleTaskExecutionSet(),
              new DataIOSet(),
-             new BackgroundSet(),
-             new FontSet(),
-             new RectangleDimensionsSet(),
              new SimulationSet(),
+             new TaskType(TaskTypes.BUSINESS_RULE),
              new AdvancedData());
     }
 
-    public ReusableSubprocess(final @MapsTo("name") String name,
-                              final @MapsTo("documentation") String documentation,
-                              final @MapsTo("executionSet") ReusableSubprocessTaskExecutionSet executionSet,
-                              final @MapsTo("dataIOSet") DataIOSet dataIOSet,
-                              final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                              final @MapsTo("fontSet") FontSet fontSet,
-                              final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                              final @MapsTo("simulationSet") SimulationSet simulationSet,
-                              final @MapsTo("advancedData") AdvancedData advancedData) {
+    public BusinessRuleTask(final @MapsTo("name") String name,
+                            final @MapsTo("documentation") String documentation,
+                            final @MapsTo("executionSet") BusinessRuleTaskExecutionSet executionSet,
+                            final @MapsTo("dataIOSet") DataIOSet dataIOSet,
+                            final @MapsTo("simulationSet") SimulationSet simulationSet,
+                            final @MapsTo("taskType") TaskType taskType,
+                            final @MapsTo("advancedData") AdvancedData advancedData) {
         super(name,
               documentation,
-              backgroundSet,
-              fontSet,
-              dimensionsSet,
               simulationSet,
+              taskType,
               advancedData);
         this.executionSet = executionSet;
         this.dataIOSet = dataIOSet;
@@ -121,22 +115,18 @@ public class ReusableSubprocess
         return false;
     }
 
-    @Override
-    public ReusableSubprocessTaskExecutionSet getExecutionSet() {
+    public BusinessRuleTaskExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    @Override
     public DataIOSet getDataIOSet() {
         return dataIOSet;
     }
 
-    @Override
-    public void setExecutionSet(final ReusableSubprocessTaskExecutionSet executionSet) {
+    public void setExecutionSet(final BusinessRuleTaskExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 
-    @Override
     public void setDataIOSet(final DataIOSet dataIOSet) {
         this.dataIOSet = dataIOSet;
     }
@@ -150,8 +140,8 @@ public class ReusableSubprocess
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ReusableSubprocess) {
-            ReusableSubprocess other = (ReusableSubprocess) o;
+        if (o instanceof BusinessRuleTask) {
+            BusinessRuleTask other = (BusinessRuleTask) o;
             return super.equals(other) &&
                     executionSet.equals(other.executionSet) &&
                     dataIOSet.equals(other.dataIOSet);

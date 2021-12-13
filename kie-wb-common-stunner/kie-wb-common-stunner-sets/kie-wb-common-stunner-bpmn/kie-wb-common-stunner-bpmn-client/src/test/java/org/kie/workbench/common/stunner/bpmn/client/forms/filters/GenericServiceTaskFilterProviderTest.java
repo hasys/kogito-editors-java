@@ -16,7 +16,7 @@
 
 package org.kie.workbench.common.stunner.bpmn.client.forms.filters;
 
-import org.kie.workbench.common.stunner.bpmn.definition.GenericServiceTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.GenericServiceTask;
 
 public class GenericServiceTaskFilterProviderTest extends MultipleInstanceNodeFilterProviderTest {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2017 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -31,7 +31,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.task.MultipleInstanceSubprocessTaskExecutionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.subProcess.execution.EventSubprocessExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.HasProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
@@ -47,53 +47,49 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 
 @Portable
 @Bindable
-@CanContain(roles = {"all"})
-@CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @Definition
 @Morph(base = BaseSubprocess.class)
-
+@CanContain(roles = {"all"})
+@CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @FormDefinition(
         startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class MultipleInstanceSubprocess extends BaseSubprocess implements HasProcessData<ProcessData> {
+
+public class EventSubprocess extends BaseSubprocess implements HasProcessData<ProcessData> {
 
     @Property
-    @FormField(
-            afterElement = "documentation"
-    )
+    @FormField(afterElement = "documentation")
     @Valid
-    protected MultipleInstanceSubprocessTaskExecutionSet executionSet;
+    private EventSubprocessExecutionSet executionSet;
 
     @Property
-    @FormField(
-            afterElement = "executionSet"
-    )
+    @FormField(afterElement = "executionSet")
     @Valid
     private ProcessData processData;
 
-    public MultipleInstanceSubprocess() {
-        this("Multiple Instance Sub-process",
+    public EventSubprocess() {
+        this("Event Sub-process",
              "",
              new BackgroundSet(),
              new FontSet(),
              new RectangleDimensionsSet(),
              new SimulationSet(),
-             new MultipleInstanceSubprocessTaskExecutionSet(),
+             new EventSubprocessExecutionSet(),
              new ProcessData(),
              new AdvancedData());
     }
 
-    public MultipleInstanceSubprocess(final @MapsTo("name") String name,
-                                      final @MapsTo("documentation") String documentation,
-                                      final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                                      final @MapsTo("fontSet") FontSet fontSet,
-                                      final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                                      final @MapsTo("simulationSet") SimulationSet simulationSet,
-                                      final @MapsTo("executionSet") MultipleInstanceSubprocessTaskExecutionSet executionSet,
-                                      final @MapsTo("processData") ProcessData processData,
-                                      final @MapsTo("advancedData") AdvancedData advancedData) {
+    public EventSubprocess(final @MapsTo("name") String name,
+                           final @MapsTo("documentation") String documentation,
+                           final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                           final @MapsTo("fontSet") FontSet fontSet,
+                           final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
+                           final @MapsTo("simulationSet") SimulationSet simulationSet,
+                           final @MapsTo("executionSet") EventSubprocessExecutionSet executionSet,
+                           final @MapsTo("processData") ProcessData processData,
+                           final @MapsTo("advancedData") AdvancedData advancedData) {
         super(name,
               documentation,
               backgroundSet,
@@ -101,16 +97,17 @@ public class MultipleInstanceSubprocess extends BaseSubprocess implements HasPro
               dimensionsSet,
               simulationSet,
               advancedData);
+
         this.executionSet = executionSet;
         this.processData = processData;
     }
 
-    public MultipleInstanceSubprocessTaskExecutionSet getExecutionSet() {
-        return executionSet;
-    }
-
-    public void setExecutionSet(MultipleInstanceSubprocessTaskExecutionSet executionSet) {
-        this.executionSet = executionSet;
+    @Override
+    protected void initLabels() {
+        super.initLabels();
+        labels.add("canContainArtifacts");
+        labels.remove("sequence_start");
+        labels.remove("sequence_end");
     }
 
     @Override
@@ -122,18 +119,26 @@ public class MultipleInstanceSubprocess extends BaseSubprocess implements HasPro
         this.processData = processData;
     }
 
+    public EventSubprocessExecutionSet getExecutionSet() {
+        return executionSet;
+    }
+
+    public void setExecutionSet(EventSubprocessExecutionSet executionSet) {
+        this.executionSet = executionSet;
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
-                                         Objects.hashCode(executionSet),
-                                         Objects.hashCode(processData),
-                                         Objects.hashCode(labels));
+                                         executionSet.hashCode(),
+                                         processData.hashCode(),
+                                         labels.hashCode());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof MultipleInstanceSubprocess) {
-            MultipleInstanceSubprocess other = (MultipleInstanceSubprocess) o;
+        if (o instanceof EventSubprocess) {
+            EventSubprocess other = (EventSubprocess) o;
             return super.equals(other) &&
                     Objects.equals(executionSet, other.executionSet) &&
                     Objects.equals(processData, other.processData) &&

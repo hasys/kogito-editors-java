@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
-import org.kie.workbench.common.stunner.bpmn.definition.UserTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 import org.kie.workbench.common.stunner.client.lienzo.shape.view.wires.ext.WiresShapeViewExt;
 import org.kie.workbench.common.stunner.core.client.shape.TextWrapperStrategy;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeView;
@@ -59,7 +59,6 @@ public class BPMNShapeViewHandlersTest {
     @Before
     public void setUp() {
         task = new UserTask();
-        task.getFontSet().getFontBorderSize().setValue(0.0);
         fontHandler = new BPMNShapeViewHandlers.FontHandlerBuilder<>().build();
     }
 

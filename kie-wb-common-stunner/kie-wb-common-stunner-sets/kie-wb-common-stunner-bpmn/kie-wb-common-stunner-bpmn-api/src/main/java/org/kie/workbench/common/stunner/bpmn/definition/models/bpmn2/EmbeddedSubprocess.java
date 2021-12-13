@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -28,10 +28,11 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.subProcess.execution.EventSubprocessExecutionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.subProcess.execution.EmbeddedSubprocessExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.HasProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
@@ -56,40 +57,41 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-
-public class EventSubprocess extends BaseSubprocess implements HasProcessData<ProcessData> {
+public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
+                                                                  HasProcessData<ProcessData> {
 
     @Property
     @FormField(afterElement = "documentation")
     @Valid
-    private EventSubprocessExecutionSet executionSet;
+    private EmbeddedSubprocessExecutionSet executionSet;
 
     @Property
     @FormField(afterElement = "executionSet")
     @Valid
     private ProcessData processData;
 
-    public EventSubprocess() {
-        this("Event Sub-process",
-             "",
-             new BackgroundSet(),
-             new FontSet(),
-             new RectangleDimensionsSet(),
-             new SimulationSet(),
-             new EventSubprocessExecutionSet(),
-             new ProcessData(),
-             new AdvancedData());
+    public EmbeddedSubprocess() {
+        this(
+                "Sub-process",
+                "",
+                new BackgroundSet(),
+                new FontSet(),
+                new RectangleDimensionsSet(),
+                new SimulationSet(),
+                new EmbeddedSubprocessExecutionSet(),
+                new ProcessData(),
+                new AdvancedData());
     }
 
-    public EventSubprocess(final @MapsTo("name") String name,
-                           final @MapsTo("documentation") String documentation,
-                           final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                           final @MapsTo("fontSet") FontSet fontSet,
-                           final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                           final @MapsTo("simulationSet") SimulationSet simulationSet,
-                           final @MapsTo("executionSet") EventSubprocessExecutionSet executionSet,
-                           final @MapsTo("processData") ProcessData processData,
-                           final @MapsTo("advancedData") AdvancedData advancedData) {
+    public EmbeddedSubprocess(final @MapsTo("name") String name,
+                              final @MapsTo("documentation") String documentation,
+                              final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                              final @MapsTo("fontSet") FontSet fontSet,
+                              final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
+                              final @MapsTo("simulationSet") SimulationSet simulationSet,
+                              final @MapsTo("executionSet") EmbeddedSubprocessExecutionSet executionSet,
+                              final @MapsTo("processData") ProcessData processData,
+                              final @MapsTo("advancedData") AdvancedData advancedData) {
         super(name,
               documentation,
               backgroundSet,
@@ -97,17 +99,28 @@ public class EventSubprocess extends BaseSubprocess implements HasProcessData<Pr
               dimensionsSet,
               simulationSet,
               advancedData);
-
         this.executionSet = executionSet;
         this.processData = processData;
     }
 
     @Override
-    protected void initLabels() {
-        super.initLabels();
-        labels.add("canContainArtifacts");
-        labels.remove("sequence_start");
-        labels.remove("sequence_end");
+    public boolean hasInputVars() {
+        return true;
+    }
+
+    @Override
+    public boolean isSingleInputVar() {
+        return false;
+    }
+
+    @Override
+    public boolean hasOutputVars() {
+        return true;
+    }
+
+    @Override
+    public boolean isSingleOutputVar() {
+        return false;
     }
 
     @Override
@@ -119,30 +132,28 @@ public class EventSubprocess extends BaseSubprocess implements HasProcessData<Pr
         this.processData = processData;
     }
 
-    public EventSubprocessExecutionSet getExecutionSet() {
+    public EmbeddedSubprocessExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(EventSubprocessExecutionSet executionSet) {
+    public void setExecutionSet(EmbeddedSubprocessExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
-                                         executionSet.hashCode(),
-                                         processData.hashCode(),
-                                         labels.hashCode());
+                                         Objects.hashCode(executionSet),
+                                         Objects.hashCode(processData));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof EventSubprocess) {
-            EventSubprocess other = (EventSubprocess) o;
+        if (o instanceof EmbeddedSubprocess) {
+            EmbeddedSubprocess other = (EmbeddedSubprocess) o;
             return super.equals(other) &&
                     Objects.equals(executionSet, other.executionSet) &&
-                    Objects.equals(processData, other.processData) &&
-                    Objects.equals(labels, other.labels);
+                    Objects.equals(processData, other.processData);
         }
         return false;
     }

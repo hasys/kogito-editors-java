@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -21,14 +21,14 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.kie.soup.commons.util.Maps;
 import org.kie.soup.commons.util.Sets;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
+import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
+import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
@@ -42,8 +42,9 @@ import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphPr
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
 @MorphBase(defaultType = NoneTask.class, targets = {BaseNonContainerSubprocess.class})
-public abstract class BaseTask extends FlowElement implements BPMNViewDefinition {
+public abstract class BaseTask extends FlowNode implements BPMNViewDefinition {
 
+    @XmlTransient
     public static final Set<String> TASK_LABELS = new Sets.Builder<String>()
             .add("all")
             .add("lane_child")
@@ -59,34 +60,30 @@ public abstract class BaseTask extends FlowElement implements BPMNViewDefinition
             .build();
 
     @Category
+    @XmlTransient
     public static final transient String category = BPMNCategories.ACTIVITIES;
 
     @Property
+    @XmlTransient
     @MorphProperty(binder = TaskTypeMorphPropertyBinding.class)
     protected TaskType taskType;
 
     @Property
-    @Valid
-    protected BackgroundSet backgroundSet;
-
-    @Property
-    protected FontSet fontSet;
-
-    @Property
+    @XmlTransient
     protected SimulationSet simulationSet;
-
-    @Property
-    protected RectangleDimensionsSet dimensionsSet;
 
     @Property
     @FormField(
             afterElement = "dimensionsSet"
     )
     @Valid
+    @XmlTransient
     protected AdvancedData advancedData;
 
+    @XmlTransient
     public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskTypes> {
 
+        @XmlTransient
         private static final Map<TaskTypes, Class<?>> MORPH_TARGETS =
                 new Maps.Builder<TaskTypes, Class<?>>()
                         .put(TaskTypes.NONE,
@@ -113,24 +110,21 @@ public abstract class BaseTask extends FlowElement implements BPMNViewDefinition
     }
 
     @Labels
+    @XmlTransient
     protected final Set<String> labels = new HashSet<>(TASK_LABELS);
+
+    public BaseTask() {
+        this("", "", new SimulationSet(), new TaskType(), new AdvancedData());
+    }
 
     public BaseTask(final @MapsTo("name") String name,
                     final @MapsTo("documentation") String documentation,
-                    final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                    final @MapsTo("fontSet") FontSet fontSet,
-                    final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     final @MapsTo("simulationSet") SimulationSet simulationSet,
                     final @MapsTo("taskType") TaskType taskType,
                     final @MapsTo("advancedData") AdvancedData advancedData) {
-        this.name = name;
-        this.documentation = documentation;
-        this.backgroundSet = backgroundSet;
-        this.fontSet = fontSet;
-        this.dimensionsSet = dimensionsSet;
+        super(name, documentation, advancedData);
         this.simulationSet = simulationSet;
         this.taskType = taskType;
-        this.advancedData = advancedData;
     }
 
     public String getCategory() {
@@ -141,40 +135,6 @@ public abstract class BaseTask extends FlowElement implements BPMNViewDefinition
         return labels;
     }
 
-    public BackgroundSet getBackgroundSet() {
-        return backgroundSet;
-    }
-
-    public FontSet getFontSet() {
-        return fontSet;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String Name) {
-        this.name = Name;
-    }
-
-    @Override
-    public String getDocumentation() {
-        return documentation;
-    }
-
-    public void setDocumentation(String documentation) {
-        this.documentation = documentation;
-    }
-
-    public void setBackgroundSet(final BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(final FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
     public TaskType getTaskType() {
         return taskType;
     }
@@ -183,44 +143,12 @@ public abstract class BaseTask extends FlowElement implements BPMNViewDefinition
         this.taskType = taskType;
     }
 
-    public SimulationSet getSimulationSet() {
-        return simulationSet;
-    }
-
-    public void setSimulationSet(final SimulationSet simulationSet) {
-        this.simulationSet = simulationSet;
-    }
-
-    public RectangleDimensionsSet getDimensionsSet() {
-        return dimensionsSet;
-    }
-
-    public void setDimensionsSet(final RectangleDimensionsSet dimensionsSet) {
-        this.dimensionsSet = dimensionsSet;
-    }
-
-    public AdvancedData getAdvancedData() {
-        return advancedData;
-    }
-
-    public void setAdvancedData(AdvancedData advancedData) {
-        this.advancedData = advancedData;
-    }
-
-    @Override
-    public String getId() {
-        return null;
-    }
-
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
                                          super.hashCode(),
                                          Objects.hashCode(taskType),
-                                         Objects.hashCode(backgroundSet),
-                                         Objects.hashCode(fontSet),
                                          Objects.hashCode(simulationSet),
-                                         Objects.hashCode(dimensionsSet),
                                          Objects.hashCode(labels),
                                          Objects.hashCode(advancedData));
     }
@@ -231,10 +159,7 @@ public abstract class BaseTask extends FlowElement implements BPMNViewDefinition
             BaseTask other = (BaseTask) o;
             return super.equals(other) &&
                     Objects.equals(taskType, other.taskType) &&
-                    Objects.equals(backgroundSet, other.backgroundSet) &&
-                    Objects.equals(fontSet, other.fontSet) &&
                     Objects.equals(simulationSet, other.simulationSet) &&
-                    Objects.equals(dimensionsSet, other.dimensionsSet) &&
                     Objects.equals(labels, other.labels) &&
                     Objects.equals(advancedData, other.advancedData);
         }

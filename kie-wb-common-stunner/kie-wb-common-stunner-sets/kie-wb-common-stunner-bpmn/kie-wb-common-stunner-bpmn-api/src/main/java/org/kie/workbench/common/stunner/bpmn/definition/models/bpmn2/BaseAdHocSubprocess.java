@@ -13,30 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.BaseAdHocSubprocessTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
-import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
+import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessData;
+import org.kie.workbench.common.stunner.bpmn.definition.property.variables.HasProcessData;
 
-@MorphBase(defaultType = ReusableSubprocess.class, targets = {BaseTask.class})
-public abstract class BaseNonContainerSubprocess extends BaseSubprocess {
+public abstract class BaseAdHocSubprocess<P extends BaseProcessData, S extends BaseAdHocSubprocessTaskExecutionSet>
+        extends BaseSubprocess implements HasProcessData<P> {
 
-    @Category
-    public static final transient String category = BPMNCategories.SUB_PROCESSES;
-
-    public BaseNonContainerSubprocess(String name,
-                                      String documentation,
-                                      BackgroundSet backgroundSet,
-                                      FontSet fontSet,
-                                      RectangleDimensionsSet dimensionsSet,
-                                      SimulationSet simulationSet,
-                                      AdvancedData advancedData) {
+    public BaseAdHocSubprocess(String name,
+                               String documentation,
+                               BackgroundSet backgroundSet,
+                               FontSet fontSet,
+                               RectangleDimensionsSet dimensionsSet,
+                               SimulationSet simulationSet,
+                               AdvancedData advancedData) {
         super(name, documentation, backgroundSet, fontSet, dimensionsSet, simulationSet, advancedData);
     }
+
+    public abstract S getExecutionSet();
+
+    public abstract void setExecutionSet(final S executionSet);
+
+    public abstract P getProcessData();
+
+    public abstract void setProcessData(final P processData);
 }

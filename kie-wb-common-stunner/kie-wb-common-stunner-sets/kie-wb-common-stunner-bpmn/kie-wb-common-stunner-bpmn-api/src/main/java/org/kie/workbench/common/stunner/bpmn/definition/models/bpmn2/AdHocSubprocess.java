@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
@@ -28,13 +28,11 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.subProcess.execution.EmbeddedSubprocessExecutionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.AdHocSubprocessTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.HasProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
@@ -48,50 +46,53 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 
 @Portable
 @Bindable
+@CanContain(roles = {"cm_activity", "cm_stage", "IntermediateEventsMorph", "GatewaysMorph", "EndEventsMorph", "text_annotation", "connector"})
+@CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @Definition
 @Morph(base = BaseSubprocess.class)
-@CanContain(roles = {"all"})
-@CanDock(roles = {"IntermediateEventOnSubprocessBoundary"})
 @FormDefinition(
         startElement = "name",
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
-public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
-                                                                  HasProcessData<ProcessData> {
+public class AdHocSubprocess
+        extends BaseAdHocSubprocess<ProcessData, AdHocSubprocessTaskExecutionSet> {
 
     @Property
     @FormField(afterElement = "documentation")
     @Valid
-    private EmbeddedSubprocessExecutionSet executionSet;
+    protected AdHocSubprocessTaskExecutionSet executionSet;
 
     @Property
     @FormField(afterElement = "executionSet")
     @Valid
     private ProcessData processData;
 
-    public EmbeddedSubprocess() {
-        this(
-                "Sub-process",
-                "",
-                new BackgroundSet(),
-                new FontSet(),
-                new RectangleDimensionsSet(),
-                new SimulationSet(),
-                new EmbeddedSubprocessExecutionSet(),
-                new ProcessData(),
-                new AdvancedData());
+    public AdHocSubprocess() {
+        this("Sub-process");
     }
 
-    public EmbeddedSubprocess(final @MapsTo("name") String name,
-                              final @MapsTo("documentation") String documentation,
-                              final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                              final @MapsTo("fontSet") FontSet fontSet,
-                              final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                              final @MapsTo("simulationSet") SimulationSet simulationSet,
-                              final @MapsTo("executionSet") EmbeddedSubprocessExecutionSet executionSet,
-                              final @MapsTo("processData") ProcessData processData,
-                              final @MapsTo("advancedData") AdvancedData advancedData) {
+    public AdHocSubprocess(String label) {
+        this(label,
+             "",
+             new BackgroundSet(),
+             new FontSet(),
+             new RectangleDimensionsSet(),
+             new SimulationSet(),
+             new AdHocSubprocessTaskExecutionSet(),
+             new ProcessData(),
+             new AdvancedData());
+    }
+
+    public AdHocSubprocess(final @MapsTo("name") String name,
+                           final @MapsTo("documentation") String documentation,
+                           final @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                           final @MapsTo("fontSet") FontSet fontSet,
+                           final @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
+                           final @MapsTo("simulationSet") SimulationSet simulationSet,
+                           final @MapsTo("executionSet") AdHocSubprocessTaskExecutionSet executionSet,
+                           final @MapsTo("processData") ProcessData processData,
+                           final @MapsTo("advancedData")AdvancedData advancedData) {
         super(name,
               documentation,
               backgroundSet,
@@ -104,23 +105,13 @@ public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
     }
 
     @Override
-    public boolean hasInputVars() {
-        return true;
+    public AdHocSubprocessTaskExecutionSet getExecutionSet() {
+        return executionSet;
     }
 
     @Override
-    public boolean isSingleInputVar() {
-        return false;
-    }
-
-    @Override
-    public boolean hasOutputVars() {
-        return true;
-    }
-
-    @Override
-    public boolean isSingleOutputVar() {
-        return false;
+    public void setExecutionSet(final AdHocSubprocessTaskExecutionSet executionSet) {
+        this.executionSet = executionSet;
     }
 
     @Override
@@ -128,16 +119,9 @@ public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
         return processData;
     }
 
+    @Override
     public void setProcessData(final ProcessData processData) {
         this.processData = processData;
-    }
-
-    public EmbeddedSubprocessExecutionSet getExecutionSet() {
-        return executionSet;
-    }
-
-    public void setExecutionSet(EmbeddedSubprocessExecutionSet executionSet) {
-        this.executionSet = executionSet;
     }
 
     @Override
@@ -149,8 +133,8 @@ public class EmbeddedSubprocess extends BaseSubprocess implements DataIOModel,
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof EmbeddedSubprocess) {
-            EmbeddedSubprocess other = (EmbeddedSubprocess) o;
+        if (o instanceof AdHocSubprocess) {
+            AdHocSubprocess other = (AdHocSubprocess) o;
             return super.equals(other) &&
                     Objects.equals(executionSet, other.executionSet) &&
                     Objects.equals(processData, other.processData);

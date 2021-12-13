@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOModel;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.BaseUserTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -30,13 +27,10 @@ public abstract class BaseUserTask<U extends BaseUserTaskExecutionSet> extends B
 
     public BaseUserTask(@MapsTo("name") String name,
                         @MapsTo("documentation") String documentation,
-                        @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                        @MapsTo("fontSet") FontSet fontSet,
-                        @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                         @MapsTo("simulationSet") SimulationSet simulationSet,
                         @MapsTo("taskType") TaskType taskType,
                         @MapsTo("advancedData") AdvancedData advancedData) {
-        super(name, documentation, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType, advancedData);
+        super(name, documentation, simulationSet, taskType, advancedData);
     }
 
     @Override
