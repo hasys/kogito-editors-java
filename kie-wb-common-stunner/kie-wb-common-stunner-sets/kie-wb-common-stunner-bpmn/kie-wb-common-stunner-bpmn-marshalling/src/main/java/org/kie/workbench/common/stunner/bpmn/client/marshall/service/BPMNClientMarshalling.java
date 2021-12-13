@@ -55,6 +55,7 @@ import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.content.view.Connection;
 import org.kie.workbench.common.stunner.core.graph.content.view.ControlPoint;
+import org.kie.workbench.common.stunner.core.graph.content.view.DiscreteConnection;
 import org.kie.workbench.common.stunner.core.graph.content.view.Point2D;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewConnector;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewConnectorImpl;
@@ -203,7 +204,9 @@ public class BPMNClientMarshalling {
             if (edge.getContent() instanceof ViewConnectorImpl) {
                 ViewConnector connector = (ViewConnector) edge.getContent();
                 if (connector.getDefinition() instanceof SequenceFlow) {
+                    DiscreteConnection sourceConnection = (DiscreteConnection) connector.getSourceConnection().get();
                     SequenceFlow flow = (SequenceFlow) connector.getDefinition();
+                    flow.setAutoConnectionSource(sourceConnection.isAuto());
                     flow.setId(edge.getUUID());
                     addOutgoingFlow(flow, nodeId, sequenceFlows, createWaypoints(connector), plane);
 
@@ -220,7 +223,9 @@ public class BPMNClientMarshalling {
             if (edge.getContent() instanceof ViewConnectorImpl) {
                 ViewConnector connector = (ViewConnector) edge.getContent();
                 if (connector.getDefinition() instanceof SequenceFlow) {
+                    DiscreteConnection targetConnection = (DiscreteConnection) connector.getTargetConnection().get();
                     SequenceFlow flow = (SequenceFlow) connector.getDefinition();
+                    flow.setAutoConnectionTarget(targetConnection.isAuto());
                     flow.setId(edge.getUUID());
 
                     addIncomingFlow(flow, nodeId, sequenceFlows, createWaypoints(connector), plane);

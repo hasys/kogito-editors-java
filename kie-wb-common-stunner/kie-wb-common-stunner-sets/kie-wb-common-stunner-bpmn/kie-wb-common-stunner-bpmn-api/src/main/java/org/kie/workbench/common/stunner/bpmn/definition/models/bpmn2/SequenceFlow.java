@@ -16,6 +16,8 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -30,6 +32,7 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.connectors.SequenceFlowExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptTypeValue;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
@@ -77,6 +80,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
 @XmlRootElement(name = "sequenceFlow", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class SequenceFlow extends BaseConnector {
 
+    // Marshalled in Extensions metadata
     @Property
     @FormField(
             afterElement = "documentation"
@@ -87,6 +91,14 @@ public class SequenceFlow extends BaseConnector {
 
     @XmlAttribute
     private String id;
+
+    // Marshalled in Extensions metadata
+    @XmlTransient
+    private boolean isAutoConnectionSource = false;
+
+    // Marshalled in Extensions metadata
+    @XmlTransient
+    private boolean isAutoConnectionTarget = false;
 
     // This variable is never assigner, used for marshalling,
     // get and set methods leads to executionSet.priority
@@ -175,11 +187,67 @@ public class SequenceFlow extends BaseConnector {
         executionSet.setConditionExpression(expression);
     }
 
+    public boolean isAutoConnectionSource() {
+        return isAutoConnectionSource;
+    }
+
+    public void setAutoConnectionSource(boolean autoConnectionSource) {
+        isAutoConnectionSource = autoConnectionSource;
+    }
+
+    public boolean isAutoConnectionTarget() {
+        return isAutoConnectionTarget;
+    }
+
+    public void setAutoConnectionTarget(boolean autoConnectionTarget) {
+        isAutoConnectionTarget = autoConnectionTarget;
+    }
+
+    @Override
+    public ExtensionElements getExtensionElements() {
+        ExtensionElements elements = super.getExtensionElements();
+        if (elements == null) {
+            elements = new ExtensionElements();
+        }
+
+        List<MetaData> metaData = new ArrayList<>();
+        if (isAutoConnectionSource) {
+            MetaData autoConnectionSource = new MetaData("isAutoConnection.source",
+                                                         "true");
+            metaData.add(autoConnectionSource);
+        }
+
+        if (isAutoConnectionTarget) {
+            MetaData autoConnectionTarget = new MetaData("isAutoConnection.target",
+                                                         "true");
+            metaData.add(autoConnectionTarget);
+        }
+        elements.setMetaData(metaData);
+
+        return elements.getMetaData().isEmpty() ? null : elements;
+    }
+
+    @Override
+    public void setExtensionElements(ExtensionElements extensionElements) {
+        super.setExtensionElements(extensionElements);
+        for (MetaData meta : extensionElements.getMetaData()) {
+            if ("isAutoConnection.source".equals(meta.getName())) {
+                isAutoConnectionSource = Boolean.parseBoolean(meta.getMetaValue());
+            }
+
+            if ("isAutoConnection.target".equals(meta.getName())) {
+                isAutoConnectionTarget = Boolean.parseBoolean(meta.getMetaValue());
+            }
+        }
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(super.hashCode(),
                                          Objects.hashCode(sourceRef),
                                          Objects.hashCode(targetRef),
+                                         Objects.hashCode(isAutoConnectionSource),
+                                         Objects.hashCode(isAutoConnectionTarget),
                                          Objects.hashCode(executionSet));
     }
 
@@ -190,6 +258,8 @@ public class SequenceFlow extends BaseConnector {
             return super.equals(other)
                     && Objects.equals(sourceRef, other.sourceRef)
                     && Objects.equals(targetRef, other.targetRef)
+                    && Objects.equals(isAutoConnectionSource, other.isAutoConnectionSource)
+                    && Objects.equals(isAutoConnectionTarget, other.isAutoConnectionTarget)
                     && Objects.equals(executionSet, other.executionSet);
         }
         return false;
