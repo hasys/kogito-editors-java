@@ -16,7 +16,6 @@
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -248,7 +247,7 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
 
     @XmlElement(name = "sequenceFlow")
     @XmlUnwrappedCollection
-    private Set<SequenceFlow> sequenceFlows = new HashSet<>();
+    private List<SequenceFlow> sequenceFlows = new ArrayList<>();
 
     @XmlElement(name = "task")
     @XmlUnwrappedCollection
@@ -526,11 +525,11 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.scriptTasks = scriptTasks;
     }
 
-    public Set<SequenceFlow> getSequenceFlows() {
+    public List<SequenceFlow> getSequenceFlows() {
         return sequenceFlows;
     }
 
-    public void setSequenceFlows(Set<SequenceFlow> sequenceFlows) {
+    public void setSequenceFlows(List<SequenceFlow> sequenceFlows) {
         this.sequenceFlows = sequenceFlows;
     }
 

@@ -64,7 +64,7 @@ public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
 
     @XmlUnwrappedCollection
     @XmlElement(name = "incoming")
-    private List<String> incoming = new ArrayList<>();
+    private List<Incoming> incoming = new ArrayList<>();
 
     /*
     Simulation parameters for the start event. Used in Simulation section during marshalling/unmarshalling
@@ -142,11 +142,11 @@ public abstract class EndEvent extends FlowNode implements BPMNViewDefinition,
         this.elementParameters = elementParameters;
     }
 
-    public List<String> getIncoming() {
+    public List<Incoming> getIncoming() {
         return incoming;
     }
 
-    public void setIncoming(List<String> incoming) {
+    public void setIncoming(List<Incoming> incoming) {
         this.incoming = incoming;
     }
 

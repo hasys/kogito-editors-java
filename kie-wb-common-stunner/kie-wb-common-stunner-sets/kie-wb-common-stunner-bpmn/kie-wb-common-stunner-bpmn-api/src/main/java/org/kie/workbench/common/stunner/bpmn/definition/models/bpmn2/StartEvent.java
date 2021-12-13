@@ -47,7 +47,7 @@ public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
     public static final transient String category = BPMNCategories.START_EVENTS;
 
     @XmlUnwrappedCollection
-    private List<String> outgoing = new ArrayList<>();
+    private List<Outgoing> outgoing = new ArrayList<>();
 
     @Labels
     @XmlTransient
@@ -140,11 +140,11 @@ public abstract class StartEvent extends FlowNode implements BPMNViewDefinition,
         this.elementParameters = elementParameters;
     }
 
-    public List<String> getOutgoing() {
+    public List<Outgoing> getOutgoing() {
         return outgoing;
     }
 
-    public void setOutgoing(List<String> outgoing) {
+    public void setOutgoing(List<Outgoing> outgoing) {
         this.outgoing = outgoing;
     }
 

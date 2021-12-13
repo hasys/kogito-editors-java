@@ -27,6 +27,15 @@ public class Waypoint {
     @XmlAttribute
     private double y;
 
+    public Waypoint() {
+
+    }
+
+    public Waypoint(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
 

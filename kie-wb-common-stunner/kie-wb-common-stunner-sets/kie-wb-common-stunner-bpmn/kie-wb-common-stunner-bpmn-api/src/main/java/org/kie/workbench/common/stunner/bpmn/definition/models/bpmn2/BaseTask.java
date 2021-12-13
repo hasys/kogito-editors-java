@@ -15,7 +15,9 @@
  */
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -40,6 +42,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBa
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphProperty;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphPropertyValueBinding;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
+import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @MorphBase(defaultType = NoneTask.class, targets = {BaseNonContainerSubprocess.class})
 public abstract class BaseTask extends FlowNode implements BPMNViewDefinition {
@@ -113,6 +116,12 @@ public abstract class BaseTask extends FlowNode implements BPMNViewDefinition {
     @XmlTransient
     protected final Set<String> labels = new HashSet<>(TASK_LABELS);
 
+    @XmlUnwrappedCollection
+    private List<Incoming> incoming = new ArrayList<>();
+
+    @XmlUnwrappedCollection
+    private List<Outgoing> outgoing = new ArrayList<>();
+
     public BaseTask() {
         this("", "", new SimulationSet(), new TaskType(), new AdvancedData());
     }
@@ -143,6 +152,22 @@ public abstract class BaseTask extends FlowNode implements BPMNViewDefinition {
         this.taskType = taskType;
     }
 
+    public List<Incoming> getIncoming() {
+        return incoming;
+    }
+
+    public void setIncoming(List<Incoming> incoming) {
+        this.incoming = incoming;
+    }
+
+    public List<Outgoing> getOutgoing() {
+        return outgoing;
+    }
+
+    public void setOutgoing(List<Outgoing> outgoing) {
+        this.outgoing = outgoing;
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(getClass()),
@@ -150,6 +175,8 @@ public abstract class BaseTask extends FlowNode implements BPMNViewDefinition {
                                          Objects.hashCode(taskType),
                                          Objects.hashCode(simulationSet),
                                          Objects.hashCode(labels),
+                                         Objects.hashCode(incoming),
+                                         Objects.hashCode(outgoing),
                                          Objects.hashCode(advancedData));
     }
 
@@ -161,6 +188,8 @@ public abstract class BaseTask extends FlowNode implements BPMNViewDefinition {
                     Objects.equals(taskType, other.taskType) &&
                     Objects.equals(simulationSet, other.simulationSet) &&
                     Objects.equals(labels, other.labels) &&
+                    Objects.equals(incoming, other.incoming) &&
+                    Objects.equals(outgoing, other.outgoing) &&
                     Objects.equals(advancedData, other.advancedData);
         }
         return false;

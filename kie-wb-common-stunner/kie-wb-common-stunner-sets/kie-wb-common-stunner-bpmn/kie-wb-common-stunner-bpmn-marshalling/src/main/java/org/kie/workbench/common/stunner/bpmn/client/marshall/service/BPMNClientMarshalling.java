@@ -34,6 +34,8 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions_XMLMapperImpl;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Incoming;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Outgoing;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationship;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
@@ -51,7 +53,9 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.di.Waypoint;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.graph.Edge;
+import org.kie.workbench.common.stunner.core.graph.content.view.Connection;
 import org.kie.workbench.common.stunner.core.graph.content.view.ControlPoint;
+import org.kie.workbench.common.stunner.core.graph.content.view.Point2D;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewConnector;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewConnectorImpl;
 import org.kie.workbench.common.stunner.core.graph.content.view.ViewImpl;
@@ -103,6 +107,7 @@ public class BPMNClientMarshalling {
         nodes.forEach(DomGlobal.console::info);
         DomGlobal.console.warn("Finished");
 
+        List<SequenceFlow> sequenceFlows = new ArrayList<>();
         for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
             BPMNViewDefinition n = node.getContent().getDefinition();
             if (n instanceof Process) {
@@ -124,20 +129,9 @@ public class BPMNClientMarshalling {
                 // Adding simulation properties
                 simulationElements.add(startEvent.getElementParameters());
 
-                List<String> outgoing = new ArrayList<>();
-                node.getOutEdges().forEach(edge -> {
-                    if (edge.getContent() instanceof ViewConnectorImpl) {
-                        ViewConnector connector = (ViewConnector) edge.getContent();
-                        if (connector.getDefinition() instanceof SequenceFlow) {
-                            SequenceFlow flow = (SequenceFlow) connector.getDefinition();
-                            process.getSequenceFlows().add(flow);
-                            flow.setSourceRef(startEvent.getId());
-                            outgoing.add(flow.getId());
-                        }
-                    }
-                });
+                List<Outgoing> outgoing = checkOutgoingFlows(node.getOutEdges(), startEvent.getId(), sequenceFlows, plane);
 
-                //startEvent.setOutgoing(outgoing);
+                startEvent.setOutgoing(outgoing);
             }
 
             if (n instanceof EndEvent) {
@@ -147,17 +141,9 @@ public class BPMNClientMarshalling {
                 // Adding simulation properties
                 simulationElements.add(endEvent.getElementParameters());
 
-                List<String> incoming = new ArrayList<>();
-                node.getInEdges().forEach(edge -> {
-                    for (SequenceFlow flow : process.getSequenceFlows()) {
-                        if (Objects.equals(flow.getId(), getId(edge))) {
-                            flow.setTargetRef(endEvent.getId());
-                            incoming.add(flow.getId());
-                        }
-                    }
-                });
+                List<Incoming> incoming = checkIncomingFlows(node.getInEdges(), endEvent.getId(), sequenceFlows, plane);
 
-                //endEvent.setIncoming(incoming);
+                endEvent.setIncoming(incoming);
             }
 
             if (n instanceof BaseTask) {
@@ -167,6 +153,11 @@ public class BPMNClientMarshalling {
                 } else {
                     process.getTasks().add(task);
                 }
+
+                List<Outgoing> outgoing = checkOutgoingFlows(node.getOutEdges(), task.getId(), sequenceFlows, plane);
+                List<Incoming> incoming = checkIncomingFlows(node.getInEdges(), task.getId(), sequenceFlows, plane);
+                task.setIncoming(incoming);
+                task.setOutgoing(outgoing);
             }
 
             // Adding Shape to Diagram
@@ -174,6 +165,18 @@ public class BPMNClientMarshalling {
                     createShapeForBounds(node.getContent().getBounds(), n.getId())
             );
         }
+
+        // Set BpmnEdges id's now when all sources and targets are ready
+        for (SequenceFlow flow : sequenceFlows) {
+            for (BpmnEdge edge : plane.getBpmnEdges()) {
+                if (Objects.equals(edge.getBpmnElement(), flow.getId())) {
+                    edge.setId("edge_shape_" + flow.getSourceRef() + "_to_shape_" + flow.getTargetRef());
+                    break;
+                }
+            }
+        }
+
+        process.getSequenceFlows().addAll(sequenceFlows);
 
         Scenario scenario = new Scenario();
         scenario.setElementParameters(simulationElements);
@@ -194,18 +197,95 @@ public class BPMNClientMarshalling {
         return definitions;
     }
 
-    private BpmnEdge createBpmnEdge(SequenceFlow flow, ControlPoint[] controlPoints) {
+    private List<Outgoing> checkOutgoingFlows(List<Edge> edges, String nodeId, List<SequenceFlow> sequenceFlows, BpmnPlane plane) {
+        List<Outgoing> outgoing = new ArrayList<>();
+        edges.forEach(edge -> {
+            if (edge.getContent() instanceof ViewConnectorImpl) {
+                ViewConnector connector = (ViewConnector) edge.getContent();
+                if (connector.getDefinition() instanceof SequenceFlow) {
+                    SequenceFlow flow = (SequenceFlow) connector.getDefinition();
+                    flow.setId(edge.getUUID());
+                    addOutgoingFlow(flow, nodeId, sequenceFlows, createWaypoints(connector), plane);
+
+                    outgoing.add(new Outgoing(flow.getId()));
+                }
+            }
+        });
+        return outgoing;
+    }
+
+    private List<Incoming> checkIncomingFlows(List<Edge> edges, String nodeId, List<SequenceFlow> sequenceFlows, BpmnPlane plane) {
+        List<Incoming> incoming = new ArrayList<>();
+        edges.forEach(edge -> {
+            if (edge.getContent() instanceof ViewConnectorImpl) {
+                ViewConnector connector = (ViewConnector) edge.getContent();
+                if (connector.getDefinition() instanceof SequenceFlow) {
+                    SequenceFlow flow = (SequenceFlow) connector.getDefinition();
+                    flow.setId(edge.getUUID());
+
+                    addIncomingFlow(flow, nodeId, sequenceFlows, createWaypoints(connector), plane);
+
+                    incoming.add(new Incoming(flow.getId()));
+                }
+            }
+        });
+        return incoming;
+    }
+
+    private void addOutgoingFlow(SequenceFlow flow, String id, List<SequenceFlow> sequenceFlows, List<Waypoint> waypoints, BpmnPlane plane) {
+        for (SequenceFlow f : sequenceFlows) {
+            if (Objects.equals(flow.getId(), f.getId())) {
+                f.setSourceRef(id);
+                return;
+            }
+        }
+
+        flow.setSourceRef(id);
+        sequenceFlows.add(flow);
+        BpmnEdge edge = createBpmnEdge(flow, waypoints);
+        plane.getBpmnEdges().add(edge);
+    }
+
+    private void addIncomingFlow(SequenceFlow flow, String id, List<SequenceFlow> sequenceFlows, List<Waypoint> waypoints, BpmnPlane plane) {
+        for (SequenceFlow f : sequenceFlows) {
+            if (Objects.equals(flow.getId(), f.getId())) {
+                f.setTargetRef(id);
+                return;
+            }
+        }
+
+        flow.setTargetRef(id);
+        sequenceFlows.add(flow);
+        BpmnEdge edge = createBpmnEdge(flow, waypoints);
+        plane.getBpmnEdges().add(edge);
+    }
+
+    private List<Waypoint> createWaypoints(ViewConnector connector) {
+        List<Waypoint> waypoints = new ArrayList<>();
+        Point2D sourcePoint = ((Connection) connector.getSourceConnection().get()).getLocation();
+        Waypoint source = new Waypoint(sourcePoint.getX(), sourcePoint.getY());
+        waypoints.add(source);
+
+        for (ControlPoint point : connector.getControlPoints()) {
+            waypoints.add(new Waypoint(
+                                  point.getLocation().getX(),
+                                  point.getLocation().getY()
+                          )
+            );
+        }
+
+        Point2D targetPoint = ((Connection) connector.getTargetConnection().get()).getLocation();
+        Waypoint target = new Waypoint(targetPoint.getX(), targetPoint.getY());
+        waypoints.add(target);
+
+        return waypoints;
+    }
+
+    private BpmnEdge createBpmnEdge(SequenceFlow flow, List<Waypoint> waypoints) {
         BpmnEdge edge = new BpmnEdge();
-        edge.setId("edge_shape_" + flow.getSourceRef() + "_to_shape_" + flow.getTargetRef());
+        // ID can't be set yet, since target is not set yet.
         edge.setBpmnElement(flow.getId());
 
-        List<Waypoint> waypoints = new ArrayList<>();
-        for (ControlPoint point : controlPoints) {
-            Waypoint waypoint = new Waypoint();
-            waypoint.setX(point.getLocation().getX());
-            waypoint.setY(point.getLocation().getY());
-            waypoints.add(waypoint);
-        }
         edge.setWaypoint(waypoints);
         return edge;
     }
