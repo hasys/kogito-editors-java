@@ -252,7 +252,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     @XmlElement(name = "task")
     @XmlUnwrappedCollection
     @XmlElements({
-            @XmlElement(name = "_NoneTask", type = NoneTask.class)
+            @XmlElement(name = "_NoneTask", type = NoneTask.class),
+            @XmlElement(name = "_UserTask", type = UserTask.class)
     })
     private List<BaseTask> tasks = new ArrayList<>();
 

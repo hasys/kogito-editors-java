@@ -23,6 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.BPSimData;
 import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.OnEntryScript;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.OnExitScript;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @XmlRootElement(name = "extensionElements", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
@@ -33,6 +35,12 @@ public class ExtensionElements {
 
     @XmlUnwrappedCollection
     private List<MetaData> metaData;
+
+    @XmlElement(name = "onEntry-script")
+    private OnEntryScript onEntryScript;
+
+    @XmlElement(name = "onExit-script")
+    private OnExitScript onExitScript;
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
@@ -53,6 +61,22 @@ public class ExtensionElements {
         this.metaData = metaData;
     }
 
+    public OnEntryScript getOnEntryScript() {
+        return onEntryScript;
+    }
+
+    public void setOnEntryScript(OnEntryScript onEntryScript) {
+        this.onEntryScript = onEntryScript;
+    }
+
+    public OnExitScript getOnExitScript() {
+        return onExitScript;
+    }
+
+    public void setOnExitScript(OnExitScript onExitScript) {
+        this.onExitScript = onExitScript;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,13 +86,11 @@ public class ExtensionElements {
             return false;
         }
         ExtensionElements that = (ExtensionElements) o;
-        return Objects.equals(getBpSimData(), that.getBpSimData())
-                && Objects.equals(getMetaData(), that.getMetaData());
+        return Objects.equals(getBpSimData(), that.getBpSimData()) && Objects.equals(getMetaData(), that.getMetaData()) && Objects.equals(getOnEntryScript(), that.getOnEntryScript()) && Objects.equals(getOnExitScript(), that.getOnExitScript());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getBpSimData(),
-                            getMetaData());
+        return Objects.hash(getBpSimData(), getMetaData(), getOnEntryScript(), getOnExitScript());
     }
 }

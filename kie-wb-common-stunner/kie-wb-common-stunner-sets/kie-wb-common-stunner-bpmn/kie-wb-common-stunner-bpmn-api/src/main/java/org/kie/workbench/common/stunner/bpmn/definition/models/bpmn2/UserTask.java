@@ -16,7 +16,13 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -25,7 +31,11 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FieldParam;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormDefinition;
 import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.OnEntryScript;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.OnExitScript;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptTypeValue;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.UserTaskExecutionSet;
@@ -49,6 +59,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
         startElement = "general",
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
+@XmlRootElement(name = "task", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
 
     @Property
@@ -56,7 +67,11 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
             afterElement = "general"
     )
     @Valid
+    @XmlTransient
     protected UserTaskExecutionSet executionSet;
+
+    @XmlAttribute(namespace = "http://www.jboss.org/drools")
+    private String taskName;
 
     public UserTask() {
         this("Task",
@@ -89,6 +104,58 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
     @Override
     public void setExecutionSet(final UserTaskExecutionSet executionSet) {
         this.executionSet = executionSet;
+    }
+
+    public String getTaskName() {
+        return executionSet.getTaskName().getValue();
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    @Override
+    public ExtensionElements getExtensionElements() {
+        ExtensionElements elements = super.getExtensionElements();
+        if (elements == null) {
+            elements = new ExtensionElements();
+        }
+
+        List<MetaData> metaData = new ArrayList<>();
+        if (executionSet.getIsAsync().getValue()) {
+            MetaData customAutoStart = new MetaData("customAsync",
+                                                    "true");
+            metaData.add(customAutoStart);
+        }
+
+        if (executionSet.getAdHocAutostart().getValue()) {
+            MetaData customAutoStart = new MetaData("customAutoStart",
+                                                    "true");
+            metaData.add(customAutoStart);
+        }
+
+        if (executionSet.getSlaDueDate().getValue() != null && !executionSet.getSlaDueDate().getValue().isEmpty()) {
+            MetaData customAutoStart = new MetaData("customSLADueDate",
+                                                    executionSet.getSlaDueDate().getValue());
+            metaData.add(customAutoStart);
+        }
+        elements.setMetaData(metaData);
+
+        if (!executionSet.getOnEntryAction().getValue().isEmpty()
+                && !executionSet.getOnEntryAction().getValue().getValues().isEmpty()) {
+            ScriptTypeValue value = executionSet.getOnEntryAction().getValue().getValues().get(0);
+            OnEntryScript entryScript = new OnEntryScript(value.getLanguage(), value.getScript());
+            elements.setOnEntryScript(entryScript);
+        }
+
+        if (!executionSet.getOnExitAction().getValue().isEmpty()
+                && !executionSet.getOnExitAction().getValue().getValues().isEmpty()) {
+            ScriptTypeValue value = executionSet.getOnExitAction().getValue().getValues().get(0);
+            OnExitScript exitScript = new OnExitScript(value.getLanguage(), value.getScript());
+            elements.setOnExitScript(exitScript);
+        }
+
+        return elements.getMetaData().isEmpty() ? null : elements;
     }
 
     @Override
