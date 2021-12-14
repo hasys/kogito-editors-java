@@ -34,7 +34,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManageme
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseRoles;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.core.diagram.Metadata;
 import org.kie.workbench.common.stunner.core.graph.Element;
 import org.kie.workbench.common.stunner.core.graph.Node;
@@ -168,7 +167,7 @@ public class VariableProviderTest
 
     private Element mockRootNode(String processVariables, String caseFileVariables) {
         Process rootNode = new Process();
-        rootNode.setProcessData(new ProcessData(new ProcessVariables(processVariables)));
+        rootNode.setProcessData(new ProcessData(processVariables));
         rootNode.setCaseManagementSet((new CaseManagementSet(
                 new CaseIdPrefix(""),
                 new CaseRoles(""),
@@ -178,7 +177,7 @@ public class VariableProviderTest
 
     private Element mockRootNodeWithoutVariables() {
         Process rootNode = new Process();
-        rootNode.setProcessData(new ProcessData(new ProcessVariables("")));
+        rootNode.setProcessData(new ProcessData(""));
         return mockNode(rootNode);
     }
 }

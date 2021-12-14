@@ -16,6 +16,8 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.property.variables;
 
+import java.util.Objects;
+
 import javax.validation.Valid;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
@@ -36,26 +38,22 @@ public class ProcessData implements BaseProcessData {
             type = VariablesEditorFieldType.class
     )
     @Valid
-    private ProcessVariables processVariables;
+    private String processVariables;
 
     public ProcessData() {
-        this(new ProcessVariables());
+        this("");
     }
 
-    public ProcessData(final @MapsTo("processVariables") ProcessVariables processVariables) {
+    public ProcessData(final @MapsTo("processVariables") String processVariables) {
         this.processVariables = processVariables;
     }
 
-    public ProcessData(final String processVariables) {
-        this.processVariables = new ProcessVariables(processVariables);
-    }
-
     @Override
-    public ProcessVariables getProcessVariables() {
+    public String getProcessVariables() {
         return processVariables;
     }
 
-    public void setProcessVariables(final ProcessVariables processVariables) {
+    public void setProcessVariables(final String processVariables) {
         this.processVariables = processVariables;
     }
 
@@ -68,7 +66,7 @@ public class ProcessData implements BaseProcessData {
     public boolean equals(Object o) {
         if (o instanceof ProcessData) {
             ProcessData other = (ProcessData) o;
-            return processVariables.equals(other.processVariables);
+            return Objects.equals(processVariables, other.processVariables);
         }
         return false;
     }

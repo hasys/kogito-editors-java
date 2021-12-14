@@ -37,7 +37,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseFileVariables;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManagementSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.bpmn.forms.conditions.FieldMetadata;
 import org.kie.workbench.common.stunner.bpmn.forms.conditions.TypeMetadata;
 import org.kie.workbench.common.stunner.bpmn.forms.conditions.TypeMetadataQuery;
@@ -411,9 +410,7 @@ public class VariableSearchServiceTest {
 
     protected ProcessData mockProcessData(String variables) {
         ProcessData processData = mock(ProcessData.class);
-        ProcessVariables processVariables = mock(ProcessVariables.class);
-        when(processData.getProcessVariables()).thenReturn(processVariables);
-        when(processVariables.getValue()).thenReturn(variables);
+        when(processData.getProcessVariables()).thenReturn(variables);
         return processData;
     }
 

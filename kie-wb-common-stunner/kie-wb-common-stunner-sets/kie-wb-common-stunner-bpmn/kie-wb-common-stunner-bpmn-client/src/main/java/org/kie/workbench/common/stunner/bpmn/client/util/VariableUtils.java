@@ -58,7 +58,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignal
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseFileVariables;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManagementSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.AssignmentsInfo;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessVariables;
 import org.kie.workbench.common.stunner.bpmn.workitem.CustomTask;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.graph.Edge;
@@ -240,12 +239,12 @@ public class VariableUtils {
                 Object oDefinition = ((View) element.getContent()).getDefinition();
                 if ((oDefinition instanceof BPMNDiagram)) {
                     BPMNDiagram bpmnDiagram = (BPMNDiagram) oDefinition;
-                    BaseProcessVariables processVariables = bpmnDiagram.getProcessData().getProcessVariables();
-                    if (processVariables != null) {
+                    String processVariables = bpmnDiagram.getProcessData().getProcessVariables();
+                    if (processVariables != null && !processVariables.isEmpty()) {
                         if (variables.length() > 0) {
                             variables.append(",");
                         }
-                        variables.append(processVariables.getValue());
+                        variables.append(processVariables);
                     }
                     CaseManagementSet caseManagementSet = bpmnDiagram.getCaseManagementSet();
                     if (caseManagementSet != null) {
@@ -259,7 +258,7 @@ public class VariableUtils {
                     }
                 }
                 if ((Objects.nonNull(parent) && Objects.equals(parent, element)) || Objects.isNull(selectedElement)) {
-                    BaseProcessVariables subprocessVariables = null;
+                    String subprocessVariables = null;
                     if (oDefinition instanceof EventSubprocess) {
                         EventSubprocess subprocess = (EventSubprocess) oDefinition;
                         subprocessVariables = subprocess.getProcessData().getProcessVariables();
@@ -273,11 +272,11 @@ public class VariableUtils {
                         EmbeddedSubprocess subprocess = (EmbeddedSubprocess) oDefinition;
                         subprocessVariables = subprocess.getProcessData().getProcessVariables();
                     }
-                    if (subprocessVariables != null) {
+                    if (subprocessVariables != null && !subprocessVariables.isEmpty()) {
                         if (variables.length() > 0) {
                             variables.append(",");
                         }
-                        variables.append(subprocessVariables.getValue());
+                        variables.append(subprocessVariables);
                     }
                 }
             }

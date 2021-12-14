@@ -76,7 +76,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.UserTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.RootProcessAdvancedData;
 import org.kie.workbench.common.stunner.bpmn.documentation.model.BPMNDocumentation;
 import org.kie.workbench.common.stunner.bpmn.documentation.model.element.Element;
@@ -238,8 +237,6 @@ public class ClientBPMNDocumentationServiceTest {
 
     private RootProcessAdvancedData advancedData;
 
-    private ProcessVariables processVariables;
-
     private UserTask userTask;
 
     private EmbeddedSubprocess embeddedSubprocess;
@@ -314,8 +311,7 @@ public class ClientBPMNDocumentationServiceTest {
         imports = new Imports(importsValue);
 
         //ProcessData
-        processVariables = new ProcessVariables(VARIABLES);
-        processData = new ProcessData(processVariables);
+        processData = new ProcessData(VARIABLES);
 
         //AdvancedData
         globalVariables = new GlobalVariables(GLOBAL_VARIABLES);

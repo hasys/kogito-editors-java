@@ -132,7 +132,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.task.UserTaskEx
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.WaitForCompletion;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.AdvancedData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.bpmn.workitem.CustomTask;
 import org.kie.workbench.common.stunner.bpmn.workitem.CustomTaskExecutionSet;
 
@@ -1212,8 +1211,8 @@ public class HashCodeAndEqualityTest {
                  new SLADueDate());
 
         final String PROCESS_DATA = "some value";
-        final ProcessData A_PROCESS_DATA = new ProcessData(new ProcessVariables(PROCESS_DATA));
-        final ProcessData B_PROCESS_DATA = new ProcessData(new ProcessVariables("Other value"));
+        final ProcessData A_PROCESS_DATA = new ProcessData(PROCESS_DATA);
+        final ProcessData B_PROCESS_DATA = new ProcessData("Other value");
 
         MultipleInstanceSubprocess a = new MultipleInstanceSubprocess();
         a.setExecutionSet(A_EXECUTION_SET);

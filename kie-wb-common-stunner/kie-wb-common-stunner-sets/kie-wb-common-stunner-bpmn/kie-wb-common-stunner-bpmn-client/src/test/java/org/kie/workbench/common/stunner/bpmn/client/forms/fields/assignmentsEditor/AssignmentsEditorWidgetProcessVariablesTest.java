@@ -35,7 +35,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataO
 import org.kie.workbench.common.stunner.bpmn.definition.property.artifacts.DataObjectTypeValue;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.client.canvas.AbstractCanvasHandler;
 import org.kie.workbench.common.stunner.core.client.canvas.controls.SelectionControl;
@@ -108,10 +107,6 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
     @Mock
     private ProcessData parentNodeProcessData;
     @Mock
-    private ProcessVariables bpmnDiagramProcessVariables;
-    @Mock
-    private ProcessVariables parentNodeProcessVariables;
-    @Mock
     private Node parentNode;
     @Mock
     private Edge edge;
@@ -161,10 +156,8 @@ public class AssignmentsEditorWidgetProcessVariablesTest {
         when(parentNode.getContent()).thenReturn(parentNodeView);
         when(nodeView.getDefinition()).thenReturn(bpmnDiagram);
         when(bpmnDiagram.getProcessData()).thenReturn(bpmnDiagramProcessData);
-        when(bpmnDiagramProcessData.getProcessVariables()).thenReturn(bpmnDiagramProcessVariables);
-        when(bpmnDiagramProcessVariables.getValue()).thenReturn(PROCESS_VARIABLES);
-        when(parentNodeProcessData.getProcessVariables()).thenReturn(parentNodeProcessVariables);
-        when(parentNodeProcessVariables.getValue()).thenReturn(PARENT_NODE_PROCESS_VARIABLES);
+        when(bpmnDiagramProcessData.getProcessVariables()).thenReturn(PROCESS_VARIABLES);
+        when(parentNodeProcessData.getProcessVariables()).thenReturn(PARENT_NODE_PROCESS_VARIABLES);
         when(graphUtils.getParent(node)).thenReturn(parentNode);
         when(parentNode.getUUID()).thenReturn("rootId");
         when(widget.isBPMNDefinition(any())).thenCallRealMethod();

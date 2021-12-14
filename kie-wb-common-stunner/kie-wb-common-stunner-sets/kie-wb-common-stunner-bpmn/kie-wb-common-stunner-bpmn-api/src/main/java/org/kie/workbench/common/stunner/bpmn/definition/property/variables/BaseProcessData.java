@@ -20,5 +20,5 @@ import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 
 public interface BaseProcessData extends BPMNPropertySet {
 
-    BaseProcessVariables getProcessVariables();
+    String getProcessVariables();
 }

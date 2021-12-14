@@ -35,8 +35,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Definitions
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Incoming;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ItemDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Outgoing;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationship;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
@@ -50,6 +52,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.ElementPara
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.Scenario;
 import org.kie.workbench.common.stunner.bpmn.definition.models.dc.Bounds;
 import org.kie.workbench.common.stunner.bpmn.definition.models.di.Waypoint;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.graph.Edge;
@@ -101,6 +104,11 @@ public class BPMNClientMarshalling {
                 .map(node -> node.getContent().getDefinition())
                 .filter(node -> node instanceof Process)
                 .findFirst().orElse(new Process());
+        DomGlobal.console.info("Process variables");
+        DomGlobal.console.info(process.getProcessData());
+        DomGlobal.console.info(process.getProcessData().getProcessVariables());
+        DomGlobal.console.info("----------------------");
+        setProcessVariables(definitions, process, process.getProcessData().getProcessVariables());
 
         definitions.setProcess(process);
         plane.setBpmnElement(process.getName());
@@ -196,6 +204,36 @@ public class BPMNClientMarshalling {
         definitions.setRelationship(relationship);
 
         return definitions;
+    }
+
+    private void setProcessVariables(Definitions definitions, Process process, String value) {
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+
+        String[] items = value.split(",");
+        for (String item : items) {
+            if (item.isEmpty()) {
+                continue;
+            }
+
+            String[] parts = item.split(":");
+            String varName = (parts.length >= 1 ? parts[0] : "");
+            String itemId = "_" + varName + "Item";
+            String varType = (parts.length >= 2 ? parts[1] : "Object");
+            String varTags = (parts.length >= 3 ? parts[2].replace(';', ',') : null);
+
+            Property property = new Property(varName, varName, itemId);
+            if (varTags != null && !varTags.isEmpty()) {
+                ExtensionElements extensionElements = new ExtensionElements();
+                extensionElements.addMetaData(new MetaData("customTags", varTags));
+                property.setExtensionElements(extensionElements);
+            }
+            process.getProperties().add(property);
+
+            ItemDefinition itemDefinition = new ItemDefinition(itemId, varType);
+            definitions.getItemDefinitions().add(itemDefinition);
+        }
     }
 
     private List<Outgoing> checkOutgoingFlows(List<Edge> edges, String nodeId, List<SequenceFlow> sequenceFlows, BpmnPlane plane) {

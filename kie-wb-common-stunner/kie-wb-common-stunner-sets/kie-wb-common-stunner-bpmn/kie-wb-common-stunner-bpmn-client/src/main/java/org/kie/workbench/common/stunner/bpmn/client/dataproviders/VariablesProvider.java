@@ -29,7 +29,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.DataObject;
 import org.kie.workbench.common.stunner.bpmn.definition.FlowElement;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseFileVariables;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessVariables;
 import org.kie.workbench.common.stunner.core.client.api.SessionManager;
 import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.Node;
@@ -73,9 +72,8 @@ public class VariablesProvider
             if (oDefinition instanceof BPMNDiagram) {
                 BPMNDiagram bpmnDiagram = (BPMNDiagram) oDefinition;
 
-                BaseProcessVariables processVars = bpmnDiagram.getProcessData().getProcessVariables();
-                addPropertyVariableToResult(result, processVars.getValue());
-
+                String processVars = bpmnDiagram.getProcessData().getProcessVariables();
+                addPropertyVariableToResult(result, processVars);
 
                 Iterable<Node> nodes = sessionManager.getCurrentSession().getCanvasHandler().getDiagram().getGraph().nodes();
 
@@ -93,11 +91,11 @@ public class VariablesProvider
     }
 
     private void processNode(Node<View<FlowElement>, Edge> elm, Collection<Pair<Object, String>> result) {
-            if(elm.getContent().getDefinition() instanceof DataObject) {
-                DataObject dataObject = (DataObject)elm.getContent().getDefinition();
-                String name = dataObject.getDataObjectName().getValue();
-                result.add(new Pair(name, name));
-            }
+        if (elm.getContent().getDefinition() instanceof DataObject) {
+            DataObject dataObject = (DataObject) elm.getContent().getDefinition();
+            String name = dataObject.getDataObjectName().getValue();
+            result.add(new Pair(name, name));
+        }
     }
 
     protected boolean isBPMNDefinition(Node node) {

@@ -537,7 +537,7 @@ public class AssignmentsEditorWidgetTest extends AssignmentBaseTest {
         View parentNodeView = new ViewImpl(bpmnDiagram, Bounds.create());
         parentNode.setContent(parentNodeView);
 
-        bpmnDiagram.getProcessData().getProcessVariables().setValue("processVar1:Object:,processVar2:Object:,processVar3:Object:,processVar4:Object:");
+        bpmnDiagram.getProcessData().setProcessVariables("processVar1:Object:,processVar2:Object:,processVar3:Object:,processVar4:Object:");
         Node node = new NodeImpl("UUID");
         Edge edge = new EdgeImpl("edge");
         Child child = mock(Child.class);

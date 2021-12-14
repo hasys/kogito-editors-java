@@ -76,7 +76,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.task.DmnModelNa
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.IsMultipleInstance;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.Namespace;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessData;
-import org.kie.workbench.common.stunner.bpmn.definition.property.variables.BaseProcessVariables;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.HasProcessData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariableSerializer;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
@@ -284,8 +283,7 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
                         .filter(o -> o instanceof HasProcessData)
                         .map(o -> (HasProcessData<BaseProcessData>) o)
                         .map(HasProcessData::getProcessData)
-                        .map(BaseProcessData::getProcessVariables)
-                        .map(BaseProcessVariables::getValue))
+                        .map(BaseProcessData::getProcessVariables))
                 .map(ProcessVariableSerializer::deserialize)
                 .flatMap(v -> v.entrySet().stream())
                 .sorted(Comparator.comparing(Map.Entry::getKey))
@@ -405,7 +403,6 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
 
     /**
      * Basically replace all \n with <br> html tag.
-     *
      * @param input
      * @return
      */
@@ -421,7 +418,6 @@ public class ClientBPMNDocumentationService implements BPMNDocumentationService 
 
     /**
      * Properties that should be ignored on the documentation
-     *
      * @return
      */
     private static Map<String, Boolean> buildIgnoredPropertiesIds() {

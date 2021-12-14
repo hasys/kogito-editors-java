@@ -74,19 +74,19 @@ public abstract class AbstractDataTypeCache {
             allDataTypes.add(dataObject.getType().getValue().getType());
         } else if (definition instanceof AdHocSubprocess) {
             AdHocSubprocess adhoc = (AdHocSubprocess) definition;
-            allDataTypes.addAll(getDataTypes(adhoc.getProcessData().getProcessVariables().getValue()));
+            allDataTypes.addAll(getDataTypes(adhoc.getProcessData().getProcessVariables()));
         } else if (definition instanceof Process) {
             Process diagram = (Process) definition;
-            allDataTypes.addAll(getDataTypes(diagram.getProcessData().getProcessVariables().getValue()));
+            allDataTypes.addAll(getDataTypes(diagram.getProcessData().getProcessVariables()));
         } else if (definition instanceof EmbeddedSubprocess) {
             EmbeddedSubprocess embeddedSubprocess = (EmbeddedSubprocess) definition;
-            allDataTypes.addAll(getDataTypes(embeddedSubprocess.getProcessData().getProcessVariables().getValue()));
+            allDataTypes.addAll(getDataTypes(embeddedSubprocess.getProcessData().getProcessVariables()));
         } else if (definition instanceof EventSubprocess) {
             EventSubprocess eventSubprocess = (EventSubprocess) definition;
-            allDataTypes.addAll(getDataTypes(eventSubprocess.getProcessData().getProcessVariables().getValue()));
+            allDataTypes.addAll(getDataTypes(eventSubprocess.getProcessData().getProcessVariables()));
         } else if (definition instanceof MultipleInstanceSubprocess) {
             MultipleInstanceSubprocess multipleInstanceSubprocess = (MultipleInstanceSubprocess) definition;
-            allDataTypes.addAll(getDataTypes(multipleInstanceSubprocess.getProcessData().getProcessVariables().getValue()));
+            allDataTypes.addAll(getDataTypes(multipleInstanceSubprocess.getProcessData().getProcessVariables()));
             allDataTypes.addAll(getDataTypes(multipleInstanceSubprocess.getExecutionSet().getMultipleInstanceDataInput().getValue()));
             allDataTypes.addAll(getDataTypes(multipleInstanceSubprocess.getExecutionSet().getMultipleInstanceDataOutput().getValue()));
         } else if (definition instanceof UserTask) {
@@ -174,7 +174,7 @@ public abstract class AbstractDataTypeCache {
         allDataTypes.clear();
         final BPMNDiagram<? extends BaseDiagramSet, ? extends BaseProcessData, ? extends BaseRootProcessAdvancedData> definition = value.getContent().getDefinition();
         cacheImports(definition.getImports().getValue().getDefaultImports());
-        cacheProcessVariables(definition.getProcessData().getProcessVariables().getValue());
+        cacheProcessVariables(definition.getProcessData().getProcessVariables());
         cacheGlobalVariables(definition.getAdvancedData().getGlobalVariables().getValue());
         cacheDataTypes(diagramRoot);
     }

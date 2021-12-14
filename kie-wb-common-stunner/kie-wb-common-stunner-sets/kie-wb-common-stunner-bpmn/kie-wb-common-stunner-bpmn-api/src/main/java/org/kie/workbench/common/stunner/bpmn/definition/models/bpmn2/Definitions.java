@@ -15,6 +15,8 @@
  */
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -23,7 +25,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnDiagram;
+import org.kie.workbench.common.stunner.core.util.HashUtil;
 import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
+import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @XMLMapper
 @XmlType(propOrder = {"process", "bpmnDiagram", "relationship"})
@@ -45,6 +49,10 @@ public class Definitions {
     private Relationship relationship;
 
     private Process process;
+
+    @XmlElement(name = "itemDefinition")
+    @XmlUnwrappedCollection
+    private List<ItemDefinition> itemDefinitions = new ArrayList<>();
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
@@ -97,6 +105,14 @@ public class Definitions {
         this.process = process;
     }
 
+    public List<ItemDefinition> getItemDefinitions() {
+        return itemDefinitions;
+    }
+
+    public void setItemDefinitions(List<ItemDefinition> itemDefinitions) {
+        this.itemDefinitions = itemDefinitions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -111,16 +127,18 @@ public class Definitions {
                 && Objects.equals(getExporterVersion(), that.getExporterVersion())
                 && Objects.equals(getBpmnDiagram(), that.getBpmnDiagram())
                 && Objects.equals(getRelationship(), that.getRelationship())
-                && Objects.equals(getProcess(), that.getProcess());
+                && Objects.equals(getProcess(), that.getProcess())
+                && Objects.equals(getItemDefinitions(), that.getItemDefinitions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(),
-                            getExporter(),
-                            getExporterVersion(),
-                            getBpmnDiagram(),
-                            getRelationship(),
-                            getProcess());
+        return HashUtil.combineHashCodes(Objects.hashCode(id),
+                                         Objects.hashCode(exporter),
+                                         Objects.hashCode(exporterVersion),
+                                         Objects.hashCode(bpmnDiagram),
+                                         Objects.hashCode(relationship),
+                                         Objects.hashCode(process),
+                                         Objects.hashCode(itemDefinitions));
     }
 }

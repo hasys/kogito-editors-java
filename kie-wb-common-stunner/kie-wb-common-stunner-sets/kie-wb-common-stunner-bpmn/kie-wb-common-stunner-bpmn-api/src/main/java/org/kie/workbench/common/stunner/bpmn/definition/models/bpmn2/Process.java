@@ -264,6 +264,10 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     })
     private List<BaseTask> scriptTasks = new ArrayList<>();
 
+    @XmlElement(name = "property")
+    @XmlUnwrappedCollection
+    private List<org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property> properties = new ArrayList<>();
+
     public Process() {
         this("",
              "",
@@ -534,6 +538,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.sequenceFlows = sequenceFlows;
     }
 
+    public List<org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property> properties) {
+        this.properties = properties;
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(processData),
@@ -546,7 +558,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                                          Objects.hashCode(endEvents),
                                          Objects.hashCode(tasks),
                                          Objects.hashCode(scriptTasks),
-                                         Objects.hashCode(sequenceFlows));
+                                         Objects.hashCode(sequenceFlows),
+                                         Objects.hashCode(properties));
     }
 
     @Override
@@ -563,7 +576,8 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                     && Objects.equals(endEvents, other.endEvents)
                     && Objects.equals(tasks, other.tasks)
                     && Objects.equals(scriptTasks, other.scriptTasks)
-                    && Objects.equals(sequenceFlows, other.sequenceFlows);
+                    && Objects.equals(sequenceFlows, other.sequenceFlows)
+                    && Objects.equals(properties, other.properties);
         }
         return false;
     }

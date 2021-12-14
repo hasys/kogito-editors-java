@@ -16,6 +16,8 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.property.variables;
 
+import java.util.Objects;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldDefinition;
@@ -70,7 +72,7 @@ public class ProcessVariables implements BaseProcessVariables {
     public boolean equals(Object o) {
         if (o instanceof ProcessVariables) {
             ProcessVariables other = (ProcessVariables) o;
-            return (null != value) ? value.equals(other.value) : null == other.value;
+            return Objects.equals(value, other.value);
         }
         return false;
     }

@@ -142,21 +142,21 @@ public class VariableSearchService implements LiveSearchService<String> {
             return null;
         }
         if (view.getDefinition() instanceof EventSubprocess) {
-            return ((EventSubprocess) view.getDefinition()).getProcessData().getProcessVariables().getValue();
+            return ((EventSubprocess) view.getDefinition()).getProcessData().getProcessVariables();
         }
         if (view.getDefinition() instanceof AdHocSubprocess) {
-            return ((AdHocSubprocess) view.getDefinition()).getProcessData().getProcessVariables().getValue();
+            return ((AdHocSubprocess) view.getDefinition()).getProcessData().getProcessVariables();
         }
         if (view.getDefinition() instanceof EmbeddedSubprocess) {
-            return ((EmbeddedSubprocess) view.getDefinition()).getProcessData().getProcessVariables().getValue();
+            return ((EmbeddedSubprocess) view.getDefinition()).getProcessData().getProcessVariables();
         }
         if (view.getDefinition() instanceof MultipleInstanceSubprocess) {
-            return ((MultipleInstanceSubprocess) view.getDefinition()).getProcessData().getProcessVariables().getValue();
+            return ((MultipleInstanceSubprocess) view.getDefinition()).getProcessData().getProcessVariables();
         }
         if (view.getDefinition() instanceof Process) {
             Process bpmnDiagram = ((Process) view.getDefinition());
             StringBuilder variablesBuilder = new StringBuilder();
-            String processVariables = bpmnDiagram.getProcessData().getProcessVariables().getValue();
+            String processVariables = bpmnDiagram.getProcessData().getProcessVariables();
             if (!isEmpty(processVariables)) {
                 variablesBuilder.append(processVariables);
             }

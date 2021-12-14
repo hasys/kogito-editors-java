@@ -15,6 +15,7 @@
  */
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,6 +60,14 @@ public class ExtensionElements {
 
     public void setMetaData(List<MetaData> metaData) {
         this.metaData = metaData;
+    }
+
+    public void addMetaData(MetaData metaData) {
+        if (this.metaData == null) {
+            this.metaData = new ArrayList<>();
+        }
+
+        this.metaData.add(metaData);
     }
 
     public OnEntryScript getOnEntryScript() {
