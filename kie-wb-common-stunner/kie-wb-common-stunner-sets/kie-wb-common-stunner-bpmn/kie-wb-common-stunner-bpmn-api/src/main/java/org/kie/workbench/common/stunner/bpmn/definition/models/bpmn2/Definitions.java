@@ -30,7 +30,7 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @XMLMapper
-@XmlType(propOrder = {"itemDefinitions", "process", "bpmnDiagram", "relationship"})
+@XmlType(propOrder = {"itemDefinitions", "messages", "process", "bpmnDiagram", "relationship"})
 @XmlRootElement(name = "definitions", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class Definitions {
 
@@ -53,6 +53,10 @@ public class Definitions {
     @XmlElement(name = "itemDefinition")
     @XmlUnwrappedCollection
     private List<ItemDefinition> itemDefinitions = new ArrayList<>();
+
+    @XmlElement(name = "message")
+    @XmlUnwrappedCollection
+    private List<Message> messages = new ArrayList<>();
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
@@ -113,6 +117,14 @@ public class Definitions {
         this.itemDefinitions = itemDefinitions;
     }
 
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -128,7 +140,8 @@ public class Definitions {
                 && Objects.equals(getBpmnDiagram(), that.getBpmnDiagram())
                 && Objects.equals(getRelationship(), that.getRelationship())
                 && Objects.equals(getProcess(), that.getProcess())
-                && Objects.equals(getItemDefinitions(), that.getItemDefinitions());
+                && Objects.equals(getItemDefinitions(), that.getItemDefinitions())
+                && Objects.equals(getMessages(), that.getMessages());
     }
 
     @Override
@@ -139,6 +152,7 @@ public class Definitions {
                                          Objects.hashCode(bpmnDiagram),
                                          Objects.hashCode(relationship),
                                          Objects.hashCode(process),
-                                         Objects.hashCode(itemDefinitions));
+                                         Objects.hashCode(itemDefinitions),
+                                         Objects.hashCode(messages));
     }
 }

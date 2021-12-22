@@ -20,6 +20,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BaseTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 
 public class IdGenerator {
@@ -34,12 +35,15 @@ public class IdGenerator {
 
     private static int scriptTaskCounter = 1;
 
+    private static int messageCounter = 1;
+
     public static void reset() {
         startNodeCounter = 1;
         endNodeCounter = 1;
         taskCounter = 1;
         userTaskCounter = 1;
         scriptTaskCounter = 1;
+        messageCounter = 1;
     }
 
     public static String getNextIdFor(BPMNViewDefinition flowElement) {
@@ -63,5 +67,13 @@ public class IdGenerator {
         }
 
         return null;
+    }
+
+    public static String getTypeId(StartEvent event) {
+        if (event instanceof StartMessageEvent) {
+            return "Message_" + messageCounter++;
+        }
+
+        return "";
     }
 }

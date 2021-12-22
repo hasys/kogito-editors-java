@@ -234,7 +234,13 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     @XmlUnwrappedCollection
     @XmlElements({
             @XmlElement(name = "_StartNoneEvent", type = StartNoneEvent.class),
-            @XmlElement(name = "_StartCompensationEvent", type = StartCompensationEvent.class)
+            @XmlElement(name = "_StartCompensationEvent", type = StartCompensationEvent.class),
+            @XmlElement(name = "_StartMessageEvent", type = StartMessageEvent.class),
+            @XmlElement(name = "_StartSignalEvent", type = StartSignalEvent.class),
+            @XmlElement(name = "_StartTimerEvent", type = StartTimerEvent.class),
+            @XmlElement(name = "_StartEscalationEvent", type = StartEscalationEvent.class),
+            @XmlElement(name = "_StartErrorEvent", type = StartErrorEvent.class),
+            @XmlElement(name = "_StartConditionalEvent", type = StartConditionalEvent.class)
     })
     private List<StartEvent> startEvents = new ArrayList<>();
 
