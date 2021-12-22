@@ -44,6 +44,7 @@ import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.selectors.l
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNDiagram;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.cm.CaseManagementSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.DiagramSet;
@@ -263,6 +264,13 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
             @XmlElement(name = "_ScriptTask", type = ScriptTask.class)
     })
     private List<BaseTask> scriptTasks = new ArrayList<>();
+
+    @XmlElement(name = "userTask")
+    @XmlUnwrappedCollection
+    @XmlElements({
+            @XmlElement(name = "_UserTask", type = UserTask.class)
+    })
+    private List<BaseTask> userTasks = new ArrayList<>();
 
     @XmlElement(name = "property")
     @XmlUnwrappedCollection
@@ -530,6 +538,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.scriptTasks = scriptTasks;
     }
 
+    public List<BaseTask> getUserTasks() {
+        return userTasks;
+    }
+
+    public void setUserTasks(List<BaseTask> userTasks) {
+        this.userTasks = userTasks;
+    }
+
     public List<SequenceFlow> getSequenceFlows() {
         return sequenceFlows;
     }
@@ -539,6 +555,37 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     }
 
     public List<org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property> getProperties() {
+        String value = getProcessData().getProcessVariables();
+        properties = new ArrayList<>();
+
+        if (value == null || value.isEmpty()) {
+            return properties;
+        }
+
+        // String format of process variables created by forms:
+        // varName1:varType1:varTag1;varTag2,varName2:varType2:varTag3;varTag4
+        String[] variables = value.split(",");
+        for (String variable : variables) {
+            if (variable.isEmpty()) {
+                continue;
+            }
+
+            String[] parts = variable.split(":");
+            String varName = (parts.length >= 1 ? parts[0] : "");
+            String itemId = "_" + varName + "Item";
+            String varType = (parts.length >= 2 ? parts[1] : "Object");
+            String varTags = (parts.length >= 3 ? parts[2].replace(';', ',') : null);
+
+            org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property property = new org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property(varName, varName, itemId);
+            if (varTags != null && !varTags.isEmpty()) {
+                ExtensionElements extensionElements = new ExtensionElements();
+                extensionElements.addMetaData(new MetaData("customTags", varTags));
+                property.setExtensionElements(extensionElements);
+            }
+            properties.add(property);
+            property.setVariableType(varType);
+        }
+
         return properties;
     }
 

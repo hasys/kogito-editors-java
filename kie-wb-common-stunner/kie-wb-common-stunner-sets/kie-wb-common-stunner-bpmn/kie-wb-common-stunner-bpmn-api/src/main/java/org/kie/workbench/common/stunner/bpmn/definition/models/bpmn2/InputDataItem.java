@@ -18,14 +18,13 @@ package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
-@XmlRootElement(name = "property", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
-public class Property {
+@XmlRootElement(name = "inputDataItem", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
+public class InputDataItem {
 
     @XmlAttribute
     private String id;
@@ -36,17 +35,14 @@ public class Property {
     @XmlAttribute
     private String name;
 
-    @XmlElement
-    private ExtensionElements extensionElements;
-
     // Used to create connection with ItemDefinition in Definitions
     @XmlTransient
     private String variableType;
 
-    public Property() {
+    public InputDataItem() {
     }
 
-    public Property(String id, String name, String itemSubjectRef) {
+    public InputDataItem(String id, String name, String itemSubjectRef) {
         this.id = id;
         this.name = name;
         this.itemSubjectRef = itemSubjectRef;
@@ -76,14 +72,6 @@ public class Property {
         this.name = name;
     }
 
-    public ExtensionElements getExtensionElements() {
-        return extensionElements;
-    }
-
-    public void setExtensionElements(ExtensionElements extensionElements) {
-        this.extensionElements = extensionElements;
-    }
-
     public String getVariableType() {
         return variableType;
     }
@@ -103,15 +91,13 @@ public class Property {
         Property property = (Property) o;
         return Objects.equals(getId(), property.getId())
                 && Objects.equals(getItemSubjectRef(), property.getItemSubjectRef())
-                && Objects.equals(getName(), property.getName())
-                && Objects.equals(getExtensionElements(), property.getExtensionElements());
+                && Objects.equals(getName(), property.getName());
     }
 
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(id),
                                          Objects.hashCode(itemSubjectRef),
-                                         Objects.hashCode(name),
-                                         Objects.hashCode(extensionElements));
+                                         Objects.hashCode(name));
     }
 }

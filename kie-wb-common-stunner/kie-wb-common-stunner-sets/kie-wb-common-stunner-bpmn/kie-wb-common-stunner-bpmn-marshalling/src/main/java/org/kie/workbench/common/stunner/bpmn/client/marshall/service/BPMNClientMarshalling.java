@@ -43,6 +43,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Relationshi
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnEdge;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnPlane;
@@ -52,7 +53,6 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.ElementPara
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpsim.Scenario;
 import org.kie.workbench.common.stunner.bpmn.definition.models.dc.Bounds;
 import org.kie.workbench.common.stunner.bpmn.definition.models.di.Waypoint;
-import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.diagram.Diagram;
 import org.kie.workbench.common.stunner.core.graph.Edge;
@@ -104,17 +104,11 @@ public class BPMNClientMarshalling {
                 .map(node -> node.getContent().getDefinition())
                 .filter(node -> node instanceof Process)
                 .findFirst().orElse(new Process());
-        DomGlobal.console.info("Process variables");
-        DomGlobal.console.info(process.getProcessData());
-        DomGlobal.console.info(process.getProcessData().getProcessVariables());
-        DomGlobal.console.info("----------------------");
-        setProcessVariables(definitions, process, process.getProcessData().getProcessVariables());
-
+        setProcessVariablesToDefinitions(definitions, process.getProperties());
         definitions.setProcess(process);
         plane.setBpmnElement(process.getName());
 
         nodes.forEach(DomGlobal.console::info);
-        DomGlobal.console.warn("Finished");
 
         List<SequenceFlow> sequenceFlows = new ArrayList<>();
         for (final NodeImpl<ViewImpl<BPMNViewDefinition>> node : nodes) {
@@ -123,10 +117,6 @@ public class BPMNClientMarshalling {
                 continue;
             }
 
-            DomGlobal.console.info(n);
-            DomGlobal.console.info(node.getOutEdges());
-            DomGlobal.console.info(node.getInEdges());
-            DomGlobal.console.warn("Finished again");
             if (n instanceof FlowElement) {
                 ((FlowElement) n).setId(IdGenerator.getNextIdFor(n));
             }
@@ -135,34 +125,40 @@ public class BPMNClientMarshalling {
                 StartEvent startEvent = (StartEvent) n;
                 process.getStartEvents().add(startEvent);
 
+                // Sequence Flows
+                List<Outgoing> outgoing = checkOutgoingFlows(node.getOutEdges(), startEvent.getId(), sequenceFlows, plane);
+                startEvent.setOutgoing(outgoing);
+
                 // Adding simulation properties
                 simulationElements.add(startEvent.getElementParameters());
-
-                List<Outgoing> outgoing = checkOutgoingFlows(node.getOutEdges(), startEvent.getId(), sequenceFlows, plane);
-
-                startEvent.setOutgoing(outgoing);
             }
 
             if (n instanceof EndEvent) {
                 EndEvent endEvent = (EndEvent) n;
                 process.getEndEvents().add(endEvent);
 
+                // Sequence Flows
+                List<Incoming> incoming = checkIncomingFlows(node.getInEdges(), endEvent.getId(), sequenceFlows, plane);
+                endEvent.setIncoming(incoming);
+
                 // Adding simulation properties
                 simulationElements.add(endEvent.getElementParameters());
-
-                List<Incoming> incoming = checkIncomingFlows(node.getInEdges(), endEvent.getId(), sequenceFlows, plane);
-
-                endEvent.setIncoming(incoming);
             }
 
             if (n instanceof BaseTask) {
                 BaseTask task = (BaseTask) n;
                 if (n instanceof ScriptTask) {
                     process.getScriptTasks().add(task);
+                } else if (n instanceof UserTask) {
+                    process.getUserTasks().add(task);
+
+                    UserTask uTask = (UserTask) task;
+                    definitions.getItemDefinitions().addAll(uTask.getItemDefinitions());
                 } else {
                     process.getTasks().add(task);
                 }
 
+                // Sequence Flows
                 List<Outgoing> outgoing = checkOutgoingFlows(node.getOutEdges(), task.getId(), sequenceFlows, plane);
                 List<Incoming> incoming = checkIncomingFlows(node.getInEdges(), task.getId(), sequenceFlows, plane);
                 task.setIncoming(incoming);
@@ -175,7 +171,7 @@ public class BPMNClientMarshalling {
             );
         }
 
-        // Set BpmnEdges id's now when all sources and targets are ready
+        // Set BpmnEdges ids now when all sources and targets are ready
         for (SequenceFlow flow : sequenceFlows) {
             for (BpmnEdge edge : plane.getBpmnEdges()) {
                 if (Objects.equals(edge.getBpmnElement(), flow.getId())) {
@@ -184,7 +180,6 @@ public class BPMNClientMarshalling {
                 }
             }
         }
-
         process.getSequenceFlows().addAll(sequenceFlows);
 
         Scenario scenario = new Scenario();
@@ -206,34 +201,11 @@ public class BPMNClientMarshalling {
         return definitions;
     }
 
-    private void setProcessVariables(Definitions definitions, Process process, String value) {
-        if (value == null || value.isEmpty()) {
-            return;
-        }
-
-        String[] items = value.split(",");
-        for (String item : items) {
-            if (item.isEmpty()) {
-                continue;
-            }
-
-            String[] parts = item.split(":");
-            String varName = (parts.length >= 1 ? parts[0] : "");
-            String itemId = "_" + varName + "Item";
-            String varType = (parts.length >= 2 ? parts[1] : "Object");
-            String varTags = (parts.length >= 3 ? parts[2].replace(';', ',') : null);
-
-            Property property = new Property(varName, varName, itemId);
-            if (varTags != null && !varTags.isEmpty()) {
-                ExtensionElements extensionElements = new ExtensionElements();
-                extensionElements.addMetaData(new MetaData("customTags", varTags));
-                property.setExtensionElements(extensionElements);
-            }
-            process.getProperties().add(property);
-
-            ItemDefinition itemDefinition = new ItemDefinition(itemId, varType);
+    private void setProcessVariablesToDefinitions(Definitions definitions, List<Property> processVariables) {
+        processVariables.forEach(processVariable -> {
+            ItemDefinition itemDefinition = new ItemDefinition(processVariable.getItemSubjectRef(), processVariable.getVariableType());
             definitions.getItemDefinitions().add(itemDefinition);
-        }
+        });
     }
 
     private List<Outgoing> checkOutgoingFlows(List<Edge> edges, String nodeId, List<SequenceFlow> sequenceFlows, BpmnPlane plane) {
@@ -305,10 +277,13 @@ public class BPMNClientMarshalling {
 
     private List<Waypoint> createWaypoints(ViewConnector connector) {
         List<Waypoint> waypoints = new ArrayList<>();
+
+        // Source point
         Point2D sourcePoint = ((Connection) connector.getSourceConnection().get()).getLocation();
         Waypoint source = new Waypoint(sourcePoint.getX(), sourcePoint.getY());
         waypoints.add(source);
 
+        // Waypoints
         for (ControlPoint point : connector.getControlPoints()) {
             waypoints.add(new Waypoint(
                                   point.getLocation().getX(),
@@ -317,6 +292,7 @@ public class BPMNClientMarshalling {
             );
         }
 
+        // Target point
         Point2D targetPoint = ((Connection) connector.getTargetConnection().get()).getLocation();
         Waypoint target = new Waypoint(targetPoint.getX(), targetPoint.getY());
         waypoints.add(target);
@@ -331,18 +307,6 @@ public class BPMNClientMarshalling {
 
         edge.setWaypoint(waypoints);
         return edge;
-    }
-
-    private String getId(Edge edge) {
-        if (edge.getContent() instanceof ViewConnectorImpl) {
-            ViewConnector connector = (ViewConnector) edge.getContent();
-            if (connector.getDefinition() instanceof SequenceFlow) {
-                SequenceFlow flow = (SequenceFlow) connector.getDefinition();
-                return flow.getId();
-            }
-        }
-
-        return null;
     }
 
     private BpmnShape createShapeForBounds(final org.kie.workbench.common.stunner.core.graph.content.Bounds bounds, final String id) {

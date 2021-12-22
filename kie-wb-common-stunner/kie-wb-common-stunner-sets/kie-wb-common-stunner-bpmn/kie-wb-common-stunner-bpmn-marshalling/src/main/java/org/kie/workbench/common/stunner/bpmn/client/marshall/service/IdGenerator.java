@@ -18,7 +18,9 @@ package org.kie.workbench.common.stunner.bpmn.client.marshall.service;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BaseTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 
 public class IdGenerator {
 
@@ -28,10 +30,16 @@ public class IdGenerator {
 
     private static int taskCounter = 1;
 
+    private static int userTaskCounter = 1;
+
+    private static int scriptTaskCounter = 1;
+
     public static void reset() {
         startNodeCounter = 1;
         endNodeCounter = 1;
         taskCounter = 1;
+        userTaskCounter = 1;
+        scriptTaskCounter = 1;
     }
 
     public static String getNextIdFor(BPMNViewDefinition flowElement) {
@@ -44,6 +52,13 @@ public class IdGenerator {
         }
 
         if (flowElement instanceof BaseTask) {
+            if (flowElement instanceof UserTask) {
+                return "UserTask_" + userTaskCounter++;
+            }
+            if (flowElement instanceof ScriptTask) {
+                return "ScriptTask_" + scriptTaskCounter++;
+            }
+
             return "Task_" + taskCounter++;
         }
 

@@ -30,7 +30,7 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @XMLMapper
-@XmlType(propOrder = {"process", "bpmnDiagram", "relationship"})
+@XmlType(propOrder = {"itemDefinitions", "process", "bpmnDiagram", "relationship"})
 @XmlRootElement(name = "definitions", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class Definitions {
 
