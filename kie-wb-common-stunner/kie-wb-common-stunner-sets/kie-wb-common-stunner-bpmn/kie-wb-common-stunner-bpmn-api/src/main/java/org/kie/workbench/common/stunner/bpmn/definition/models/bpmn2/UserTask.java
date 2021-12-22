@@ -34,6 +34,7 @@ import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.bpmn.definition.models.drools.OnEntryScript;
 import org.kie.workbench.common.stunner.bpmn.definition.models.drools.OnExitScript;
+import org.kie.workbench.common.stunner.bpmn.definition.property.assignment.AssignmentParser;
 import org.kie.workbench.common.stunner.bpmn.definition.property.notification.NotificationValue;
 import org.kie.workbench.common.stunner.bpmn.definition.property.reassignment.ReassignmentValue;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
@@ -199,7 +200,7 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
 
         if (!executionSet.getAssignmentsinfo().getValue().isEmpty()) {
             String wholeAssignments = executionSet.getAssignmentsinfo().getValue();
-            String inputVariables = getInputAssignmentVariables(wholeAssignments);
+            String inputVariables = AssignmentParser.getInputAssignmentVariables(wholeAssignments);
             String[] inVars = inputVariables.split(",");
             for (String inVar : inVars) {
                 String[] var = inVar.split(":");
@@ -208,7 +209,7 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
                 itemDefinitions.add(new ItemDefinition("_" + getId() + "_" + name + "InputXItem", type));
             }
 
-            String outputVariables = getOutputAssignmentVariables(wholeAssignments);
+            String outputVariables = AssignmentParser.getOutputAssignmentVariables(wholeAssignments);
             String[] outVars = outputVariables.split(",");
             for (String outVar : outVars) {
                 String[] var = outVar.split(":");
@@ -219,56 +220,6 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
         }
 
         return itemDefinitions;
-    }
-
-    private String getInputAssignmentVariables(String assignments) {
-        if (assignments.isEmpty()) {
-            return "";
-        }
-
-        String[] parts = assignments.split("\\|");
-
-        if (!parts[0].isEmpty()) {
-            return parts[0];
-        }
-
-        if (parts.length > 1 && !parts[1].isEmpty()) {
-            return parts[1];
-        }
-
-        return "";
-    }
-
-    private String getOutputAssignmentVariables(String assignments) {
-        if (assignments.isEmpty()) {
-            return "";
-        }
-
-        String[] parts = assignments.split("\\|");
-
-        if (parts.length > 3 && !parts[2].isEmpty()) {
-            return parts[2];
-        }
-
-        if (parts.length > 4 && !parts[3].isEmpty()) {
-            return parts[3];
-        }
-
-        return "";
-    }
-
-    private String getAssignmentsAssignmentVariables(String assignments) {
-        if (assignments.isEmpty()) {
-            return "";
-        }
-
-        String[] parts = assignments.split("\\|");
-
-        if (parts.length >= 5 && !parts[4].isEmpty()) {
-            return parts[4];
-        }
-
-        return "";
     }
 
     public void setItemDefinitions(List<ItemDefinition> itemDefinitions) {
@@ -367,26 +318,17 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
 
         if (!executionSet.getAssignmentsinfo().getValue().isEmpty()) {
             String wholeAssignments = executionSet.getAssignmentsinfo().getValue();
-            String inputVariables = getInputAssignmentVariables(wholeAssignments);
-            String[] inVars = inputVariables.split(",");
-            for (String inVar : inVars) {
-                String[] var = inVar.split(":");
-                String name = var[0];
-                String type = (var.length > 1 && var[1] != null && !var[1].isEmpty()) ? var[1] : "Object";
-                DataInput ncn = createDataInput(name, type);
-                ioSpecification.getDataInput().add(ncn);
-                ioSpecification.getInputSet().getDataInputRefs().add(new DataInputRefs(ncn.getId()));
+
+            List<DataInput> dataInputs = AssignmentParser.parseDataInputs(getId(), wholeAssignments);
+            for (DataInput dataInput : dataInputs) {
+                ioSpecification.getDataInput().add(dataInput);
+                ioSpecification.getInputSet().getDataInputRefs().add(new DataInputRefs(dataInput.getId()));
             }
 
-            String outputVariables = getOutputAssignmentVariables(wholeAssignments);
-            String[] outVars = outputVariables.split(",");
-            for (String outVar : outVars) {
-                String[] var = outVar.split(":");
-                String name = var[0];
-                String type = (var.length > 1 && var[1] != null && !var[1].isEmpty()) ? var[1] : "Object";
-                DataOutput ncn = createDataOutput(name, type);
-                ioSpecification.getDataOutput().add(ncn);
-                ioSpecification.getOutputSet().getDataOutputRefs().add(new DataOutputRefs(ncn.getId()));
+            List<DataOutput> dataOutputs = AssignmentParser.parseDataOutputs(getId(), wholeAssignments);
+            for (DataOutput dataOutput : dataOutputs) {
+                ioSpecification.getDataOutput().add(dataOutput);
+                ioSpecification.getOutputSet().getDataOutputRefs().add(new DataOutputRefs(dataOutput.getId()));
             }
         }
 
@@ -435,20 +377,6 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
         dataInput.setItemSubjectRef("_" + dataInput.getId() + "Item");
 
         return dataInput;
-    }
-
-    private DataOutput createDataOutput(String name) {
-        return createDataOutput(name, "Object");
-    }
-
-    private DataOutput createDataOutput(String name, String type) {
-        DataOutput dataOutput = new DataOutput();
-        dataOutput.setDtype(type);
-        dataOutput.setName(name);
-        dataOutput.setId(getId() + "_" + name + "OutputX");
-        dataOutput.setItemSubjectRef("_" + dataOutput.getId() + "Item");
-
-        return dataOutput;
     }
 
     public void setIoSpecification(IoSpecification ioSpecification) {
@@ -581,29 +509,8 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
             }
 
             if (!executionSet.getAssignmentsinfo().getValue().isEmpty()) {
-                String wholeAssignments = executionSet.getAssignmentsinfo().getValue();
-
-                String assignmentsString = getAssignmentsAssignmentVariables(wholeAssignments);
-                if (assignmentsString != null && !assignmentsString.isEmpty()) {
-                    String[] assignments = assignmentsString.split(",");
-                    for (String assignment : assignments) {
-                        if (assignment.startsWith("[din]")) {
-                            assignment = assignment.substring("[din]".length());
-                            if (assignment.contains("=")) {
-                                String[] parts = assignment.split("=");
-                                DataInputAssociation inputAssociation = new DataInputAssociation();
-                                inputAssociation.setTargetRef(new TargetRef(getId() + "_" + parts[0] + "InputX"));
-                                inputAssociation.getAssignment().setFrom(new From(parts[1]));
-                                inputAssociation.getAssignment().setTo(new To(inputAssociation.getTargetRef().getValue()));
-                                dataInputAssociation.add(inputAssociation);
-                            } else {
-                                String[] parts = assignment.split("->");
-                                DataInputAssociation inputAssociation = new DataInputAssociation(getId() + "_" + parts[1] + "InputX", parts[0]);
-                                dataInputAssociation.add(inputAssociation);
-                            }
-                        }
-                    }
-                }
+                dataInputAssociation.addAll(AssignmentParser.parseDataInputAssociation(getId(),
+                                                                                       executionSet.getAssignmentsinfo().getValue()));
             }
 
             if (executionSet.getIsMultipleInstance().getValue()) {
@@ -636,29 +543,8 @@ public class UserTask extends BaseUserTask<UserTaskExecutionSet> {
         }
 
         if (!executionSet.getAssignmentsinfo().getValue().isEmpty()) {
-            String wholeAssignments = executionSet.getAssignmentsinfo().getValue();
-
-            String assignmentsString = getAssignmentsAssignmentVariables(wholeAssignments);
-            if (assignmentsString != null && !assignmentsString.isEmpty()) {
-                String[] assignments = assignmentsString.split(",");
-                for (String assignment : assignments) {
-                    if (assignment.startsWith("[dout]")) {
-                        assignment = assignment.substring("[dout]".length());
-                        if (assignment.contains("=")) {
-                            String[] parts = assignment.split("=");
-                            DataOutputAssociation outputAssociation = new DataOutputAssociation();
-                            outputAssociation.setSourceRef(new SourceRef(getId() + "_" + parts[1] + "OutputX"));
-                            outputAssociation.getAssignment().setFrom(new From(outputAssociation.getSourceRef().getValue()));
-                            outputAssociation.getAssignment().setTo(new To(parts[0]));
-                            dataOutputAssociation.add(outputAssociation);
-                        } else {
-                            String[] parts = assignment.split("->");
-                            DataOutputAssociation outputAssociation = new DataOutputAssociation(getId() + "_" + parts[0] + "OutputX", parts[1]);
-                            dataOutputAssociation.add(outputAssociation);
-                        }
-                    }
-                }
-            }
+            dataOutputAssociation.addAll(AssignmentParser.parseDataOutputAssociation(getId(),
+                                                                                     executionSet.getAssignmentsinfo().getValue()));
         }
 
         return dataOutputAssociation;
