@@ -22,7 +22,9 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.DataInput;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.DataInputAssociation;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.DataOutput;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.DataOutputAssociation;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.DataOutputRefs;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.From;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.OutputSet;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SourceRef;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.TargetRef;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.To;
@@ -124,6 +126,17 @@ public class AssignmentParser {
         }
 
         return dataOutput;
+    }
+
+    public static List<OutputSet> getOutputSet(String dataIO, String nodeId) {
+        List<OutputSet> outputSets = new ArrayList<>();
+        List<DataOutput> outputs = AssignmentParser.parseDataOutputs(dataIO, nodeId);
+        if (!outputs.isEmpty()) {
+            OutputSet os = new OutputSet();
+            os.getDataOutputRefs().add(new DataOutputRefs(outputs.get(0).getId()));
+            outputSets.add(os);
+        }
+        return outputSets;
     }
 
     private static DataInput createDataInput(String name, String type, String nodeId) {

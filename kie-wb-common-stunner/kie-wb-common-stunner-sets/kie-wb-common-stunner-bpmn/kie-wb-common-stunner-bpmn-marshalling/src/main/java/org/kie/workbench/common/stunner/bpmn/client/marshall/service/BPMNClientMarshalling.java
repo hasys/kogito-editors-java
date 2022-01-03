@@ -44,6 +44,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.SequenceFlow;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartSignalEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.UserTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnDiagram;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmndi.BpmnEdge;
@@ -135,7 +136,13 @@ public class BPMNClientMarshalling {
                     StartMessageEvent startMessage = (StartMessageEvent) startEvent;
                     startMessage.setMessageId(IdGenerator.getTypeId(startMessage));
                     definitions.getMessages().add(startMessage.getMessage());
-                    DomGlobal.console.info("ID is set to: " + startMessage.getMessageId());
+                }
+
+                // Type ID
+                if (startEvent instanceof StartSignalEvent) {
+                    StartSignalEvent startSignal = (StartSignalEvent) startEvent;
+                    startSignal.setSignalId(IdGenerator.getTypeId(startSignal));
+                    definitions.getSignals().add(startSignal.getSignal());
                 }
 
                 // Adding simulation properties

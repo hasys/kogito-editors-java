@@ -30,7 +30,7 @@ import org.treblereel.gwt.xml.mapper.api.annotation.XMLMapper;
 import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 @XMLMapper
-@XmlType(propOrder = {"itemDefinitions", "messages", "process", "bpmnDiagram", "relationship"})
+@XmlType(propOrder = {"itemDefinitions", "messages", "signals", "process", "bpmnDiagram", "relationship"})
 @XmlRootElement(name = "definitions", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class Definitions {
 
@@ -57,6 +57,10 @@ public class Definitions {
     @XmlElement(name = "message")
     @XmlUnwrappedCollection
     private List<Message> messages = new ArrayList<>();
+
+    @XmlElement(name = "signal")
+    @XmlUnwrappedCollection
+    private List<Signal> signals = new ArrayList<>();
 
     // All code behind this comment is auto generated.
     // Please regenerate it again if you added new property.
@@ -125,6 +129,14 @@ public class Definitions {
         this.messages = messages;
     }
 
+    public List<Signal> getSignals() {
+        return signals;
+    }
+
+    public void setSignals(List<Signal> signals) {
+        this.signals = signals;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -141,6 +153,7 @@ public class Definitions {
                 && Objects.equals(getRelationship(), that.getRelationship())
                 && Objects.equals(getProcess(), that.getProcess())
                 && Objects.equals(getItemDefinitions(), that.getItemDefinitions())
+                && Objects.equals(getSignals(), that.getSignals())
                 && Objects.equals(getMessages(), that.getMessages());
     }
 
@@ -153,6 +166,7 @@ public class Definitions {
                                          Objects.hashCode(relationship),
                                          Objects.hashCode(process),
                                          Objects.hashCode(itemDefinitions),
-                                         Objects.hashCode(messages));
+                                         Objects.hashCode(messages),
+                                         Objects.hashCode(signals));
     }
 }

@@ -16,7 +16,6 @@
 
 package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +24,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import elemental2.dom.DomGlobal;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -154,12 +152,10 @@ public class StartMessageEvent extends StartEvent implements DataIOModel {
     }
 
     public String getMessageId() {
-        DomGlobal.console.info("ID getter: " + messageId);
         return messageId;
     }
 
     public void setMessageId(String messageId) {
-        DomGlobal.console.info("set ID: " + messageId);
         this.messageId = messageId;
     }
 
@@ -180,14 +176,7 @@ public class StartMessageEvent extends StartEvent implements DataIOModel {
     }
 
     public List<OutputSet> getOutputSet() {
-        List<OutputSet> outputSets = new ArrayList<>();
-        List<DataOutput> outputs = AssignmentParser.parseDataOutputs(dataIOSet.getAssignmentsinfo().getValue(), getId());
-        if (!outputs.isEmpty()) {
-            OutputSet os = new OutputSet();
-            os.getDataOutputRefs().add(new DataOutputRefs(outputs.get(0).getId()));
-            outputSets.add(os);
-        }
-        return outputSets;
+        return AssignmentParser.getOutputSet(dataIOSet.getAssignmentsinfo().getValue(), getId());
     }
 
     public void setOutputSet(List<OutputSet> outputSet) {
