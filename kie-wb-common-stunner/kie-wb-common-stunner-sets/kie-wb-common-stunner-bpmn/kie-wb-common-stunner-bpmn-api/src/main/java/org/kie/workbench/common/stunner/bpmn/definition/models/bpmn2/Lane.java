@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package org.kie.workbench.common.stunner.bpmn.definition;
+package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlCData;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
@@ -33,6 +40,9 @@ import org.kie.workbench.common.forms.adf.definitions.annotations.FormField;
 import org.kie.workbench.common.forms.adf.definitions.annotations.metaModel.FieldValue;
 import org.kie.workbench.common.forms.adf.definitions.settings.FieldPolicy;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textArea.type.TextAreaFieldType;
+import org.kie.workbench.common.stunner.bpmn.definition.BPMNCategories;
+import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
+import org.kie.workbench.common.stunner.bpmn.definition.models.drools.MetaData;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
@@ -44,6 +54,8 @@ import org.kie.workbench.common.stunner.core.definition.annotation.definition.La
 import org.kie.workbench.common.stunner.core.definition.annotation.property.Value;
 import org.kie.workbench.common.stunner.core.rule.annotation.CanContain;
 import org.kie.workbench.common.stunner.core.util.HashUtil;
+import org.kie.workbench.common.stunner.core.util.StringUtils;
+import org.treblereel.gwt.xml.mapper.api.annotation.XmlUnwrappedCollection;
 
 import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.processing.fields.fieldInitializers.nestedForms.SubFormFieldInitializer.COLLAPSIBLE_CONTAINER;
 import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.processing.fields.fieldInitializers.nestedForms.SubFormFieldInitializer.FIELD_CONTAINER_PARAM;
@@ -57,6 +69,7 @@ import static org.kie.workbench.common.forms.adf.engine.shared.formGeneration.pr
         policy = FieldPolicy.ONLY_MARKED,
         defaultFieldSettings = {@FieldParam(name = FIELD_CONTAINER_PARAM, value = COLLAPSIBLE_CONTAINER)}
 )
+@XmlRootElement(name = "lane", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
 public class Lane implements BPMNViewDefinition {
 
     @Category
@@ -68,6 +81,7 @@ public class Lane implements BPMNViewDefinition {
     @FieldValue
     @NotNull
     @NotEmpty
+    @XmlAttribute
     @FormField(type = TextAreaFieldType.class)
     private String name;
 
@@ -79,16 +93,24 @@ public class Lane implements BPMNViewDefinition {
             type = TextAreaFieldType.class,
             afterElement = "name"
     )
+    @XmlCData
+    @XmlAttribute(namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
     private String documentation;
+
+    @XmlAttribute
+    private String id;
 
     @Property
     @Valid
+    @XmlTransient
     protected BackgroundSet backgroundSet;
 
     @Property
+    @XmlTransient
     private FontSet fontSet;
 
     @Property
+    @XmlTransient
     protected RectangleDimensionsSet dimensionsSet;
 
     @Property
@@ -96,7 +118,21 @@ public class Lane implements BPMNViewDefinition {
             afterElement = "dimensionSet"
     )
     @Valid
+    @XmlTransient
     protected AdvancedData advancedData;
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+    This variable will be always null and getter/setter will return data from other Execution sets.
+    Execution sets not removed due to how forms works now, should be refactored during the migration
+    to the new forms.
+     */
+    @XmlElement
+    private ExtensionElements extensionElements;
+
+    @XmlUnwrappedCollection
+    @XmlElement(name = "flowNodeRef")
+    private List<FlowNodeRef> flowNodeRef = new ArrayList<>();
 
     @Labels
     private final Set<String> labels = new Sets.Builder<String>()
@@ -188,9 +224,50 @@ public class Lane implements BPMNViewDefinition {
         this.advancedData = advancedData;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String getId() {
-        return null;
+        return id;
+    }
+
+    /*
+Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+Execution sets not removed due to how forms works now, should be refactored during the migration
+to the new forms.
+ */
+    public ExtensionElements getExtensionElements() {
+        ExtensionElements elements = new ExtensionElements();
+        List<MetaData> metaData = new ArrayList<>();
+        elements.setMetaData(metaData);
+
+        if (StringUtils.nonEmpty(this.getName())) {
+            MetaData name = new MetaData("elementname", this.getName());
+            metaData.add(name);
+        }
+
+        metaData.addAll(this.getAdvancedData().getAsMetaData());
+
+        return elements;
+    }
+
+    /*
+    Used only for marshalling/unmarshalling purposes. Shouldn't be handled in Equals/HashCode.
+    Execution sets not removed due to how forms works now, should be refactored during the migration
+    to the new forms.
+     */
+    public void setExtensionElements(ExtensionElements extensionElements) {
+        this.extensionElements = extensionElements;
+    }
+
+    public List<FlowNodeRef> getFlowNodeRef() {
+        return flowNodeRef;
+    }
+
+    public void setFlowNodeRef(List<FlowNodeRef> flowNodeRef) {
+        this.flowNodeRef = flowNodeRef;
     }
 
     @Override

@@ -22,17 +22,17 @@ import javax.xml.bind.annotation.XmlValue;
 
 import org.kie.workbench.common.stunner.core.util.HashUtil;
 
-@XmlRootElement(name = "incoming", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
-public class Incoming {
+@XmlRootElement(name = "flowNodeRef", namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL")
+public class FlowNodeRef {
 
     @XmlValue
     private String value;
 
-    public Incoming() {
+    public FlowNodeRef() {
 
     }
 
-    public Incoming(String id) {
+    public FlowNodeRef(String id) {
         this.value = id;
     }
 
@@ -49,11 +49,11 @@ public class Incoming {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Incoming)) {
+        if (!(o instanceof FlowNodeRef)) {
             return false;
         }
-        Incoming incoming = (Incoming) o;
-        return Objects.equals(getValue(), incoming.getValue());
+        FlowNodeRef flowNodeRef = (FlowNodeRef) o;
+        return Objects.equals(getValue(), flowNodeRef.getValue());
     }
 
     @Override

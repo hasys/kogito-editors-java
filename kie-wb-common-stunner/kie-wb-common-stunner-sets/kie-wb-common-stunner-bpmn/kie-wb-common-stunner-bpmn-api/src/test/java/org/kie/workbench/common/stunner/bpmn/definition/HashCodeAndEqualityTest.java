@@ -27,6 +27,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndSignalEv
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndTerminateEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EventSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.GenericServiceTask;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Lane;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.MultipleInstanceSubprocess;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.NoneTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;

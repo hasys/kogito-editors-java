@@ -15,9 +15,13 @@
  */
 package org.kie.workbench.common.stunner.bpmn.client.marshall.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNViewDefinition;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.BaseTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Lane;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ScriptTask;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.StartMessageEvent;
@@ -40,6 +44,11 @@ public class IdGenerator {
 
     private static int signalCounter = 1;
 
+    private static int laneCounter = 1;
+
+    // key is old ID and value is new ID
+    private static Map<String, String> oldNewId = new HashMap<>();
+
     public static void reset() {
         startNodeCounter = 1;
         endNodeCounter = 1;
@@ -48,15 +57,32 @@ public class IdGenerator {
         scriptTaskCounter = 1;
         messageCounter = 1;
         signalCounter = 1;
+        laneCounter = 1;
+        oldNewId = new HashMap<>();
     }
 
-    public static String getNextIdFor(BPMNViewDefinition flowElement) {
+    public static String getNextIdFor(BPMNViewDefinition flowElement, String oldId) {
+        if (oldNewId.containsKey(oldId)) {
+            return oldNewId.get(oldId);
+        }
+
+        String newId = generateNewId(flowElement);
+        oldNewId.put(oldId, newId);
+
+        return newId;
+    }
+
+    private static String generateNewId(BPMNViewDefinition flowElement) {
         if (flowElement instanceof StartEvent) {
             return "StartEvent_" + startNodeCounter++;
         }
 
         if (flowElement instanceof EndEvent) {
             return "EndEvent_" + endNodeCounter++;
+        }
+
+        if (flowElement instanceof Lane) {
+            return "Lane_" + laneCounter++;
         }
 
         if (flowElement instanceof BaseTask) {
@@ -69,7 +95,6 @@ public class IdGenerator {
 
             return "Task_" + taskCounter++;
         }
-
         return null;
     }
 

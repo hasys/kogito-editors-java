@@ -17,7 +17,6 @@ package org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2;
 
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlCData;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -27,7 +26,6 @@ import org.kie.workbench.common.stunner.core.util.HashUtil;
 public class Outgoing {
 
     @XmlValue
-    @XmlCData(value = false)
     private String value;
 
     public Outgoing() {

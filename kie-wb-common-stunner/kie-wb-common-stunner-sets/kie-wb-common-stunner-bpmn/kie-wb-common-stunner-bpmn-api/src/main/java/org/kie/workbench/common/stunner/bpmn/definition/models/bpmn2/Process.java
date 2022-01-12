@@ -244,6 +244,9 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
     })
     private List<StartEvent> startEvents = new ArrayList<>();
 
+    @XmlElement(name = "laneSet")
+    private List<Lane> lanes = new ArrayList<>();
+
     @XmlElement(name = "endEvent")
     @XmlUnwrappedCollection
     @XmlElements({
@@ -599,6 +602,14 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
         this.properties = properties;
     }
 
+    public List<Lane> getLanes() {
+        return lanes;
+    }
+
+    public void setLanes(List<Lane> lanes) {
+        this.lanes = lanes;
+    }
+
     @Override
     public int hashCode() {
         return HashUtil.combineHashCodes(Objects.hashCode(processData),
@@ -612,6 +623,7 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                                          Objects.hashCode(tasks),
                                          Objects.hashCode(scriptTasks),
                                          Objects.hashCode(sequenceFlows),
+                                         Objects.hashCode(lanes),
                                          Objects.hashCode(properties));
     }
 
@@ -630,6 +642,7 @@ public class Process implements BPMNDiagram<DiagramSet, ProcessData, RootProcess
                     && Objects.equals(tasks, other.tasks)
                     && Objects.equals(scriptTasks, other.scriptTasks)
                     && Objects.equals(sequenceFlows, other.sequenceFlows)
+                    && Objects.equals(lanes, other.lanes)
                     && Objects.equals(properties, other.properties);
         }
         return false;

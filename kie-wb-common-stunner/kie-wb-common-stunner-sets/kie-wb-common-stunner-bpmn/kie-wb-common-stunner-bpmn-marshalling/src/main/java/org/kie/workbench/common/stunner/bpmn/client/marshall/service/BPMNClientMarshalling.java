@@ -36,6 +36,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.EndEvent;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ExtensionElements;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Incoming;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.ItemDefinition;
+import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Lane;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Outgoing;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Process;
 import org.kie.workbench.common.stunner.bpmn.definition.models.bpmn2.Property;
@@ -120,7 +121,8 @@ public class BPMNClientMarshalling {
             }
 
             if (n instanceof FlowElement) {
-                ((FlowElement) n).setId(IdGenerator.getNextIdFor(n));
+                // All except Lanes
+                ((FlowElement) n).setId(IdGenerator.getNextIdFor(n, node.getUUID()));
             }
 
             if (n instanceof StartEvent) {
@@ -179,6 +181,12 @@ public class BPMNClientMarshalling {
                 List<Incoming> incoming = checkIncomingFlows(node.getInEdges(), task.getId(), sequenceFlows, plane);
                 task.setIncoming(incoming);
                 task.setOutgoing(outgoing);
+            }
+
+            if (n instanceof Lane) {
+                Lane lane = (Lane) n;
+                lane.setId(IdGenerator.getNextIdFor(n, node.getUUID()));
+                process.getLanes().add(lane);
             }
 
             // Adding Shape to Diagram
